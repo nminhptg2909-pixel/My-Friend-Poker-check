@@ -270,7 +270,6 @@ table.players tr:last-child td{border-bottom:none;}
   <div class="tab" onclick="showTab('members')">Hội viên</div>
 </div>
 
-<!-- GAME -->
 <div class="page show" id="tab-game">
   <div class="card">
     <div class="card-title">Chọn người chơi</div>
@@ -290,7 +289,6 @@ table.players tr:last-child td{border-bottom:none;}
 
   <div class="card">
     <div class="card-title">Bàn chơi hiện tại</div>
-    <!-- Session date picker -->
     <div class="session-date-bar">
       <span class="cal-icon">📅</span>
       <div>
@@ -302,24 +300,35 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- RESULT -->
 <div class="page" id="tab-result">
-  <div class="card">
-    <div class="card-title">Cash Out</div>
-    <div id="cashoutList"><div class="empty">Chưa có người chơi nào</div></div>
-    <button class="btn-green" onclick="calcResult()" style="margin-top:10px;">Tính kết quả</button>
+  <div id="resultMainView">
+    <div class="card">
+      <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Cash Out</span>
+        <span style="font-size:10px; color:var(--gold); text-transform:none; letter-spacing:0; cursor:pointer; background:rgba(200,168,75,.1); padding:5px 8px; border-radius:6px; border:1px solid var(--border);" onclick="showSessionHistory()">🕒 Lịch sử bàn chơi</span>
+      </div>
+      <div id="cashoutList"><div class="empty">Chưa có người chơi nào</div></div>
+      <button class="btn-green" onclick="calcResult()" style="margin-top:10px;">Tính kết quả</button>
+    </div>
+    <div class="card" id="summaryCard" style="display:none">
+      <div class="card-title">Kết quả buổi chơi</div>
+      <div class="pot-info">Tổng pot: <span id="totalPot">0đ</span></div>
+      <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
+      <div id="summaryList"></div>
+      <button class="btn-green" onclick="saveSession()">💾 Lưu buổi chơi</button>
+      <button class="btn-red" onclick="resetAll()">Reset bàn mới</button>
+    </div>
   </div>
-  <div class="card" id="summaryCard" style="display:none">
-    <div class="card-title">Kết quả buổi chơi</div>
-    <div class="pot-info">Tổng pot: <span id="totalPot">0đ</span></div>
-    <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
-    <div id="summaryList"></div>
-    <button class="btn-green" onclick="saveSession()">💾 Lưu buổi chơi</button>
-    <button class="btn-red" onclick="resetAll()">Reset bàn mới</button>
+
+  <div id="sessionHistoryView" style="display:none">
+    <button class="back-btn" onclick="hideSessionHistory()">‹ Quay lại tính Cash Out</button>
+    <div class="card">
+      <div class="card-title">Lịch sử các buổi chơi</div>
+      <div id="sessionHistoryList"><div class="empty">Chưa có dữ liệu lịch sử</div></div>
+    </div>
   </div>
 </div>
 
-<!-- HOF -->
 <div class="page" id="tab-hof">
   <div class="hof-hero">
     <span class="hof-crown">👑</span>
@@ -340,7 +349,6 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- MEMBERS -->
 <div class="page" id="tab-members">
   <div id="memberDetailView" style="display:none"></div>
   <div id="memberListView">
@@ -352,7 +360,6 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="addMemberModal" style="display:none" onclick="closeModalOutside(event)">
   <div class="modal-box">
     <div class="modal-title">Thêm hội viên mới <span class="modal-close" onclick="closeAddMemberModal()">✕</span></div>
@@ -364,10 +371,34 @@ table.players tr:last-child td{border-bottom:none;}
 <script>
 var players=[],lastResults=[],selectedMember=null;
 
-// set default date = today
+// INIT & MIGRATION SCRIPT
 (function(){
+  // set default date = today
   var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
   document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+
+  // Tự động khôi phục dữ liệu lịch sử các bàn chơi cũ (VD ngày 31/3) từ profile hội viên
+  if(!localStorage.getItem('pk_sessions') && localStorage.getItem('pk_members')) {
+      var members = JSON.parse(localStorage.getItem('pk_members')||'[]');
+      var sessMap = {};
+      members.forEach(function(m){
+          (m.history||[]).forEach(function(h){
+              if(!sessMap[h.date]) sessMap[h.date] = [];
+              sessMap[h.date].push({name: m.name, diff: h.diff, buyin: h.buyin, cashout: h.cashout});
+          });
+      });
+      var sessions = [];
+      for(var date in sessMap) {
+          sessions.push({ id: date, date: date, results: sessMap[date] });
+      }
+      sessions.sort(function(a,b){
+         var pA = a.date.split('/'), pB = b.date.split('/');
+         var dA = new Date(pA[2], pA[1]-1, pA[0]).getTime();
+         var dB = new Date(pB[2], pB[1]-1, pB[0]).getTime();
+         return dB - dA;
+      });
+      localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+  }
 })();
 
 function loadMembers(){try{return JSON.parse(localStorage.getItem('pk_members'))||[];}catch(e){return[];}}
@@ -473,7 +504,8 @@ function calcResult(){
     tb+=p.chips;
     results.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
   });
-  document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
+  window.currentSessionPot = Math.round(tb/2000*100000);
+  document.getElementById('totalPot').textContent=fmtAbs(window.currentSessionPot);
   var dateStr=getSessionDate();
   var disp=document.getElementById('sessionDateDisplay');
   disp.textContent=dateStr?'📅 Buổi chơi: '+dateStr:'';
@@ -494,6 +526,8 @@ function calcResult(){
 function saveSession(){
   if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
   var members=getMembers(),dateStr=getSessionDate(),saved=0;
+  
+  // 1. Lưu vào lịch sử cá nhân từng hội viên
   lastResults.forEach(function(r){
     if(!r.memberId)return;
     var m=members.find(function(x){return x.id===r.memberId;});
@@ -503,18 +537,85 @@ function saveSession(){
     saved++;
   });
   saveMembers(members);
-  alert(saved>0?'✅ Đã lưu buổi chơi ngày '+dateStr+' cho '+saved+' hội viên!':'ℹ️ Không có hội viên nào trong bàn này để lưu.\nChỉ lưu người chơi được chọn từ danh sách hội viên.');
+
+  // 2. Lưu vào lịch sử bàn chơi tổng
+  var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  sessions.unshift({
+     id: Date.now(),
+     date: dateStr,
+     results: lastResults.map(function(r){ return {name:r.name, diff:r.diff, buyin:r.buyin, cashout:r.cashout}; })
+  });
+  localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+
+  alert(saved>0?'✅ Đã lưu buổi chơi ngày '+dateStr+' cho '+saved+' hội viên!':'✅ Đã lưu buổi chơi ngày '+dateStr+' (Khách)!');
+
+  // 3. Xoá bàn và chuyển về tab Game để chống lưu 2 lần
+  players=[];
+  renderPlayers();
+  renderCashout();
+  document.getElementById('summaryCard').style.display='none';
+  var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
+  document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  showTab('game');
 }
 
 function resetAll(){
   if(confirm('Reset bàn mới? Toàn bộ dữ liệu bàn hiện tại sẽ mất.')){
     players=[];lastResults=[];renderPlayers();
     document.getElementById('summaryCard').style.display='none';
-    // reset date to today
     var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
     document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
     showTab('game');
   }
+}
+
+// LỊCH SỬ BÀN CHƠI FUNCTIONS
+function showSessionHistory() {
+   document.getElementById('resultMainView').style.display = 'none';
+   document.getElementById('sessionHistoryView').style.display = 'block';
+   renderSessionHistory();
+}
+
+function hideSessionHistory() {
+   document.getElementById('resultMainView').style.display = 'block';
+   document.getElementById('sessionHistoryView').style.display = 'none';
+}
+
+function renderSessionHistory() {
+   var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+   var el = document.getElementById('sessionHistoryList');
+   if(!sessions.length) {
+      el.innerHTML = '<div class="empty">Chưa có lịch sử bàn chơi nào được lưu.</div>';
+      return;
+   }
+   var h = '';
+   sessions.forEach(function(s, idx) {
+       h += '<div style="margin-bottom:12px; border:1px solid var(--border2); border-radius:8px; padding:12px; background:var(--bg3);">';
+       h += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border2); padding-bottom:8px;">';
+       h += '<span style="color:var(--gold2); font-weight:700; font-size:13px;">📅 ' + s.date + '</span>';
+       h += '<button style="background:transparent; border:none; color:var(--red); font-size:11px; cursor:pointer; font-weight:600;" onclick="deleteSession('+idx+')">Xóa</button>';
+       h += '</div>';
+
+       var sorted = (s.results||[]).sort(function(a,b){return b.diff - a.diff});
+       sorted.forEach(function(r) {
+           var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
+           h += '<div class="summary-row" style="padding:5px 0; border-bottom:none;">'
+              + '<div style="font-size:12px; font-weight:600; color:var(--text);">' + r.name + '</div>'
+              + '<div class="summary-val '+cls+'" style="font-size:12px; font-weight:700;">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div>'
+              + '</div>';
+       });
+       h += '</div>';
+   });
+   el.innerHTML = h;
+}
+
+function deleteSession(idx) {
+    if(confirm('Xóa lịch sử bàn chơi này? (Lưu ý: Không làm thay đổi lịch sử cá nhân của các hội viên)')) {
+        var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+        sessions.splice(idx, 1);
+        localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+        renderSessionHistory();
+    }
 }
 
 function renderHof(){
