@@ -3,33 +3,33 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>♠ Triton Poker Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Tenor+Sans&display=swap');
-
 :root{
   --bg:        #0b0c0f;
   --bg2:       #111318;
   --bg3:       #181a20;
   --bg4:       #1e2028;
-  --border:    rgba(180,150,60,.22);
-  --border2:   rgba(180,150,60,.12);
+  --border:    rgba(200,168,75,.28);
+  --border2:   rgba(200,168,75,.12);
   --gold:      #c8a84b;
   --gold2:     #e8c96a;
   --gold3:     #f5e09a;
   --gold-glow: rgba(200,168,75,.18);
-  --text:      #e8dfc8;
-  --text2:     rgba(232,223,200,.55);
-  --text3:     rgba(232,223,200,.28);
+  --text:      #ffffff;
+  --text2:     rgba(255,255,255,.75);
+  --text3:     rgba(255,255,255,.4);
   --green:     #4a8c5c;
   --green-lt:  rgba(74,140,92,.15);
-  --red:       #a04040;
-  --red-lt:    rgba(160,64,64,.15);
+  --red:       #c05050;
+  --red-lt:    rgba(192,80,80,.15);
   --radius:    10px;
+  --font:      'Montserrat', sans-serif;
 }
 
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
-  font-family:'Tenor Sans',Georgia,serif;
+  font-family:var(--font);
   background:var(--bg);
   padding:14px;
   color:var(--text);
@@ -37,267 +37,122 @@ body{
   margin:0 auto;
   min-height:100vh;
 }
-
-/* subtle diamond pattern bg */
 body::before{
   content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
   background-image:
-    repeating-linear-gradient(45deg, rgba(180,150,60,.025) 0px, transparent 1px, transparent 18px, rgba(180,150,60,.025) 19px),
-    repeating-linear-gradient(-45deg, rgba(180,150,60,.025) 0px, transparent 1px, transparent 18px, rgba(180,150,60,.025) 19px);
+    repeating-linear-gradient(45deg,rgba(200,168,75,.025) 0px,transparent 1px,transparent 18px,rgba(200,168,75,.025) 19px),
+    repeating-linear-gradient(-45deg,rgba(200,168,75,.025) 0px,transparent 1px,transparent 18px,rgba(200,168,75,.025) 19px);
 }
 body>*{position:relative;z-index:1;}
 
 /* HEADER */
-.app-header{
-  text-align:center;
-  padding:18px 0 16px;
-  margin-bottom:4px;
-}
-.app-logo{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:11px;font-weight:600;
-  letter-spacing:6px;text-transform:uppercase;
-  color:var(--gold);
-  opacity:.7;
-  margin-bottom:6px;
-}
+.app-header{text-align:center;padding:18px 0 14px;margin-bottom:4px;}
+.app-logo{font-size:10px;font-weight:600;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:6px;}
 .app-title{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:28px;font-weight:700;
+  font-size:28px;font-weight:800;letter-spacing:4px;
   background:linear-gradient(135deg,#9a7830 0%,#c8a84b 25%,#f0d878 50%,#c8a84b 75%,#9a7830 100%);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  letter-spacing:3px;
   filter:drop-shadow(0 0 20px rgba(200,168,75,.3));
 }
-.app-divider{
-  display:flex;align-items:center;gap:10px;margin:10px auto 0;max-width:280px;
-}
+.app-divider{display:flex;align-items:center;gap:10px;margin:10px auto 0;max-width:260px;}
 .app-divider::before,.app-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
-.app-divider-icon{font-size:12px;color:var(--gold);opacity:.6;}
+.app-divider-icon{font-size:11px;color:var(--gold);opacity:.5;}
 
 /* TABS */
-.tabs{
-  display:flex;gap:4px;margin-bottom:16px;
-  background:var(--bg2);
-  border:1px solid var(--border2);
-  border-radius:var(--radius);
-  padding:4px;
-}
-.tab{
-  flex:1;padding:8px 2px;font-size:10px;font-weight:600;
-  text-align:center;border-radius:7px;cursor:pointer;
-  background:transparent;color:var(--text3);
-  transition:all .2s;letter-spacing:.8px;text-transform:uppercase;
-  font-family:'Tenor Sans',Georgia,serif;
-  border:1px solid transparent;
-}
-.tab.active{
-  background:linear-gradient(135deg,#1e1a0e,#2a2210);
-  color:var(--gold2);
-  border-color:var(--border);
-  box-shadow:0 0 12px var(--gold-glow);
-}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:4px;}
+.tab{flex:1;padding:8px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;background:transparent;color:var(--text3);transition:all .2s;letter-spacing:.5px;text-transform:uppercase;font-family:var(--font);border:1px solid transparent;}
+.tab.active{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(--gold2);border-color:var(--border);box-shadow:0 0 12px var(--gold-glow);}
 .page{display:none;}.page.show{display:block;}
 
 /* CARDS */
-.card{
-  background:var(--bg2);
-  border:1px solid var(--border2);
-  border-radius:var(--radius);
-  padding:16px;
-  margin-bottom:12px;
-  position:relative;overflow:hidden;
+.card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.25;}
+.card-title{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2);opacity:.85;}
+
+/* DATE PICKER BANNER */
+.session-date-bar{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:10px 13px;margin-bottom:12px;
 }
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--gold),transparent);
-  opacity:.3;
+.session-date-bar .cal-icon{font-size:18px;flex-shrink:0;}
+.session-date-bar .date-label{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
+.session-date-bar input[type=date]{
+  flex:1;background:transparent;border:none;
+  color:var(--text);font-family:var(--font);font-size:14px;font-weight:600;
+  outline:none;cursor:pointer;
+  color-scheme:dark;
 }
-.card-title{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:11px;font-weight:600;
-  color:var(--gold);letter-spacing:3px;text-transform:uppercase;
-  margin-bottom:12px;padding-bottom:8px;
-  border-bottom:1px solid var(--border2);
-  opacity:.8;
-}
+.session-date-bar input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) sepia(1) saturate(3) hue-rotate(5deg);opacity:.7;cursor:pointer;}
 
 /* FORM */
 .form-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
-.form-row label{font-size:11px;color:var(--text3);white-space:nowrap;min-width:60px;letter-spacing:.5px;}
+.form-row label{font-size:11px;color:var(--text2);white-space:nowrap;min-width:60px;font-weight:600;letter-spacing:.3px;}
 input[type=text],input[type=number]{
-  flex:1;padding:9px 12px;font-size:13px;
+  flex:1;padding:9px 12px;font-size:13px;font-weight:500;
   border:1px solid var(--border);border-radius:8px;
-  min-width:80px;
-  background:var(--bg3);
-  color:var(--text);
-  font-family:'Tenor Sans',Georgia,serif;
+  min-width:80px;background:var(--bg3);
+  color:var(--text);font-family:var(--font);
 }
 input[type=text]::placeholder,input[type=number]::placeholder{color:var(--text3);}
 input:focus{border-color:var(--gold);outline:none;background:var(--bg4);box-shadow:0 0 8px var(--gold-glow);}
 
-.btn-gold{
-  width:100%;padding:11px;font-size:13px;font-weight:600;
-  background:linear-gradient(135deg,#7a5c1e,#c8a84b,#7a5c1e);
-  color:#0b0c0f;border:none;border-radius:8px;cursor:pointer;margin-top:6px;
-  font-family:'Cormorant Garamond',Georgia,serif;
-  letter-spacing:2px;text-transform:uppercase;font-size:12px;
-  box-shadow:0 2px 12px rgba(200,168,75,.25);
-  transition:all .2s;
-}
+.btn-gold{width:100%;padding:11px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#7a5c1e,#c8a84b,#7a5c1e);color:#0b0c0f;border:none;border-radius:8px;cursor:pointer;margin-top:6px;font-family:var(--font);letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 2px 12px rgba(200,168,75,.25);transition:all .2s;}
 .btn-gold:active{opacity:.85;transform:scale(.99);}
-
-.btn-green{
-  width:100%;padding:11px;font-size:12px;font-weight:600;
-  background:linear-gradient(135deg,#1e3a26,#2e5c3a);
-  color:#6dbf80;border:1px solid rgba(74,140,92,.4);
-  border-radius:8px;cursor:pointer;margin-top:6px;
-  font-family:'Cormorant Garamond',Georgia,serif;
-  letter-spacing:2px;text-transform:uppercase;
-  transition:all .2s;
-}
+.btn-green{width:100%;padding:11px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#1e3a26,#2e5c3a);color:#6dbf80;border:1px solid rgba(74,140,92,.4);border-radius:8px;cursor:pointer;margin-top:6px;font-family:var(--font);letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
 .btn-green:active{opacity:.85;}
-
-.btn-red{
-  width:100%;padding:9px;font-size:11px;font-weight:600;
-  background:transparent;color:var(--red);
-  border:1px solid rgba(160,64,64,.35);
-  border-radius:8px;cursor:pointer;margin-top:8px;
-  font-family:'Cormorant Garamond',Georgia,serif;
-  letter-spacing:1.5px;text-transform:uppercase;
-}
-.btn-red:active{opacity:.7;}
-
-.hand-note{font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.5px;}
-.empty{text-align:center;color:var(--text3);font-size:12px;padding:20px 0;font-style:italic;letter-spacing:.5px;}
+.btn-red{width:100%;padding:9px;font-size:11px;font-weight:600;background:transparent;color:var(--red);border:1px solid rgba(192,80,80,.35);border-radius:8px;cursor:pointer;margin-top:8px;font-family:var(--font);letter-spacing:1px;text-transform:uppercase;}
+.hand-note{font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.3px;}
+.empty{text-align:center;color:var(--text3);font-size:12px;padding:20px 0;font-style:italic;letter-spacing:.3px;}
 
 /* MEMBER GRID */
-.member-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-.member-chip{
-  display:flex;align-items:center;gap:7px;
-  padding:7px 12px;border-radius:20px;cursor:pointer;
-  border:1px solid var(--border);background:var(--bg3);
-  font-size:12px;color:var(--text2);
-  transition:all .15s;
-  font-family:'Tenor Sans',Georgia,serif;
-}
+.member-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.member-chip{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;font-family:var(--font);}
 .member-chip:active{transform:scale(.96);}
-.member-chip.selected{
-  background:linear-gradient(135deg,#1e1a0e,#2a2210);
-  color:var(--gold2);border-color:var(--gold);
-  box-shadow:0 0 10px var(--gold-glow);
-}
-.member-chip .avatar{
-  width:22px;height:22px;border-radius:50%;
-  background:var(--bg4);color:var(--gold);
-  font-size:10px;font-weight:600;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  border:1px solid var(--border);
-}
+.member-chip.selected{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(--gold2);border-color:var(--gold);box-shadow:0 0 10px var(--gold-glow);}
+.member-chip .avatar{width:22px;height:22px;border-radius:50%;background:var(--bg4);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border);}
 .member-chip.selected .avatar{background:rgba(200,168,75,.2);color:var(--gold2);}
 .member-hint{font-size:10px;color:var(--text3);margin-bottom:10px;letter-spacing:.3px;}
 
 /* PLAYER TABLE */
 table.players{width:100%;border-collapse:collapse;font-size:12px;}
-table.players th{
-  background:var(--bg3);color:var(--gold);font-weight:600;
-  padding:8px 6px;text-align:center;font-size:10px;
-  letter-spacing:1.5px;text-transform:uppercase;
-  border-bottom:1px solid var(--border);
-}
-table.players td{
-  padding:9px 6px;text-align:center;
-  border-bottom:1px solid var(--border2);vertical-align:middle;
-  color:var(--text);
-}
+table.players th{background:var(--bg3);color:var(--gold);font-weight:700;padding:8px 6px;text-align:center;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+table.players td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--border2);vertical-align:middle;color:var(--text);}
 table.players tr:last-child td{border-bottom:none;}
 .name-cell{text-align:left!important;font-weight:600;color:var(--text);}
-.chip-inp{
-  width:80px;padding:6px 8px;font-size:12px;
-  border:1px solid var(--border);border-radius:6px;text-align:center;
-  background:var(--bg3);color:var(--text);
-  font-family:'Tenor Sans',Georgia,serif;
-}
+.chip-inp{width:80px;padding:6px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;text-align:center;background:var(--bg3);color:var(--text);font-family:var(--font);}
 .chip-inp:focus{border-color:var(--gold);outline:none;}
-.del-btn{
-  background:var(--red-lt);color:var(--red);
-  border:1px solid rgba(160,64,64,.3);
-  border-radius:6px;padding:5px 8px;font-size:12px;cursor:pointer;
+.del-btn{background:var(--red-lt);color:var(--red);border:1px solid rgba(192,80,80,.3);border-radius:6px;padding:5px 8px;font-size:12px;cursor:pointer;}
+.rebuy-btn{background:rgba(200,168,75,.1);color:var(--gold);border:1px solid var(--border);border-radius:6px;padding:4px 7px;font-size:10px;font-weight:700;cursor:pointer;margin-left:4px;}
+.badge{display:inline-block;background:rgba(200,168,75,.1);color:var(--gold);font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;margin-left:4px;border:1px solid var(--border2);}
+
+/* session date badge on table */
+.session-badge{
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:7px 11px;margin-bottom:12px;
+  font-size:11px;font-weight:600;color:var(--gold2);
 }
-.rebuy-btn{
-  background:rgba(200,168,75,.1);color:var(--gold);
-  border:1px solid var(--border);
-  border-radius:6px;padding:4px 7px;font-size:10px;font-weight:600;cursor:pointer;
-  margin-left:4px;letter-spacing:.5px;
-}
-.badge{
-  display:inline-block;background:rgba(200,168,75,.1);color:var(--gold);
-  font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;margin-left:4px;
-  border:1px solid var(--border2);letter-spacing:.3px;
-}
+.session-badge .cal{font-size:14px;}
 
 /* RESULT */
 .profit{color:#6dbf80;font-weight:700;}
 .loss{color:#d07070;font-weight:700;}
 .zero{color:var(--text3);}
-.summary-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;
-}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;}
 .summary-row:last-child{border-bottom:none;}
-.pot-info{
-  background:linear-gradient(135deg,rgba(200,168,75,.08),rgba(200,168,75,.04));
-  border:1px solid var(--border);
-  border-radius:8px;padding:11px 13px;font-size:13px;color:var(--gold2);margin-bottom:10px;
-}
-.pot-info span{font-weight:700;font-size:16px;color:var(--gold3);}
+.pot-info{background:linear-gradient(135deg,rgba(200,168,75,.08),rgba(200,168,75,.04));border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:13px;color:var(--gold2);margin-bottom:10px;}
+.pot-info span{font-weight:800;font-size:16px;color:var(--gold3);}
 
-/* ══ HOF ══ */
+/* HOF */
 #tab-hof{padding:0;}
-.hof-hero{
-  background:linear-gradient(160deg,#080a06 0%,#0f1208 40%,#141a0a 100%);
-  border-radius:var(--radius) var(--radius) 0 0;
-  padding:28px 16px 22px;text-align:center;
-  position:relative;overflow:hidden;
-  border:1px solid var(--border2);border-bottom:none;
-}
-.hof-hero::before{
-  content:'';position:absolute;inset:0;
-  background-image:
-    radial-gradient(1px 1px at 12% 15%,rgba(200,168,75,.6) 0%,transparent 100%),
-    radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.3) 0%,transparent 100%),
-    radial-gradient(1px 1px at 40% 60%,rgba(200,168,75,.4) 0%,transparent 100%),
-    radial-gradient(1px 1px at 70% 75%,rgba(255,255,255,.25) 0%,transparent 100%),
-    radial-gradient(1px 1px at 25% 85%,rgba(200,168,75,.5) 0%,transparent 100%),
-    radial-gradient(2px 2px at 55% 35%,rgba(200,168,75,.7) 0%,transparent 100%),
-    radial-gradient(1px 1px at 90% 55%,rgba(255,255,255,.3) 0%,transparent 100%);
-  pointer-events:none;
-}
-.hof-hero::after{
-  content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);
-  width:300px;height:200px;
-  background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);
-  pointer-events:none;
-}
-.hof-crown{
-  font-size:42px;display:block;margin-bottom:8px;position:relative;z-index:1;
-  filter:drop-shadow(0 0 18px rgba(200,168,75,.8));
-  animation:crownFloat 3.5s ease-in-out infinite;
-}
+.hof-hero{background:linear-gradient(160deg,#080a06 0%,#0f1208 40%,#141a0a 100%);border-radius:var(--radius) var(--radius) 0 0;padding:28px 16px 22px;text-align:center;position:relative;overflow:hidden;border:1px solid var(--border2);border-bottom:none;}
+.hof-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 15%,rgba(200,168,75,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 40% 60%,rgba(200,168,75,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 75%,rgba(255,255,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 25% 85%,rgba(200,168,75,.5) 0%,transparent 100%),radial-gradient(2px 2px at 55% 35%,rgba(200,168,75,.7) 0%,transparent 100%);pointer-events:none;}
+.hof-hero::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
+.hof-crown{font-size:42px;display:block;margin-bottom:8px;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(200,168,75,.8));animation:crownFloat 3.5s ease-in-out infinite;}
 @keyframes crownFloat{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-6px) rotate(1deg);}}
-.hof-eyebrow{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:9px;letter-spacing:6px;color:rgba(200,168,75,.5);
-  text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1;
-}
-.hof-title{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-weight:700;font-size:26px;letter-spacing:4px;
-  background:linear-gradient(135deg,#7a5c1e 0%,#c8a84b 25%,#f5e09a 50%,#c8a84b 75%,#7a5c1e 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  filter:drop-shadow(0 2px 10px rgba(200,168,75,.4));
-  position:relative;z-index:1;margin-bottom:4px;
-}
+.hof-eyebrow{font-size:9px;font-weight:600;letter-spacing:6px;color:rgba(200,168,75,.5);text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1;}
+.hof-title{font-weight:800;font-size:24px;letter-spacing:5px;background:linear-gradient(135deg,#7a5c1e 0%,#c8a84b 25%,#f5e09a 50%,#c8a84b 75%,#7a5c1e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 10px rgba(200,168,75,.4));position:relative;z-index:1;margin-bottom:4px;}
 .hof-suits{display:flex;justify-content:center;gap:12px;position:relative;z-index:1;margin-top:8px;}
 .hof-suits span{font-size:14px;color:var(--gold);opacity:.3;animation:suitP 2.5s ease-in-out infinite;}
 .hof-suits span:nth-child(1){color:#c8564a;animation-delay:0s;}
@@ -305,77 +160,39 @@ table.players tr:last-child td{border-bottom:none;}
 .hof-suits span:nth-child(3){animation-delay:.8s;}
 .hof-suits span:nth-child(4){color:#c8564a;animation-delay:1.2s;}
 @keyframes suitP{0%,100%{opacity:.2;}50%{opacity:.7;}}
-
-.hof-body{
-  background:var(--bg2);border-radius:0 0 var(--radius) var(--radius);
-  padding:16px;
-  border:1px solid var(--border2);border-top:none;
-}
-.hof-empty{text-align:center;color:var(--text3);font-size:12px;padding:28px 0;font-style:italic;letter-spacing:.5px;}
+.hof-body{background:var(--bg2);border-radius:0 0 var(--radius) var(--radius);padding:16px;border:1px solid var(--border2);border-top:none;}
+.hof-empty{text-align:center;color:var(--text3);font-size:12px;padding:28px 0;font-style:italic;}
 
 /* RANK CARDS */
 .rank-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
-.rank-card{
-  border-radius:10px;padding:13px 14px;
-  display:flex;align-items:center;gap:12px;
-  position:relative;overflow:hidden;
-}
-/* #1 gold */
-.rank-1{
-  background:linear-gradient(135deg,rgba(50,36,6,.95),rgba(30,22,4,.98));
-  border:1.5px solid rgba(200,168,75,.6);
-  box-shadow:0 0 20px rgba(200,168,75,.15),inset 0 1px 0 rgba(200,168,75,.2);
-}
+.rank-card{border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
+.rank-1{background:linear-gradient(135deg,rgba(50,36,6,.95),rgba(30,22,4,.98));border:1.5px solid rgba(200,168,75,.6);box-shadow:0 0 20px rgba(200,168,75,.15),inset 0 1px 0 rgba(200,168,75,.2);}
 .rank-1::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,168,75,.06) 0%,transparent 55%);pointer-events:none;}
-/* #2 silver */
-.rank-2{
-  background:linear-gradient(135deg,rgba(28,30,34,.95),rgba(20,22,26,.98));
-  border:1.5px solid rgba(160,175,195,.3);
-}
-/* #3 bronze */
-.rank-3{
-  background:linear-gradient(135deg,rgba(40,22,8,.95),rgba(28,16,5,.98));
-  border:1.5px solid rgba(180,110,55,.4);
-}
+.rank-2{background:linear-gradient(135deg,rgba(28,30,34,.95),rgba(20,22,26,.98));border:1.5px solid rgba(160,175,195,.3);}
+.rank-3{background:linear-gradient(135deg,rgba(40,22,8,.95),rgba(28,16,5,.98));border:1.5px solid rgba(180,110,55,.4);}
 .rank-win{background:var(--bg3);border:1px solid rgba(74,140,92,.3);}
-.rank-loss{background:var(--bg3);border:1px solid rgba(160,64,64,.25);}
+.rank-loss{background:var(--bg3);border:1px solid rgba(192,80,80,.25);}
 .rank-even{background:var(--bg3);border:1px solid var(--border2);}
-
-.medal{
-  width:40px;height:40px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:20px;
-}
+.medal{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
 .rank-1 .medal{background:linear-gradient(145deg,#c8a84b,#8a6a20);box-shadow:0 0 14px rgba(200,168,75,.5);}
 .rank-2 .medal{background:linear-gradient(145deg,#b0b8c8,#707888);}
 .rank-3 .medal{background:linear-gradient(145deg,#b07840,#6a4020);}
 .rank-win .medal,.rank-loss .medal,.rank-even .medal{background:var(--bg4);border:1px solid var(--border);font-size:14px;width:34px;height:34px;}
-
 .rank-info{flex:1;min-width:0;}
-.rank-name{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-weight:700;font-size:16px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.rank-1 .rank-name{color:var(--gold2);font-size:18px;text-shadow:0 0 12px rgba(200,168,75,.4);}
-.rank-2 .rank-name{color:#a8b8cc;}
-.rank-3 .rank-name{color:#b07840;}
-.rank-win .rank-name{color:#6dbf80;}
-.rank-loss .rank-name{color:#d07070;}
-.rank-even .rank-name{color:var(--text2);}
-
-.rank-sub{font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px;}
-.rank-amt{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-weight:700;font-size:17px;white-space:nowrap;text-align:right;
-}
-.rank-1 .rank-amt{color:var(--gold2);font-size:20px;text-shadow:0 0 10px rgba(200,168,75,.5);}
-.rank-2 .rank-amt{color:#8898ac;}
-.rank-3 .rank-amt{color:#a07040;}
-.rank-win .rank-amt{color:#5aab6e;}
-.rank-loss .rank-amt{color:#c06060;}
+.rank-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.rank-1 .rank-name{color:var(--gold2);font-size:17px;text-shadow:0 0 12px rgba(200,168,75,.4);}
+.rank-2 .rank-name{color:#c8d4e4;}
+.rank-3 .rank-name{color:#c89060;}
+.rank-win .rank-name{color:#7dd890;}
+.rank-loss .rank-name{color:#e08888;}
+.rank-sub{font-size:10px;color:var(--text3);margin-top:2px;}
+.rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
+.rank-1 .rank-amt{color:var(--gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
+.rank-2 .rank-amt{color:#9aaabb;}
+.rank-3 .rank-amt{color:#b08050;}
+.rank-win .rank-amt{color:#6dbf80;}
+.rank-loss .rank-amt{color:#d07070;}
 .rank-even .rank-amt{color:var(--text3);font-size:13px;}
-
 .rank-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.03);border-radius:0 0 10px 10px;overflow:hidden;}
 .rank-bar-fill{height:100%;width:0;transition:width 1s cubic-bezier(.4,0,.2,1);}
 .rank-1 .rank-bar-fill{background:linear-gradient(90deg,#7a5c1e,#c8a84b,#f0d878);}
@@ -386,106 +203,52 @@ table.players tr:last-child td{border-bottom:none;}
 .rank-even .rank-bar-fill{background:var(--border);}
 .rank-sparkle{position:absolute;top:8px;right:10px;font-size:13px;animation:sp 2.2s ease-in-out infinite;}
 @keyframes sp{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:1;transform:scale(1.35);}}
-
 .rank-divider{display:flex;align-items:center;gap:8px;margin:10px 0;}
-.rank-divider::before,.rank-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(160,64,64,.4),transparent);}
-.rank-divider span{font-size:9px;color:rgba(160,64,64,.6);letter-spacing:3px;white-space:nowrap;text-transform:uppercase;}
-
-/* HOF STATS */
+.rank-divider::before,.rank-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(192,80,80,.4),transparent);}
+.rank-divider span{font-size:9px;color:rgba(192,80,80,.6);letter-spacing:3px;white-space:nowrap;text-transform:uppercase;font-weight:600;}
 .hof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.hof-stat{
-  background:var(--bg3);border:1px solid var(--border2);
-  border-radius:10px;padding:11px 12px;text-align:center;
-}
-.hof-stat-label{font-size:9px;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:5px;opacity:.6;}
-.hof-stat-val{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:700;color:var(--gold2);}
+.hof-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:11px 12px;text-align:center;}
+.hof-stat-label{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;opacity:.7;font-weight:600;}
+.hof-stat-val{font-size:16px;font-weight:800;color:var(--gold2);}
 .hof-stat-val.green{color:#6dbf80;}.hof-stat-val.red{color:#d07070;}
 
-/* ══ MEMBERS ══ */
-.member-list-item{
-  display:flex;align-items:center;gap:12px;
-  padding:13px;border-radius:10px;
-  background:var(--bg3);border:1px solid var(--border2);
-  margin-bottom:8px;cursor:pointer;transition:all .15s;
-}
+/* MEMBERS */
+.member-list-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);margin-bottom:8px;cursor:pointer;transition:all .15s;}
 .member-list-item:active{border-color:var(--border);background:var(--bg4);}
-.member-avatar{
-  width:42px;height:42px;border-radius:50%;
-  background:var(--bg4);
-  color:var(--gold);border:1px solid var(--border);
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:16px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
+.member-avatar{width:42px;height:42px;border-radius:50%;background:var(--bg4);color:var(--gold);border:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .member-meta{flex:1;min-width:0;}
-.member-name{font-family:'Cormorant Garamond',Georgia,serif;font-weight:700;font-size:15px;color:var(--text);}
+.member-name{font-weight:700;font-size:14px;color:var(--text);}
 .member-stats-row{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;}
-.stat-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;letter-spacing:.3px;}
+.stat-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;}
 .pill-gold{background:rgba(200,168,75,.12);color:var(--gold);border:1px solid var(--border2);}
 .pill-green{background:var(--green-lt);color:#6dbf80;border:1px solid rgba(74,140,92,.2);}
-.pill-red{background:var(--red-lt);color:#d07070;border:1px solid rgba(160,64,64,.2);}
+.pill-red{background:var(--red-lt);color:#d07070;border:1px solid rgba(192,80,80,.2);}
 .pill-gray{background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border2);}
 .member-arrow{color:var(--text3);font-size:18px;}
 
 /* PROFILE */
-.profile-header{
-  background:linear-gradient(135deg,rgba(50,36,6,.9),rgba(20,15,4,.95));
-  border:1px solid var(--border);
-  border-radius:12px;padding:20px 16px;margin-bottom:12px;
-  display:flex;align-items:center;gap:16px;
-  position:relative;overflow:hidden;
-}
+.profile-header{background:linear-gradient(135deg,rgba(50,36,6,.9),rgba(20,15,4,.95));border:1px solid var(--border);border-radius:12px;padding:20px 16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
 .profile-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5;}
-.profile-avatar-lg{
-  width:56px;height:56px;border-radius:50%;
-  background:var(--bg4);border:2px solid var(--border);
-  color:var(--gold2);
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:22px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  box-shadow:0 0 14px var(--gold-glow);
-}
-.profile-name{font-family:'Cormorant Garamond',Georgia,serif;font-size:22px;font-weight:700;color:var(--gold2);}
+.profile-avatar-lg{width:56px;height:56px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);color:var(--gold2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px var(--gold-glow);}
+.profile-name{font-size:20px;font-weight:800;color:var(--text);}
 .profile-since{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.5px;}
-
 .profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
 .pstat{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 6px;text-align:center;}
-.pstat-val{font-family:'Cormorant Garamond',Georgia,serif;font-size:16px;font-weight:700;color:var(--gold2);}
+.pstat-val{font-size:15px;font-weight:800;color:var(--gold2);}
 .pstat-val.green{color:#6dbf80;}.pstat-val.red{color:#d07070;}
-.pstat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
-
-/* HISTORY */
-.history-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;
-}
+.pstat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;font-weight:600;}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;}
 .history-row:last-child{border-bottom:none;}
-.history-date{color:var(--gold);font-size:12px;font-family:'Cormorant Garamond',Georgia,serif;}
-.history-detail{font-size:10px;color:var(--text3);margin-top:2px;letter-spacing:.3px;}
-
-.back-btn{
-  display:flex;align-items:center;gap:6px;
-  background:none;border:none;color:var(--gold);
-  font-size:13px;font-weight:600;cursor:pointer;
-  padding:0 0 12px;
-  font-family:'Tenor Sans',Georgia,serif;letter-spacing:.5px;
-}
+.history-date{color:var(--gold);font-size:12px;font-weight:600;}
+.history-detail{font-size:10px;color:var(--text3);margin-top:2px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;padding:0 0 12px;font-family:var(--font);}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
-.modal-box{
-  background:var(--bg2);border-radius:16px 16px 0 0;
-  padding:20px 16px 36px;width:100%;max-width:500px;
-  animation:slideUp .22s ease;
-  border:1px solid var(--border);border-bottom:none;
-  position:relative;
-}
+.modal-box{background:var(--bg2);border-radius:16px 16px 0 0;padding:20px 16px 36px;width:100%;max-width:500px;animation:slideUp .22s ease;border:1px solid var(--border);border-bottom:none;position:relative;}
 .modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
 @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-.modal-title{
-  font-family:'Cormorant Garamond',Georgia,serif;
-  font-size:17px;font-weight:700;color:var(--gold2);margin-bottom:16px;letter-spacing:1px;
-}
+.modal-title{font-size:15px;font-weight:700;color:var(--gold2);margin-bottom:16px;letter-spacing:.5px;}
 .modal-close{float:right;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;}
 
 #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none;}
@@ -502,31 +265,40 @@ table.players tr:last-child td{border-bottom:none;}
 
 <div class="tabs">
   <div class="tab active" onclick="showTab('game')">🎮 Game</div>
-  <div class="tab" onclick="showTab('result')">Results</div>
+  <div class="tab" onclick="showTab('result')">Kết quả</div>
   <div class="tab" onclick="showTab('hof')">🏆 Fame</div>
-  <div class="tab" onclick="showTab('members')">Members</div>
+  <div class="tab" onclick="showTab('members')">Hội viên</div>
 </div>
 
 <!-- GAME -->
 <div class="page show" id="tab-game">
   <div class="card">
-    <div class="card-title">Select Player</div>
+    <div class="card-title">Chọn người chơi</div>
     <div class="member-grid" id="memberGrid">
-      <div class="empty" style="width:100%;padding:8px 0;">No members — add in Members tab</div>
+      <div class="empty" style="width:100%;padding:8px 0;">Chưa có hội viên — thêm ở tab Hội viên</div>
     </div>
-    <div class="member-hint">Tap to select · Fill hands below</div>
-    <div class="form-row"><label>Name</label><input type="text" id="nameInp" placeholder="Or enter new name..."></div>
+    <div class="member-hint">Bấm chọn · rồi điền số hand bên dưới</div>
+    <div class="form-row"><label>Tên</label><input type="text" id="nameInp" placeholder="Hoặc nhập tên mới..."></div>
     <div class="form-row">
       <label>Buy in</label>
       <input type="number" id="buyInp" placeholder="3" min="1">
       <span style="font-size:11px;color:var(--text3);white-space:nowrap;">× 100k / hand</span>
     </div>
-    <button class="btn-gold" onclick="addPlayer()">+ Add to Table</button>
-    <div class="hand-note">1 hand = 2,000 chips = 100,000đ</div>
+    <button class="btn-gold" onclick="addPlayer()">+ Thêm vào bàn</button>
+    <div class="hand-note">1 hand = 2,000 chip = 100,000đ</div>
   </div>
+
   <div class="card">
-    <div class="card-title">Current Table</div>
-    <div id="playerList"><div class="empty">No players yet</div></div>
+    <div class="card-title">Bàn chơi hiện tại</div>
+    <!-- Session date picker -->
+    <div class="session-date-bar">
+      <span class="cal-icon">📅</span>
+      <div>
+        <div class="date-label">Ngày chơi</div>
+        <input type="date" id="sessionDate">
+      </div>
+    </div>
+    <div id="playerList"><div class="empty">Chưa có ai trong bàn</div></div>
   </div>
 </div>
 
@@ -534,15 +306,16 @@ table.players tr:last-child td{border-bottom:none;}
 <div class="page" id="tab-result">
   <div class="card">
     <div class="card-title">Cash Out</div>
-    <div id="cashoutList"><div class="empty">No players in session</div></div>
-    <button class="btn-green" onclick="calcResult()" style="margin-top:10px;">Calculate Results</button>
+    <div id="cashoutList"><div class="empty">Chưa có người chơi nào</div></div>
+    <button class="btn-green" onclick="calcResult()" style="margin-top:10px;">Tính kết quả</button>
   </div>
   <div class="card" id="summaryCard" style="display:none">
-    <div class="card-title">Session Results</div>
-    <div class="pot-info">Total Pot: <span id="totalPot">0đ</span></div>
+    <div class="card-title">Kết quả buổi chơi</div>
+    <div class="pot-info">Tổng pot: <span id="totalPot">0đ</span></div>
+    <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
     <div id="summaryList"></div>
-    <button class="btn-green" onclick="saveSession()">💾 Save Session</button>
-    <button class="btn-red" onclick="resetAll()">Reset Table</button>
+    <button class="btn-green" onclick="saveSession()">💾 Lưu buổi chơi</button>
+    <button class="btn-red" onclick="resetAll()">Reset bàn mới</button>
   </div>
 </div>
 
@@ -550,18 +323,18 @@ table.players tr:last-child td{border-bottom:none;}
 <div class="page" id="tab-hof">
   <div class="hof-hero">
     <span class="hof-crown">👑</span>
-    <div class="hof-eyebrow">Season Leaderboard</div>
+    <div class="hof-eyebrow">Session Leaderboard</div>
     <div class="hof-title">HALL OF FAME</div>
     <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
   </div>
   <div class="hof-body">
-    <div id="hofList"><div class="hof-empty">No data yet — calculate results first</div></div>
+    <div id="hofList"><div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div></div>
     <div id="hofStats" style="display:none">
       <div class="hof-stats">
-        <div class="hof-stat"><div class="hof-stat-label">Total Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Players</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Top Win</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Top Loss</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
       </div>
     </div>
   </div>
@@ -572,9 +345,9 @@ table.players tr:last-child td{border-bottom:none;}
   <div id="memberDetailView" style="display:none"></div>
   <div id="memberListView">
     <div class="card">
-      <div class="card-title">Members</div>
-      <div id="memberListEl"><div class="empty">No members yet</div></div>
-      <button class="btn-gold" style="margin-top:12px;" onclick="showAddMemberModal()">+ New Member</button>
+      <div class="card-title">Danh sách hội viên</div>
+      <div id="memberListEl"><div class="empty">Chưa có hội viên nào</div></div>
+      <button class="btn-gold" style="margin-top:12px;" onclick="showAddMemberModal()">+ Thêm hội viên mới</button>
     </div>
   </div>
 </div>
@@ -582,21 +355,33 @@ table.players tr:last-child td{border-bottom:none;}
 <!-- MODAL -->
 <div class="modal-overlay" id="addMemberModal" style="display:none" onclick="closeModalOutside(event)">
   <div class="modal-box">
-    <div class="modal-title">New Member <span class="modal-close" onclick="closeAddMemberModal()">✕</span></div>
-    <div class="form-row"><label>Name</label><input type="text" id="newMemberName" placeholder="Member name..." maxlength="20"></div>
-    <button class="btn-gold" onclick="addMember()" style="margin-top:8px;">Confirm</button>
+    <div class="modal-title">Thêm hội viên mới <span class="modal-close" onclick="closeAddMemberModal()">✕</span></div>
+    <div class="form-row"><label>Tên</label><input type="text" id="newMemberName" placeholder="Nhập tên..." maxlength="20"></div>
+    <button class="btn-gold" onclick="addMember()" style="margin-top:8px;">Xác nhận</button>
   </div>
 </div>
 
 <script>
 var players=[],lastResults=[],selectedMember=null;
 
+// set default date = today
+(function(){
+  var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
+  document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+})();
+
 function loadMembers(){try{return JSON.parse(localStorage.getItem('pk_members'))||[];}catch(e){return[];}}
 function saveMembers(m){localStorage.setItem('pk_members',JSON.stringify(m));}
 function getMembers(){return loadMembers();}
 function fmtAbs(n){return n.toLocaleString('vi-VN')+'đ';}
 function initials(name){return name.trim().split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);}
-function today(){var d=new Date();return d.getDate()+'/'+(d.getMonth()+1)+'/'+d.getFullYear();}
+
+function getSessionDate(){
+  var val=document.getElementById('sessionDate').value;
+  if(!val)return '';
+  var parts=val.split('-');
+  return parts[2]+'/'+parts[1]+'/'+parts[0];
+}
 
 function showTab(t){
   ['game','result','hof','members'].forEach(function(id){
@@ -612,9 +397,8 @@ function showTab(t){
 }
 
 function renderMemberGrid(){
-  var el=document.getElementById('memberGrid');
-  var members=getMembers();
-  if(!members.length){el.innerHTML='<div class="empty" style="width:100%;padding:8px 0;">No members — add in Members tab</div>';return;}
+  var el=document.getElementById('memberGrid'),members=getMembers();
+  if(!members.length){el.innerHTML='<div class="empty" style="width:100%;padding:8px 0;">Chưa có hội viên — thêm ở tab Hội viên</div>';return;}
   el.innerHTML=members.map(function(m){
     var sel=selectedMember===m.id;
     return '<div class="member-chip'+(sel?' selected':'')+'" onclick="selectMember(\''+m.id+'\')">'
@@ -634,22 +418,28 @@ function selectMember(id){
 function addPlayer(){
   var name=document.getElementById('nameInp').value.trim();
   var hands=parseInt(document.getElementById('buyInp').value)||0;
-  if(!name){alert('Enter a name!');return;}
-  if(hands<1){alert('Enter buy-in hands!');return;}
-  if(players.find(function(p){return p.name===name;})){alert(name+' is already at the table!');return;}
+  if(!name){alert('Nhập tên đi!');return;}
+  if(hands<1){alert('Nhập số hand mua vào!');return;}
+  if(players.find(function(p){return p.name===name;})){alert(name+' đã ở bàn rồi!');return;}
   players.push({name:name,hands:hands,chips:hands*2000,memberId:selectedMember||null});
   document.getElementById('nameInp').value='';
   document.getElementById('buyInp').value='';
   selectedMember=null;renderMemberGrid();renderPlayers();
 }
 
-function rebuy(i){var h=parseInt(prompt(players[i].name+' — rebuy how many hands?'))||0;if(h>0){players[i].hands+=h;players[i].chips+=h*2000;renderPlayers();}}
-function delPlayer(i){if(confirm('Remove '+players[i].name+'?')){players.splice(i,1);renderPlayers();}}
+function rebuy(i){var h=parseInt(prompt(players[i].name+' rebuy thêm mấy hand?'))||0;if(h>0){players[i].hands+=h;players[i].chips+=h*2000;renderPlayers();}}
+function delPlayer(i){if(confirm('Xoá '+players[i].name+'?')){players.splice(i,1);renderPlayers();}}
 
 function renderPlayers(){
   var el=document.getElementById('playerList');
-  if(!players.length){el.innerHTML='<div class="empty">No players yet</div>';return;}
-  var h='<table class="players"><tr><th>Name</th><th>Hands</th><th>Chips</th><th></th></tr>';
+  if(!players.length){el.innerHTML='<div class="empty">Chưa có ai trong bàn</div>';return;}
+  // show session date badge
+  var dateStr=getSessionDate();
+  var h='';
+  if(dateStr){
+    h+='<div class="session-badge"><span class="cal">📅</span> Buổi chơi: <strong>'+dateStr+'</strong></div>';
+  }
+  h+='<table class="players"><tr><th>Tên</th><th>Hand</th><th>Chip</th><th></th></tr>';
   players.forEach(function(p,i){
     h+='<tr><td class="name-cell">'+p.name+'<span class="badge">'+fmtAbs(p.hands*100000)+'</span></td>'
       +'<td>'+p.hands+'<button class="rebuy-btn" onclick="rebuy('+i+')">+</button></td>'
@@ -661,21 +451,21 @@ function renderPlayers(){
 
 function renderCashout(){
   var el=document.getElementById('cashoutList');
-  if(!players.length){el.innerHTML='<div class="empty">No players in session</div>';return;}
+  if(!players.length){el.innerHTML='<div class="empty">Chưa có người chơi nào</div>';return;}
   var h='';
   players.forEach(function(p,i){
     h+='<div style="margin-bottom:12px;">'
       +'<div style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text);">'+p.name
-      +' <span style="font-size:10px;color:var(--text3);font-weight:400;letter-spacing:.3px;">bought '+p.chips.toLocaleString()+' chips</span></div>'
+      +' <span style="font-size:10px;color:var(--text3);font-weight:400;">mua '+p.chips.toLocaleString()+' chip</span></div>'
       +'<div style="display:flex;align-items:center;gap:8px;">'
-      +'<input class="chip-inp" type="number" id="co_'+i+'" placeholder="remaining" min="0">'
-      +'<span style="font-size:11px;color:var(--text3);">chips remaining</span></div></div>';
+      +'<input class="chip-inp" type="number" id="co_'+i+'" placeholder="chip còn" min="0">'
+      +'<span style="font-size:11px;color:var(--text3);">chip còn lại</span></div></div>';
   });
   el.innerHTML=h;
 }
 
 function calcResult(){
-  if(!players.length){alert('No players!');return;}
+  if(!players.length){alert('Chưa có người chơi!');return;}
   var results=[],tb=0;
   players.forEach(function(p,i){
     var co=parseInt((document.getElementById('co_'+i)||{}).value)||0;
@@ -684,6 +474,9 @@ function calcResult(){
     results.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
   });
   document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
+  var dateStr=getSessionDate();
+  var disp=document.getElementById('sessionDateDisplay');
+  disp.textContent=dateStr?'📅 Buổi chơi: '+dateStr:'';
   results.sort(function(a,b){return b.diff-a.diff;});
   lastResults=results;
   var sl='';
@@ -691,7 +484,7 @@ function calcResult(){
     var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
     sl+='<div class="summary-row"><div>'
       +'<div style="font-weight:600;color:var(--text);">'+r.name+'</div>'
-      +'<div style="font-size:10px;color:var(--text3);letter-spacing:.3px;">Bought '+r.buyin.toLocaleString()+' → Left '+r.cashout.toLocaleString()+'</div>'
+      +'<div style="font-size:10px;color:var(--text3);">Mua '+r.buyin.toLocaleString()+' → Còn '+r.cashout.toLocaleString()+'</div>'
       +'</div><div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
   });
   document.getElementById('summaryList').innerHTML=sl;
@@ -699,8 +492,8 @@ function calcResult(){
 }
 
 function saveSession(){
-  if(!lastResults.length){alert('Calculate results first!');return;}
-  var members=getMembers(),dateStr=today(),saved=0;
+  if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
+  var members=getMembers(),dateStr=getSessionDate(),saved=0;
   lastResults.forEach(function(r){
     if(!r.memberId)return;
     var m=members.find(function(x){return x.id===r.memberId;});
@@ -710,20 +503,23 @@ function saveSession(){
     saved++;
   });
   saveMembers(members);
-  alert(saved>0?'✅ Saved session for '+saved+' member(s)!':'ℹ️ No registered members in this session to save.');
+  alert(saved>0?'✅ Đã lưu buổi chơi ngày '+dateStr+' cho '+saved+' hội viên!':'ℹ️ Không có hội viên nào trong bàn này để lưu.\nChỉ lưu người chơi được chọn từ danh sách hội viên.');
 }
 
 function resetAll(){
-  if(confirm('Reset table? All current session data will be cleared.')){
+  if(confirm('Reset bàn mới? Toàn bộ dữ liệu bàn hiện tại sẽ mất.')){
     players=[];lastResults=[];renderPlayers();
     document.getElementById('summaryCard').style.display='none';
+    // reset date to today
+    var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
+    document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
     showTab('game');
   }
 }
 
 function renderHof(){
   var el=document.getElementById('hofList');
-  if(!lastResults.length){el.innerHTML='<div class="hof-empty">No data yet — calculate results first</div>';document.getElementById('hofStats').style.display='none';return;}
+  if(!lastResults.length){el.innerHTML='<div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div>';document.getElementById('hofStats').style.display='none';return;}
   var sorted=lastResults.slice().sort(function(a,b){return b.diff-a.diff;});
   var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
   var medals=['🥇','🥈','🥉'],rc=['rank-1','rank-2','rank-3'];
@@ -732,12 +528,12 @@ function renderHof(){
   sorted.forEach(function(r,i){
     var cls=i<3?rc[i]:(r.diff>0?'rank-win':r.diff<0?'rank-loss':'rank-even');
     var badge=i<3?medals[i]:(i+1),barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
-    var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Even';
-    if(i===winCount&&hasLoss&&winCount>0)h+='</div><div class="rank-divider"><span>▼ Losses ▼</span></div><div class="rank-list">';
+    var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Huề';
+    if(i===winCount&&hasLoss&&winCount>0)h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
     h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
       +'<div class="rank-info"><div class="rank-name">'+r.name+'</div>'
-      +'<div class="rank-sub">'+r.buyin.toLocaleString()+' in · '+r.cashout.toLocaleString()+' out</div></div>'
+      +'<div class="rank-sub">'+r.buyin.toLocaleString()+' vào · '+r.cashout.toLocaleString()+' ra</div></div>'
       +'<div class="rank-amt">'+amt+'</div>'
       +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
   });
@@ -745,7 +541,7 @@ function renderHof(){
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
   var tm=Math.round(lastResults.reduce(function(s,r){return s+r.buyin;},0)/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
   document.getElementById('hofTotalPot').textContent=fmtAbs(tm);
-  document.getElementById('hofPlayerCount').textContent=sorted.length;
+  document.getElementById('hofPlayerCount').textContent=sorted.length+' người';
   document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
   document.getElementById('hofBigLoss').textContent=bl.diff<0?'-'+fmtAbs(Math.abs(bl.diff)):'—';
   document.getElementById('hofStats').style.display='block';
@@ -759,7 +555,7 @@ function showMemberListView(){
 
 function renderMemberList(){
   var el=document.getElementById('memberListEl'),members=getMembers();
-  if(!members.length){el.innerHTML='<div class="empty">No members yet</div>';return;}
+  if(!members.length){el.innerHTML='<div class="empty">Chưa có hội viên nào</div>';return;}
   el.innerHTML=members.map(function(m){
     var hist=m.history||[];
     var totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
@@ -771,7 +567,7 @@ function renderMemberList(){
       +'<div class="member-avatar">'+initials(m.name)+'</div>'
       +'<div class="member-meta"><div class="member-name">'+m.name+'</div>'
       +'<div class="member-stats-row">'
-      +'<span class="stat-pill pill-gold">'+hist.length+' sessions</span>'
+      +'<span class="stat-pill pill-gold">'+hist.length+' buổi</span>'
       +'<span class="stat-pill '+diffCls+'">'+diffTxt+'</span>'
       +(hist.length>0?'<span class="stat-pill pill-gray">WR '+winRate+'%</span>':'')
       +'</div></div><div class="member-arrow">›</div></div>';
@@ -789,26 +585,26 @@ function showMemberDetail(id){
   var since=hist.length>0?hist[hist.length-1].date:'—';
   var diffCls=totalDiff>0?'green':totalDiff<0?'red':'';
   var diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
-  var histHTML=!hist.length?'<div class="empty">No session history</div>':hist.map(function(h){
+  var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h){
     var cls=h.diff>0?'profit':h.diff<0?'loss':'zero',icon=h.diff>0?'▲':h.diff<0?'▼':'—';
-    var amt=h.diff>0?'+'+fmtAbs(h.diff):h.diff<0?'-'+fmtAbs(Math.abs(h.diff)):'Even';
-    return '<div class="history-row"><div><div class="history-date">'+h.date+'</div>'
-      +'<div class="history-detail">'+h.buyin.toLocaleString()+' in · '+h.cashout.toLocaleString()+' out</div></div>'
+    var amt=h.diff>0?'+'+fmtAbs(h.diff):h.diff<0?'-'+fmtAbs(Math.abs(h.diff)):'Huề';
+    return '<div class="history-row"><div><div class="history-date">📅 '+h.date+'</div>'
+      +'<div class="history-detail">Mua '+h.buyin.toLocaleString()+' → Còn '+h.cashout.toLocaleString()+'</div></div>'
       +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div></div>';
   }).join('');
-  var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Back</button>'
+  var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
     +'<div class="profile-header">'
     +'<div class="profile-avatar-lg">'+initials(m.name)+'</div>'
     +'<div><div class="profile-name">'+m.name+'</div>'
-    +'<div class="profile-since">Member since '+since+'</div></div></div>'
+    +'<div class="profile-since">Thành viên từ '+since+'</div></div></div>'
     +'<div class="profile-stats">'
-    +'<div class="pstat"><div class="pstat-val">'+hist.length+'</div><div class="pstat-label">Sessions</div></div>'
-    +'<div class="pstat"><div class="pstat-val '+diffCls+'">'+diffTxt+'</div><div class="pstat-label">Total</div></div>'
-    +'<div class="pstat"><div class="pstat-val">'+winRate+'%</div><div class="pstat-label">Win Rate</div></div>'
+    +'<div class="pstat"><div class="pstat-val">'+hist.length+'</div><div class="pstat-label">Buổi</div></div>'
+    +'<div class="pstat"><div class="pstat-val '+diffCls+'">'+diffTxt+'</div><div class="pstat-label">Tổng</div></div>'
+    +'<div class="pstat"><div class="pstat-val">'+winRate+'%</div><div class="pstat-label">Win rate</div></div>'
     +'<div class="pstat"><div class="pstat-val">'+wins+'/'+losses+'</div><div class="pstat-label">W / L</div></div>'
     +'</div>'
-    +'<div class="card"><div class="card-title">Session History</div>'+histHTML+'</div>'
-    +'<button class="btn-red" onclick="deleteMember(\''+id+'\')">Remove Member</button>';
+    +'<div class="card"><div class="card-title">Lịch sử buổi chơi</div>'+histHTML+'</div>'
+    +'<button class="btn-red" onclick="deleteMember(\''+id+'\')">Xoá hội viên này</button>';
   document.getElementById('memberDetailView').innerHTML=html;
   document.getElementById('memberDetailView').style.display='block';
   document.getElementById('memberListView').style.display='none';
@@ -817,7 +613,7 @@ function showMemberDetail(id){
 function deleteMember(id){
   var members=getMembers(),m=members.find(function(x){return x.id===id;});
   if(!m)return;
-  if(confirm('Remove '+m.name+'? All history will be lost.')){
+  if(confirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.')){
     saveMembers(members.filter(function(x){return x.id!==id;}));
     showMemberListView();renderMemberList();
   }
@@ -828,9 +624,9 @@ function closeAddMemberModal(){document.getElementById('addMemberModal').style.d
 function closeModalOutside(e){if(e.target===document.getElementById('addMemberModal'))closeAddMemberModal();}
 function addMember(){
   var name=document.getElementById('newMemberName').value.trim();
-  if(!name){alert('Enter a name!');return;}
+  if(!name){alert('Nhập tên đi!');return;}
   var members=getMembers();
-  if(members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();})){alert('This name already exists!');return;}
+  if(members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();})){alert('Tên này đã có rồi!');return;}
   members.push({id:'m_'+Date.now(),name:name,history:[]});
   saveMembers(members);closeAddMemberModal();renderMemberList();renderMemberGrid();
 }
