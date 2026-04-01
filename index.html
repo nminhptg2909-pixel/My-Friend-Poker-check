@@ -323,7 +323,7 @@ table.players tr:last-child td{border-bottom:none;}
   <div id="sessionHistoryView" style="display:none">
     <button class="back-btn" onclick="hideSessionHistory()">‹ Quay lại tính Cash Out</button>
     <div class="card">
-      <div class="card-title">Lịch sử các buổi chơi</div>
+      <div class="card-title">Lịch sử các buổi chơi (Tổng)</div>
       <div id="sessionHistoryList"><div class="empty">Chưa có dữ liệu lịch sử</div></div>
     </div>
   </div>
@@ -723,13 +723,18 @@ function showMemberDetail(id){
   var since=hist.length>0?hist[hist.length-1].date:'—';
   var diffCls=totalDiff>0?'green':totalDiff<0?'red':'';
   var diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
-  var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h){
+  
+  // TẠO NÚT XÓA Ở ĐÂY
+  var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h, idx){
     var cls=h.diff>0?'profit':h.diff<0?'loss':'zero',icon=h.diff>0?'▲':h.diff<0?'▼':'—';
-    var amt=h.diff>0?'+'+fmtAbs(h.diff):h.diff<0?'-'+fmtAbs(Math.abs(h.diff)):'Huề';
     return '<div class="history-row"><div><div class="history-date">📅 '+h.date+'</div>'
       +'<div class="history-detail">Mua '+h.buyin.toLocaleString()+' → Còn '+h.cashout.toLocaleString()+'</div></div>'
-      +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div></div>';
+      +'<div style="display:flex; align-items:center; gap:10px;">'
+      +'<div class="summary-val '+cls+'" style="text-align:right;">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div>'
+      +'<button style="background:var(--red-lt); color:var(--red); border:1px solid rgba(192,80,80,.3); border-radius:6px; padding:4px 8px; font-size:10px; font-weight:bold; cursor:pointer;" onclick="deleteMemberHistory(\''+id+'\', '+idx+')">Xóa</button>'
+      +'</div></div>';
   }).join('');
+  
   var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
     +'<div class="profile-header">'
     +'<div class="profile-avatar-lg">'+initials(m.name)+'</div>'
@@ -746,6 +751,18 @@ function showMemberDetail(id){
   document.getElementById('memberDetailView').innerHTML=html;
   document.getElementById('memberDetailView').style.display='block';
   document.getElementById('memberListView').style.display='none';
+}
+
+function deleteMemberHistory(memberId, histIndex) {
+  if(confirm('Xóa kết quả ngày chơi này của hội viên? Lịch sử và thông số sẽ được tính lại.')){
+    var members = getMembers();
+    var m = members.find(function(x){return x.id === memberId;});
+    if(m && m.history) {
+      m.history.splice(histIndex, 1);
+      saveMembers(members);
+      showMemberDetail(memberId); // Cập nhật lại giao diện ngay lập tức
+    }
+  }
 }
 
 function deleteMember(id){
