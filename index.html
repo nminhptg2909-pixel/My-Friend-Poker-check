@@ -332,7 +332,7 @@ table.players tr:last-child td{border-bottom:none;}
 <div class="page" id="tab-hof">
   <div class="hof-hero">
     <span class="hof-crown">👑</span>
-    <div class="hof-eyebrow">Session Leaderboard</div>
+    <div class="hof-eyebrow">All-Time Leaderboard</div>
     <div class="hof-title">HALL OF FAME</div>
     <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
   </div>
@@ -340,10 +340,10 @@ table.players tr:last-child td{border-bottom:none;}
     <div id="hofList"><div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div></div>
     <div id="hofStats" style="display:none">
       <div class="hof-stats">
-        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot Các Bàn</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
         <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lời nhất (Tổng)</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất (Tổng)</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
       </div>
     </div>
   </div>
@@ -373,11 +373,9 @@ var players=[],lastResults=[],selectedMember=null;
 
 // INIT & MIGRATION SCRIPT
 (function(){
-  // set default date = today
   var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
   document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 
-  // Tự động khôi phục dữ liệu lịch sử các bàn chơi cũ (VD ngày 31/3) từ profile hội viên
   if(!localStorage.getItem('pk_sessions') && localStorage.getItem('pk_members')) {
       var members = JSON.parse(localStorage.getItem('pk_members')||'[]');
       var sessMap = {};
@@ -464,7 +462,6 @@ function delPlayer(i){if(confirm('Xoá '+players[i].name+'?')){players.splice(i,
 function renderPlayers(){
   var el=document.getElementById('playerList');
   if(!players.length){el.innerHTML='<div class="empty">Chưa có ai trong bàn</div>';return;}
-  // show session date badge
   var dateStr=getSessionDate();
   var h='';
   if(dateStr){
@@ -527,7 +524,6 @@ function saveSession(){
   if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
   var members=getMembers(),dateStr=getSessionDate(),saved=0;
   
-  // 1. Lưu vào lịch sử cá nhân từng hội viên
   lastResults.forEach(function(r){
     if(!r.memberId)return;
     var m=members.find(function(x){return x.id===r.memberId;});
@@ -538,7 +534,6 @@ function saveSession(){
   });
   saveMembers(members);
 
-  // 2. Lưu vào lịch sử bàn chơi tổng
   var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
   sessions.unshift({
      id: Date.now(),
@@ -549,7 +544,6 @@ function saveSession(){
 
   alert(saved>0?'✅ Đã lưu buổi chơi ngày '+dateStr+' cho '+saved+' hội viên!':'✅ Đã lưu buổi chơi ngày '+dateStr+' (Khách)!');
 
-  // 3. Xoá bàn và chuyển về tab Game để chống lưu 2 lần
   players=[];
   renderPlayers();
   renderCashout();
@@ -610,18 +604,59 @@ function renderSessionHistory() {
 }
 
 function deleteSession(idx) {
-    if(confirm('Xóa lịch sử bàn chơi này? (Lưu ý: Không làm thay đổi lịch sử cá nhân của các hội viên)')) {
+    if(confirm('Xóa lịch sử bàn chơi này? Tiền tổng của các hội viên trong bàn cũng sẽ được điều chỉnh lại.')) {
         var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+        var deletedSession = sessions[idx];
+        
+        if (deletedSession) {
+            var members = getMembers();
+            // Xóa dữ liệu trận đấu khỏi profile của từng hội viên tham gia trận đó
+            (deletedSession.results || []).forEach(function(r) {
+                var m = members.find(function(x) { return x.name === r.name; });
+                if (m && m.history) {
+                    var hIdx = m.history.findIndex(function(h) { 
+                        return h.date === deletedSession.date && h.diff === r.diff && h.buyin === r.buyin; 
+                    });
+                    if (hIdx !== -1) {
+                        m.history.splice(hIdx, 1);
+                    }
+                }
+            });
+            saveMembers(members);
+        }
+
         sessions.splice(idx, 1);
         localStorage.setItem('pk_sessions', JSON.stringify(sessions));
         renderSessionHistory();
     }
 }
 
+// HOF ALL-TIME
 function renderHof(){
   var el=document.getElementById('hofList');
-  if(!lastResults.length){el.innerHTML='<div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div>';document.getElementById('hofStats').style.display='none';return;}
-  var sorted=lastResults.slice().sort(function(a,b){return b.diff-a.diff;});
+  var members=getMembers();
+  var allTimeResults=[];
+  var totalBuyinAllTime=0;
+  
+  // Tính tổng kết của toàn bộ người chơi qua tất cả các buổi chơi
+  members.forEach(function(m){
+    if(m.history && m.history.length>0){
+      var tDiff=0, tBuyin=0, tCashout=0;
+      m.history.forEach(function(h){
+        tDiff+=h.diff; tBuyin+=h.buyin; tCashout+=h.cashout;
+        totalBuyinAllTime+=h.buyin;
+      });
+      allTimeResults.push({name:m.name, diff:tDiff, buyin:tBuyin, cashout:tCashout});
+    }
+  });
+  
+  if(!allTimeResults.length){
+    el.innerHTML='<div class="hof-empty">Chưa có dữ liệu — hãy lưu kết quả buổi chơi để xếp hạng nhé</div>';
+    document.getElementById('hofStats').style.display='none';
+    return;
+  }
+  
+  var sorted=allTimeResults.sort(function(a,b){return b.diff-a.diff;});
   var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
   var medals=['🥇','🥈','🥉'],rc=['rank-1','rank-2','rank-3'];
   var winCount=sorted.filter(function(r){return r.diff>0;}).length,hasLoss=sorted.some(function(r){return r.diff<0;});
@@ -634,13 +669,15 @@ function renderHof(){
     h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
       +'<div class="rank-info"><div class="rank-name">'+r.name+'</div>'
-      +'<div class="rank-sub">'+r.buyin.toLocaleString()+' vào · '+r.cashout.toLocaleString()+' ra</div></div>'
+      +'<div class="rank-sub">Tổng mua: '+r.buyin.toLocaleString()+' · Tổng ra: '+r.cashout.toLocaleString()+'</div></div>'
       +'<div class="rank-amt">'+amt+'</div>'
       +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
   });
   el.innerHTML=h+'</div>';
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
-  var tm=Math.round(lastResults.reduce(function(s,r){return s+r.buyin;},0)/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
+  
+  // Tính Stats cho HOF All-time
+  var tm=Math.round(totalBuyinAllTime/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
   document.getElementById('hofTotalPot').textContent=fmtAbs(tm);
   document.getElementById('hofPlayerCount').textContent=sorted.length+' người';
   document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
