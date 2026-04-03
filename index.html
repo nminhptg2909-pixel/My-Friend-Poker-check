@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="vi">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,170 +29,170 @@
 
 *{box-sizing:border-box;margin:0;padding:0;}
 body{
-font-family:var(–font);
-background:var(–bg);
-padding:14px;
-color:var(–text);
-max-width:500px;
-margin:0 auto;
-min-height:100vh;
+  font-family:var(--font);
+  background:var(--bg);
+  padding:14px;
+  color:var(--text);
+  max-width:500px;
+  margin:0 auto;
+  min-height:100vh;
 }
 body::before{
-content:’’;position:fixed;inset:0;pointer-events:none;z-index:0;
-background-image:
-repeating-linear-gradient(45deg,rgba(200,168,75,.025) 0px,transparent 1px,transparent 18px,rgba(200,168,75,.025) 19px),
-repeating-linear-gradient(-45deg,rgba(200,168,75,.025) 0px,transparent 1px,transparent 18px,rgba(200,168,75,.025) 19px);
+  content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    repeating-linear-gradient(45deg,rgba(200,168,75,.025) 0px,transparent 1px,transparent 18px,rgba(200,168,75,.025) 19px),
+    repeating-linear-gradient(-45deg,rgba(200,168,75,.025) 0px,transparent 1px,transparent 18px,rgba(200,168,75,.025) 19px);
 }
 body>*{position:relative;z-index:1;}
 
 /* HEADER */
 .app-header{text-align:center;padding:18px 0 14px;margin-bottom:4px;}
-.app-logo{font-size:10px;font-weight:600;letter-spacing:6px;text-transform:uppercase;color:var(–gold);opacity:.6;margin-bottom:6px;}
+.app-logo{font-size:10px;font-weight:600;letter-spacing:6px;text-transform:uppercase;color:var(--gold);opacity:.6;margin-bottom:6px;}
 .app-title{
-font-size:28px;font-weight:800;letter-spacing:4px;
-background:linear-gradient(135deg,#9a7830 0%,#c8a84b 25%,#f0d878 50%,#c8a84b 75%,#9a7830 100%);
--webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-filter:drop-shadow(0 0 20px rgba(200,168,75,.3));
+  font-size:28px;font-weight:800;letter-spacing:4px;
+  background:linear-gradient(135deg,#9a7830 0%,#c8a84b 25%,#f0d878 50%,#c8a84b 75%,#9a7830 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 20px rgba(200,168,75,.3));
 }
 .app-divider{display:flex;align-items:center;gap:10px;margin:10px auto 0;max-width:260px;}
-.app-divider::before,.app-divider::after{content:’’;flex:1;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);opacity:.4;}
-.app-divider-icon{font-size:11px;color:var(–gold);opacity:.5;}
+.app-divider::before,.app-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
+.app-divider-icon{font-size:11px;color:var(--gold);opacity:.5;}
 
 /* TABS */
-.tabs{display:flex;gap:4px;margin-bottom:16px;background:var(–bg2);border:1px solid var(–border2);border-radius:var(–radius);padding:4px;}
-.tab{flex:1;padding:8px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;background:transparent;color:var(–text3);transition:all .2s;letter-spacing:.5px;text-transform:uppercase;font-family:var(–font);border:1px solid transparent;}
-.tab.active{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(–gold2);border-color:var(–border);box-shadow:0 0 12px var(–gold-glow);}
+.tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:4px;}
+.tab{flex:1;padding:8px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;background:transparent;color:var(--text3);transition:all .2s;letter-spacing:.5px;text-transform:uppercase;font-family:var(--font);border:1px solid transparent;}
+.tab.active{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(--gold2);border-color:var(--border);box-shadow:0 0 12px var(--gold-glow);}
 .page{display:none;}.page.show{display:block;}
 
 /* CARDS */
-.card{background:var(–bg2);border:1px solid var(–border2);border-radius:var(–radius);padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
-.card::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);opacity:.25;}
-.card-title{font-size:10px;font-weight:700;color:var(–gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(–border2);opacity:.85;}
+.card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:16px;margin-bottom:12px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.25;}
+.card-title{font-size:10px;font-weight:700;color:var(--gold);letter-spacing:2.5px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2);opacity:.85;}
 
 /* DATE PICKER BANNER */
 .session-date-bar{
-display:flex;align-items:center;gap:10px;
-background:var(–bg3);border:1px solid var(–border);
-border-radius:9px;padding:10px 13px;margin-bottom:12px;
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:10px 13px;margin-bottom:12px;
 }
 .session-date-bar .cal-icon{font-size:18px;flex-shrink:0;}
-.session-date-bar .date-label{font-size:10px;color:var(–gold);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
+.session-date-bar .date-label{font-size:10px;color:var(--gold);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:2px;}
 .session-date-bar input[type=date]{
-flex:1;background:transparent;border:none;
-color:var(–text);font-family:var(–font);font-size:14px;font-weight:600;
-outline:none;cursor:pointer;
-color-scheme:dark;
+  flex:1;background:transparent;border:none;
+  color:var(--text);font-family:var(--font);font-size:14px;font-weight:600;
+  outline:none;cursor:pointer;
+  color-scheme:dark;
 }
 .session-date-bar input[type=date]::-webkit-calendar-picker-indicator{filter:invert(1) sepia(1) saturate(3) hue-rotate(5deg);opacity:.7;cursor:pointer;}
 
 /* FORM */
 .form-row{display:flex;gap:8px;align-items:center;margin-bottom:8px;flex-wrap:wrap;}
-.form-row label{font-size:11px;color:var(–text2);white-space:nowrap;min-width:60px;font-weight:600;letter-spacing:.3px;}
+.form-row label{font-size:11px;color:var(--text2);white-space:nowrap;min-width:60px;font-weight:600;letter-spacing:.3px;}
 input[type=text],input[type=number]{
-flex:1;padding:9px 12px;font-size:13px;font-weight:500;
-border:1px solid var(–border);border-radius:8px;
-min-width:80px;background:var(–bg3);
-color:var(–text);font-family:var(–font);
+  flex:1;padding:9px 12px;font-size:13px;font-weight:500;
+  border:1px solid var(--border);border-radius:8px;
+  min-width:80px;background:var(--bg3);
+  color:var(--text);font-family:var(--font);
 }
-input[type=text]::placeholder,input[type=number]::placeholder{color:var(–text3);}
-input:focus{border-color:var(–gold);outline:none;background:var(–bg4);box-shadow:0 0 8px var(–gold-glow);}
+input[type=text]::placeholder,input[type=number]::placeholder{color:var(--text3);}
+input:focus{border-color:var(--gold);outline:none;background:var(--bg4);box-shadow:0 0 8px var(--gold-glow);}
 
-.btn-gold{width:100%;padding:11px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#7a5c1e,#c8a84b,#7a5c1e);color:#0b0c0f;border:none;border-radius:8px;cursor:pointer;margin-top:6px;font-family:var(–font);letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 2px 12px rgba(200,168,75,.25);transition:all .2s;}
+.btn-gold{width:100%;padding:11px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#7a5c1e,#c8a84b,#7a5c1e);color:#0b0c0f;border:none;border-radius:8px;cursor:pointer;margin-top:6px;font-family:var(--font);letter-spacing:1.5px;text-transform:uppercase;box-shadow:0 2px 12px rgba(200,168,75,.25);transition:all .2s;}
 .btn-gold:active{opacity:.85;transform:scale(.99);}
-.btn-green{width:100%;padding:11px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#1e3a26,#2e5c3a);color:#6dbf80;border:1px solid rgba(74,140,92,.4);border-radius:8px;cursor:pointer;margin-top:6px;font-family:var(–font);letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
+.btn-green{width:100%;padding:11px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#1e3a26,#2e5c3a);color:#6dbf80;border:1px solid rgba(74,140,92,.4);border-radius:8px;cursor:pointer;margin-top:6px;font-family:var(--font);letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
 .btn-green:active{opacity:.85;}
-.btn-red{width:100%;padding:9px;font-size:11px;font-weight:600;background:transparent;color:var(–red);border:1px solid rgba(192,80,80,.35);border-radius:8px;cursor:pointer;margin-top:8px;font-family:var(–font);letter-spacing:1px;text-transform:uppercase;}
-.hand-note{font-size:10px;color:var(–text3);margin-top:6px;letter-spacing:.3px;}
-.empty{text-align:center;color:var(–text3);font-size:12px;padding:20px 0;font-style:italic;letter-spacing:.3px;}
+.btn-red{width:100%;padding:9px;font-size:11px;font-weight:600;background:transparent;color:var(--red);border:1px solid rgba(192,80,80,.35);border-radius:8px;cursor:pointer;margin-top:8px;font-family:var(--font);letter-spacing:1px;text-transform:uppercase;}
+.hand-note{font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.3px;}
+.empty{text-align:center;color:var(--text3);font-size:12px;padding:20px 0;font-style:italic;letter-spacing:.3px;}
 
 /* MEMBER GRID */
 .member-grid{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
-.member-chip{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:20px;cursor:pointer;border:1px solid var(–border);background:var(–bg3);font-size:12px;font-weight:600;color:var(–text2);transition:all .15s;font-family:var(–font);}
+.member-chip{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:20px;cursor:pointer;border:1px solid var(--border);background:var(--bg3);font-size:12px;font-weight:600;color:var(--text2);transition:all .15s;font-family:var(--font);}
 .member-chip:active{transform:scale(.96);}
-.member-chip.selected{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(–gold2);border-color:var(–gold);box-shadow:0 0 10px var(–gold-glow);}
-.member-chip .avatar{width:22px;height:22px;border-radius:50%;background:var(–bg4);color:var(–gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(–border);}
-.member-chip.selected .avatar{background:rgba(200,168,75,.2);color:var(–gold2);}
-.member-hint{font-size:10px;color:var(–text3);margin-bottom:10px;letter-spacing:.3px;}
+.member-chip.selected{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(--gold2);border-color:var(--gold);box-shadow:0 0 10px var(--gold-glow);}
+.member-chip .avatar{width:22px;height:22px;border-radius:50%;background:var(--bg4);color:var(--gold);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid var(--border);}
+.member-chip.selected .avatar{background:rgba(200,168,75,.2);color:var(--gold2);}
+.member-hint{font-size:10px;color:var(--text3);margin-bottom:10px;letter-spacing:.3px;}
 
 /* PLAYER TABLE */
 table.players{width:100%;border-collapse:collapse;font-size:12px;}
-table.players th{background:var(–bg3);color:var(–gold);font-weight:700;padding:8px 6px;text-align:center;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(–border);}
-table.players td{padding:9px 6px;text-align:center;border-bottom:1px solid var(–border2);vertical-align:middle;color:var(–text);}
+table.players th{background:var(--bg3);color:var(--gold);font-weight:700;padding:8px 6px;text-align:center;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+table.players td{padding:9px 6px;text-align:center;border-bottom:1px solid var(--border2);vertical-align:middle;color:var(--text);}
 table.players tr:last-child td{border-bottom:none;}
-.name-cell{text-align:left!important;font-weight:600;color:var(–text);}
-.chip-inp{width:80px;padding:6px 8px;font-size:12px;border:1px solid var(–border);border-radius:6px;text-align:center;background:var(–bg3);color:var(–text);font-family:var(–font);}
-.chip-inp:focus{border-color:var(–gold);outline:none;}
-.del-btn{background:var(–red-lt);color:var(–red);border:1px solid rgba(192,80,80,.3);border-radius:6px;padding:5px 8px;font-size:12px;cursor:pointer;}
-.rebuy-btn{background:rgba(200,168,75,.1);color:var(–gold);border:1px solid var(–border);border-radius:6px;padding:4px 7px;font-size:10px;font-weight:700;cursor:pointer;margin-left:4px;}
-.badge{display:inline-block;background:rgba(200,168,75,.1);color:var(–gold);font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;margin-left:4px;border:1px solid var(–border2);}
+.name-cell{text-align:left!important;font-weight:600;color:var(--text);}
+.chip-inp{width:80px;padding:6px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;text-align:center;background:var(--bg3);color:var(--text);font-family:var(--font);}
+.chip-inp:focus{border-color:var(--gold);outline:none;}
+.del-btn{background:var(--red-lt);color:var(--red);border:1px solid rgba(192,80,80,.3);border-radius:6px;padding:5px 8px;font-size:12px;cursor:pointer;}
+.rebuy-btn{background:rgba(200,168,75,.1);color:var(--gold);border:1px solid var(--border);border-radius:6px;padding:4px 7px;font-size:10px;font-weight:700;cursor:pointer;margin-left:4px;}
+.badge{display:inline-block;background:rgba(200,168,75,.1);color:var(--gold);font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;margin-left:4px;border:1px solid var(--border2);}
 
 /* session date badge on table */
 .session-badge{
-display:flex;align-items:center;gap:6px;
-background:var(–bg3);border:1px solid var(–border);
-border-radius:8px;padding:7px 11px;margin-bottom:12px;
-font-size:11px;font-weight:600;color:var(–gold2);
+  display:flex;align-items:center;gap:6px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:7px 11px;margin-bottom:12px;
+  font-size:11px;font-weight:600;color:var(--gold2);
 }
 .session-badge .cal{font-size:14px;}
 
 /* RESULT */
 .profit{color:#6dbf80;font-weight:700;}
 .loss{color:#d07070;font-weight:700;}
-.zero{color:var(–text3);}
-.summary-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(–border2);font-size:13px;}
+.zero{color:var(--text3);}
+.summary-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;}
 .summary-row:last-child{border-bottom:none;}
-.pot-info{background:linear-gradient(135deg,rgba(200,168,75,.08),rgba(200,168,75,.04));border:1px solid var(–border);border-radius:8px;padding:11px 13px;font-size:13px;color:var(–gold2);margin-bottom:10px;}
-.pot-info span{font-weight:800;font-size:16px;color:var(–gold3);}
+.pot-info{background:linear-gradient(135deg,rgba(200,168,75,.08),rgba(200,168,75,.04));border:1px solid var(--border);border-radius:8px;padding:11px 13px;font-size:13px;color:var(--gold2);margin-bottom:10px;}
+.pot-info span{font-weight:800;font-size:16px;color:var(--gold3);}
 
 /* HOF */
 #tab-hof{padding:0;}
-.hof-hero{background:linear-gradient(160deg,#080a06 0%,#0f1208 40%,#141a0a 100%);border-radius:var(–radius) var(–radius) 0 0;padding:28px 16px 22px;text-align:center;position:relative;overflow:hidden;border:1px solid var(–border2);border-bottom:none;}
-.hof-hero::before{content:’’;position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 15%,rgba(200,168,75,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 40% 60%,rgba(200,168,75,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 75%,rgba(255,255,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 25% 85%,rgba(200,168,75,.5) 0%,transparent 100%),radial-gradient(2px 2px at 55% 35%,rgba(200,168,75,.7) 0%,transparent 100%);pointer-events:none;}
-.hof-hero::after{content:’’;position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
+.hof-hero{background:linear-gradient(160deg,#080a06 0%,#0f1208 40%,#141a0a 100%);border-radius:var(--radius) var(--radius) 0 0;padding:28px 16px 22px;text-align:center;position:relative;overflow:hidden;border:1px solid var(--border2);border-bottom:none;}
+.hof-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 15%,rgba(200,168,75,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 40% 60%,rgba(200,168,75,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 75%,rgba(255,255,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 25% 85%,rgba(200,168,75,.5) 0%,transparent 100%),radial-gradient(2px 2px at 55% 35%,rgba(200,168,75,.7) 0%,transparent 100%);pointer-events:none;}
+.hof-hero::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
 .hof-crown{font-size:42px;display:block;margin-bottom:8px;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(200,168,75,.8));animation:crownFloat 3.5s ease-in-out infinite;}
 @keyframes crownFloat{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-6px) rotate(1deg);}}
 .hof-eyebrow{font-size:9px;font-weight:600;letter-spacing:6px;color:rgba(200,168,75,.5);text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1;}
 .hof-title{font-weight:800;font-size:24px;letter-spacing:5px;background:linear-gradient(135deg,#7a5c1e 0%,#c8a84b 25%,#f5e09a 50%,#c8a84b 75%,#7a5c1e 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 2px 10px rgba(200,168,75,.4));position:relative;z-index:1;margin-bottom:4px;}
 .hof-suits{display:flex;justify-content:center;gap:12px;position:relative;z-index:1;margin-top:8px;}
-.hof-suits span{font-size:14px;color:var(–gold);opacity:.3;animation:suitP 2.5s ease-in-out infinite;}
+.hof-suits span{font-size:14px;color:var(--gold);opacity:.3;animation:suitP 2.5s ease-in-out infinite;}
 .hof-suits span:nth-child(1){color:#c8564a;animation-delay:0s;}
 .hof-suits span:nth-child(2){animation-delay:.4s;}
 .hof-suits span:nth-child(3){animation-delay:.8s;}
 .hof-suits span:nth-child(4){color:#c8564a;animation-delay:1.2s;}
 @keyframes suitP{0%,100%{opacity:.2;}50%{opacity:.7;}}
-.hof-body{background:var(–bg2);border-radius:0 0 var(–radius) var(–radius);padding:16px;border:1px solid var(–border2);border-top:none;}
-.hof-empty{text-align:center;color:var(–text3);font-size:12px;padding:28px 0;font-style:italic;}
+.hof-body{background:var(--bg2);border-radius:0 0 var(--radius) var(--radius);padding:16px;border:1px solid var(--border2);border-top:none;}
+.hof-empty{text-align:center;color:var(--text3);font-size:12px;padding:28px 0;font-style:italic;}
 
 /* RANK CARDS */
 .rank-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .rank-card{border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
 .rank-1{background:linear-gradient(135deg,rgba(50,36,6,.95),rgba(30,22,4,.98));border:1.5px solid rgba(200,168,75,.6);box-shadow:0 0 20px rgba(200,168,75,.15),inset 0 1px 0 rgba(200,168,75,.2);}
-.rank-1::before{content:’’;position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,168,75,.06) 0%,transparent 55%);pointer-events:none;}
+.rank-1::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,168,75,.06) 0%,transparent 55%);pointer-events:none;}
 .rank-2{background:linear-gradient(135deg,rgba(28,30,34,.95),rgba(20,22,26,.98));border:1.5px solid rgba(160,175,195,.3);}
 .rank-3{background:linear-gradient(135deg,rgba(40,22,8,.95),rgba(28,16,5,.98));border:1.5px solid rgba(180,110,55,.4);}
-.rank-win{background:var(–bg3);border:1px solid rgba(74,140,92,.3);}
-.rank-loss{background:var(–bg3);border:1px solid rgba(192,80,80,.25);}
-.rank-even{background:var(–bg3);border:1px solid var(–border2);}
+.rank-win{background:var(--bg3);border:1px solid rgba(74,140,92,.3);}
+.rank-loss{background:var(--bg3);border:1px solid rgba(192,80,80,.25);}
+.rank-even{background:var(--bg3);border:1px solid var(--border2);}
 .medal{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:20px;}
 .rank-1 .medal{background:linear-gradient(145deg,#c8a84b,#8a6a20);box-shadow:0 0 14px rgba(200,168,75,.5);}
 .rank-2 .medal{background:linear-gradient(145deg,#b0b8c8,#707888);}
 .rank-3 .medal{background:linear-gradient(145deg,#b07840,#6a4020);}
-.rank-win .medal,.rank-loss .medal,.rank-even .medal{background:var(–bg4);border:1px solid var(–border);font-size:14px;width:34px;height:34px;}
+.rank-win .medal,.rank-loss .medal,.rank-even .medal{background:var(--bg4);border:1px solid var(--border);font-size:14px;width:34px;height:34px;}
 .rank-info{flex:1;min-width:0;}
-.rank-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(–text);}
-.rank-1 .rank-name{color:var(–gold2);font-size:17px;text-shadow:0 0 12px rgba(200,168,75,.4);}
+.rank-name{font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--text);}
+.rank-1 .rank-name{color:var(--gold2);font-size:17px;text-shadow:0 0 12px rgba(200,168,75,.4);}
 .rank-2 .rank-name{color:#c8d4e4;}
 .rank-3 .rank-name{color:#c89060;}
 .rank-win .rank-name{color:#7dd890;}
 .rank-loss .rank-name{color:#e08888;}
-.rank-sub{font-size:10px;color:var(–text3);margin-top:2px;}
+.rank-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
-.rank-1 .rank-amt{color:var(–gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
+.rank-1 .rank-amt{color:var(--gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
 .rank-2 .rank-amt{color:#9aaabb;}
 .rank-3 .rank-amt{color:#b08050;}
 .rank-win .rank-amt{color:#6dbf80;}
 .rank-loss .rank-amt{color:#d07070;}
-.rank-even .rank-amt{color:var(–text3);font-size:13px;}
+.rank-even .rank-amt{color:var(--text3);font-size:13px;}
 .rank-bar{position:absolute;bottom:0;left:0;right:0;height:2px;background:rgba(255,255,255,.03);border-radius:0 0 10px 10px;overflow:hidden;}
 .rank-bar-fill{height:100%;width:0;transition:width 1s cubic-bezier(.4,0,.2,1);}
 .rank-1 .rank-bar-fill{background:linear-gradient(90deg,#7a5c1e,#c8a84b,#f0d878);}
@@ -201,79 +200,59 @@ font-size:11px;font-weight:600;color:var(–gold2);
 .rank-3 .rank-bar-fill{background:linear-gradient(90deg,#603820,#a07040);}
 .rank-win .rank-bar-fill{background:linear-gradient(90deg,#2a5c34,#4a9c5c);}
 .rank-loss .rank-bar-fill{background:linear-gradient(90deg,#6a2020,#a04040);}
-.rank-even .rank-bar-fill{background:var(–border);}
+.rank-even .rank-bar-fill{background:var(--border);}
 .rank-sparkle{position:absolute;top:8px;right:10px;font-size:13px;animation:sp 2.2s ease-in-out infinite;}
 @keyframes sp{0%,100%{opacity:.5;transform:scale(1);}50%{opacity:1;transform:scale(1.35);}}
 .rank-divider{display:flex;align-items:center;gap:8px;margin:10px 0;}
-.rank-divider::before,.rank-divider::after{content:’’;flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(192,80,80,.4),transparent);}
+.rank-divider::before,.rank-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(192,80,80,.4),transparent);}
 .rank-divider span{font-size:9px;color:rgba(192,80,80,.6);letter-spacing:3px;white-space:nowrap;text-transform:uppercase;font-weight:600;}
 .hof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.hof-stat{background:var(–bg3);border:1px solid var(–border2);border-radius:10px;padding:11px 12px;text-align:center;}
-.hof-stat-label{font-size:9px;color:var(–gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;opacity:.7;font-weight:600;}
-.hof-stat-val{font-size:16px;font-weight:800;color:var(–gold2);}
+.hof-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:11px 12px;text-align:center;}
+.hof-stat-label{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;opacity:.7;font-weight:600;}
+.hof-stat-val{font-size:16px;font-weight:800;color:var(--gold2);}
 .hof-stat-val.green{color:#6dbf80;}.hof-stat-val.red{color:#d07070;}
 
 /* MEMBERS */
-.member-list-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:10px;background:var(–bg3);border:1px solid var(–border2);margin-bottom:8px;cursor:pointer;transition:all .15s;}
-.member-list-item:active{border-color:var(–border);background:var(–bg4);}
-.member-avatar{width:42px;height:42px;border-radius:50%;background:var(–bg4);color:var(–gold);border:1px solid var(–border);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.member-list-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);margin-bottom:8px;cursor:pointer;transition:all .15s;}
+.member-list-item:active{border-color:var(--border);background:var(--bg4);}
+.member-avatar{width:42px;height:42px;border-radius:50%;background:var(--bg4);color:var(--gold);border:1px solid var(--border);font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .member-meta{flex:1;min-width:0;}
-.member-name{font-weight:700;font-size:14px;color:var(–text);}
+.member-name{font-weight:700;font-size:14px;color:var(--text);}
 .member-stats-row{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap;}
 .stat-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:8px;}
-.pill-gold{background:rgba(200,168,75,.12);color:var(–gold);border:1px solid var(–border2);}
-.pill-green{background:var(–green-lt);color:#6dbf80;border:1px solid rgba(74,140,92,.2);}
-.pill-red{background:var(–red-lt);color:#d07070;border:1px solid rgba(192,80,80,.2);}
-.pill-gray{background:rgba(255,255,255,.05);color:var(–text3);border:1px solid var(–border2);}
-.member-arrow{color:var(–text3);font-size:18px;}
+.pill-gold{background:rgba(200,168,75,.12);color:var(--gold);border:1px solid var(--border2);}
+.pill-green{background:var(--green-lt);color:#6dbf80;border:1px solid rgba(74,140,92,.2);}
+.pill-red{background:var(--red-lt);color:#d07070;border:1px solid rgba(192,80,80,.2);}
+.pill-gray{background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border2);}
+.member-arrow{color:var(--text3);font-size:18px;}
 
 /* PROFILE */
-.profile-header{background:linear-gradient(135deg,rgba(50,36,6,.9),rgba(20,15,4,.95));border:1px solid var(–border);border-radius:12px;padding:20px 16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
-.profile-header::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);opacity:.5;}
-.profile-avatar-lg{width:56px;height:56px;border-radius:50%;background:var(–bg4);border:2px solid var(–border);color:var(–gold2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px var(–gold-glow);}
-.profile-name{font-size:20px;font-weight:800;color:var(–text);}
-.profile-since{font-size:10px;color:var(–text3);margin-top:3px;letter-spacing:.5px;}
+.profile-header{background:linear-gradient(135deg,rgba(50,36,6,.9),rgba(20,15,4,.95));border:1px solid var(--border);border-radius:12px;padding:20px 16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5;}
+.profile-avatar-lg{width:56px;height:56px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);color:var(--gold2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px var(--gold-glow);}
+.profile-name{font-size:20px;font-weight:800;color:var(--text);}
+.profile-since{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.5px;}
 .profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
-.pstat{background:var(–bg3);border:1px solid var(–border2);border-radius:10px;padding:10px 6px;text-align:center;}
-.pstat-val{font-size:15px;font-weight:800;color:var(–gold2);}
+.pstat{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 6px;text-align:center;}
+.pstat-val{font-size:15px;font-weight:800;color:var(--gold2);}
 .pstat-val.green{color:#6dbf80;}.pstat-val.red{color:#d07070;}
-.pstat-label{font-size:9px;color:var(–text3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;font-weight:600;}
-.history-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(–border2);font-size:13px;}
+.pstat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;font-weight:600;}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;}
 .history-row:last-child{border-bottom:none;}
-.history-date{color:var(–gold);font-size:12px;font-weight:600;}
-.history-detail{font-size:10px;color:var(–text3);margin-top:2px;}
-.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(–gold);font-size:13px;font-weight:600;cursor:pointer;padding:0 0 12px;font-family:var(–font);}
-
-/* BACKUP BUTTONS */
-.backup-row{display:flex;gap:8px;margin-top:10px;}
-.btn-backup{flex:1;padding:10px 8px;font-size:11px;font-weight:700;border-radius:8px;cursor:pointer;font-family:var(–font);letter-spacing:.8px;text-transform:uppercase;transition:all .2s;border:1px solid var(–border);}
-.btn-export{background:rgba(200,168,75,.1);color:var(–gold2);}
-.btn-export:active{opacity:.7;}
-.btn-import{background:rgba(74,140,92,.1);color:#6dbf80;border-color:rgba(74,140,92,.3);}
-.btn-import:active{opacity:.7;}
-
-/* BACKUP MODAL TEXTAREA */
-.backup-textarea{
-width:100%;height:130px;padding:10px;
-background:var(–bg3);border:1px solid var(–border);border-radius:8px;
-color:var(–text);font-family:monospace;font-size:11px;
-resize:none;margin-top:10px;
-line-height:1.4;
-}
-.backup-textarea:focus{border-color:var(–gold);outline:none;}
-.backup-hint{font-size:10px;color:var(–text3);margin-top:6px;line-height:1.5;}
+.history-date{color:var(--gold);font-size:12px;font-weight:600;}
+.history-detail{font-size:10px;color:var(--text3);margin-top:2px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;padding:0 0 12px;font-family:var(--font);}
 
 /* MODAL */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
-.modal-box{background:var(–bg2);border-radius:16px 16px 0 0;padding:20px 16px 36px;width:100%;max-width:500px;animation:slideUp .22s ease;border:1px solid var(–border);border-bottom:none;position:relative;}
-.modal-box::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);opacity:.4;}
+.modal-box{background:var(--bg2);border-radius:16px 16px 0 0;padding:20px 16px 36px;width:100%;max-width:500px;animation:slideUp .22s ease;border:1px solid var(--border);border-bottom:none;position:relative;}
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
 @keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
-.modal-title{font-size:15px;font-weight:700;color:var(–gold2);margin-bottom:4px;letter-spacing:.5px;}
-.modal-close{float:right;font-size:22px;cursor:pointer;color:var(–text3);line-height:1;}
+.modal-title{font-size:15px;font-weight:700;color:var(--gold2);margin-bottom:16px;letter-spacing:.5px;}
+.modal-close{float:right;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;}
 
 #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none;}
 </style>
-
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
@@ -291,8 +270,6 @@ line-height:1.4;
   <div class="tab" onclick="showTab('members')">Hội viên</div>
 </div>
 
-<!-- GAME -->
-
 <div class="page show" id="tab-game">
   <div class="card">
     <div class="card-title">Chọn người chơi</div>
@@ -309,6 +286,7 @@ line-height:1.4;
     <button class="btn-gold" onclick="addPlayer()">+ Thêm vào bàn</button>
     <div class="hand-note">1 hand = 2,000 chip = 100,000đ</div>
   </div>
+
   <div class="card">
     <div class="card-title">Bàn chơi hiện tại</div>
     <div class="session-date-bar">
@@ -322,14 +300,12 @@ line-height:1.4;
   </div>
 </div>
 
-<!-- RESULT -->
-
 <div class="page" id="tab-result">
   <div id="resultMainView">
     <div class="card">
-      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <div class="card-title" style="display:flex; justify-content:space-between; align-items:center;">
         <span>Cash Out</span>
-        <span style="font-size:10px;color:var(--gold);text-transform:none;letter-spacing:0;cursor:pointer;background:rgba(200,168,75,.1);padding:5px 8px;border-radius:6px;border:1px solid var(--border);" onclick="showSessionHistory()">🕒 Lịch sử bàn chơi</span>
+        <span style="font-size:10px; color:var(--gold); text-transform:none; letter-spacing:0; cursor:pointer; background:rgba(200,168,75,.1); padding:5px 8px; border-radius:6px; border:1px solid var(--border);" onclick="showSessionHistory()">🕒 Lịch sử bàn chơi</span>
       </div>
       <div id="cashoutList"><div class="empty">Chưa có người chơi nào</div></div>
       <button class="btn-green" onclick="calcResult()" style="margin-top:10px;">Tính kết quả</button>
@@ -343,21 +319,20 @@ line-height:1.4;
       <button class="btn-red" onclick="resetAll()">Reset bàn mới</button>
     </div>
   </div>
+
   <div id="sessionHistoryView" style="display:none">
     <button class="back-btn" onclick="hideSessionHistory()">‹ Quay lại tính Cash Out</button>
     <div class="card">
-      <div class="card-title">Lịch sử các buổi chơi (Tổng)</div>
+      <div class="card-title">Lịch sử các buổi chơi</div>
       <div id="sessionHistoryList"><div class="empty">Chưa có dữ liệu lịch sử</div></div>
     </div>
   </div>
 </div>
 
-<!-- HOF -->
-
 <div class="page" id="tab-hof">
   <div class="hof-hero">
     <span class="hof-crown">👑</span>
-    <div class="hof-eyebrow">All-Time Leaderboard</div>
+    <div class="hof-eyebrow">Session Leaderboard</div>
     <div class="hof-title">HALL OF FAME</div>
     <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
   </div>
@@ -365,16 +340,14 @@ line-height:1.4;
     <div id="hofList"><div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div></div>
     <div id="hofStats" style="display:none">
       <div class="hof-stats">
-        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot Các Bàn</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
         <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lời nhất (Tổng)</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất (Tổng)</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
       </div>
     </div>
   </div>
 </div>
-
-<!-- MEMBERS -->
 
 <div class="page" id="tab-members">
   <div id="memberDetailView" style="display:none"></div>
@@ -384,25 +357,8 @@ line-height:1.4;
       <div id="memberListEl"><div class="empty">Chưa có hội viên nào</div></div>
       <button class="btn-gold" style="margin-top:12px;" onclick="showAddMemberModal()">+ Thêm hội viên mới</button>
     </div>
-
-```
-<!-- ══ BACKUP CARD ══ -->
-<div class="card">
-  <div class="card-title">💾 Sao lưu dữ liệu</div>
-  <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">
-    Xuất toàn bộ dữ liệu hội viên + lịch sử để lưu trữ hoặc chuyển sang thiết bị khác.
-  </div>
-  <div class="backup-row">
-    <button class="btn-backup btn-export" onclick="showExportModal()">📤 Xuất dữ liệu</button>
-    <button class="btn-backup btn-import" onclick="showImportModal()">📥 Nhập dữ liệu</button>
   </div>
 </div>
-```
-
-  </div>
-</div>
-
-<!-- ADD MEMBER MODAL -->
 
 <div class="modal-overlay" id="addMemberModal" style="display:none" onclick="closeModalOutside(event)">
   <div class="modal-box">
@@ -412,43 +368,36 @@ line-height:1.4;
   </div>
 </div>
 
-<!-- EXPORT MODAL -->
-
-<div class="modal-overlay" id="exportModal" style="display:none" onclick="closeExportOutside(event)">
-  <div class="modal-box">
-    <div class="modal-title">📤 Xuất dữ liệu <span class="modal-close" onclick="closeExportModal()">✕</span></div>
-    <div class="backup-hint">Bôi đen toàn bộ → Copy → Lưu vào <strong style="color:var(--gold2);">Notes</strong> hoặc gửi cho bạn bè.</div>
-    <textarea class="backup-textarea" id="exportText" readonly onclick="this.select()"></textarea>
-    <button class="btn-gold" onclick="copyExportData()" style="margin-top:10px;" id="copyBtn">📋 Bấm để Copy toàn bộ</button>
-  </div>
-</div>
-
-<!-- IMPORT MODAL -->
-
-<div class="modal-overlay" id="importModal" style="display:none" onclick="closeImportOutside(event)">
-  <div class="modal-box">
-    <div class="modal-title">📥 Nhập dữ liệu <span class="modal-close" onclick="closeImportModal()">✕</span></div>
-    <div class="backup-hint">Paste đoạn JSON đã sao lưu vào ô bên dưới rồi bấm <strong style="color:#6dbf80;">Khôi phục</strong>.<br><span style="color:var(--red);font-weight:600;">⚠ Dữ liệu hiện tại sẽ bị ghi đè!</span></div>
-    <textarea class="backup-textarea" id="importText" placeholder="Paste JSON vào đây..."></textarea>
-    <button class="btn-green" onclick="doImport()" style="margin-top:10px;">✓ Khôi phục dữ liệu</button>
-  </div>
-</div>
-
 <script>
 var players=[],lastResults=[],selectedMember=null;
 
-// INIT & MIGRATION
+// INIT & MIGRATION SCRIPT
 (function(){
+  // set default date = today
   var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
   document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-  if(!localStorage.getItem('pk_sessions')&&localStorage.getItem('pk_members')){
-    var members=JSON.parse(localStorage.getItem('pk_members')||'[]');
-    var sessMap={};
-    members.forEach(function(m){(m.history||[]).forEach(function(h){if(!sessMap[h.date])sessMap[h.date]=[];sessMap[h.date].push({name:m.name,diff:h.diff,buyin:h.buyin,cashout:h.cashout});});});
-    var sessions=[];
-    for(var date in sessMap)sessions.push({id:date,date:date,results:sessMap[date]});
-    sessions.sort(function(a,b){var pA=a.date.split('/'),pB=b.date.split('/');return new Date(pB[2],pB[1]-1,pB[0])-new Date(pA[2],pA[1]-1,pA[0]);});
-    localStorage.setItem('pk_sessions',JSON.stringify(sessions));
+
+  // Tự động khôi phục dữ liệu lịch sử các bàn chơi cũ (VD ngày 31/3) từ profile hội viên
+  if(!localStorage.getItem('pk_sessions') && localStorage.getItem('pk_members')) {
+      var members = JSON.parse(localStorage.getItem('pk_members')||'[]');
+      var sessMap = {};
+      members.forEach(function(m){
+          (m.history||[]).forEach(function(h){
+              if(!sessMap[h.date]) sessMap[h.date] = [];
+              sessMap[h.date].push({name: m.name, diff: h.diff, buyin: h.buyin, cashout: h.cashout});
+          });
+      });
+      var sessions = [];
+      for(var date in sessMap) {
+          sessions.push({ id: date, date: date, results: sessMap[date] });
+      }
+      sessions.sort(function(a,b){
+         var pA = a.date.split('/'), pB = b.date.split('/');
+         var dA = new Date(pA[2], pA[1]-1, pA[0]).getTime();
+         var dB = new Date(pB[2], pB[1]-1, pB[0]).getTime();
+         return dB - dA;
+      });
+      localStorage.setItem('pk_sessions', JSON.stringify(sessions));
   }
 })();
 
@@ -466,8 +415,12 @@ function getSessionDate(){
 }
 
 function showTab(t){
-  ['game','result','hof','members'].forEach(function(id){document.getElementById('tab-'+id).className='page'+(t===id?' show':'');});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.className='tab'+(['game','result','hof','members'][i]===t?' active':'');});
+  ['game','result','hof','members'].forEach(function(id){
+    document.getElementById('tab-'+id).className='page'+(t===id?' show':'');
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    el.className='tab'+(['game','result','hof','members'][i]===t?' active':'');
+  });
   if(t==='game')renderMemberGrid();
   if(t==='result')renderCashout();
   if(t==='hof')renderHof();
@@ -479,23 +432,29 @@ function renderMemberGrid(){
   if(!members.length){el.innerHTML='<div class="empty" style="width:100%;padding:8px 0;">Chưa có hội viên — thêm ở tab Hội viên</div>';return;}
   el.innerHTML=members.map(function(m){
     var sel=selectedMember===m.id;
-    return '<div class="member-chip'+(sel?' selected':'')+'" onclick="selectMember(\''+m.id+'\')">'+'<div class="avatar">'+initials(m.name)+'</div>'+m.name+'</div>';
+    return '<div class="member-chip'+(sel?' selected':'')+'" onclick="selectMember(\''+m.id+'\')">'
+      +'<div class="avatar">'+initials(m.name)+'</div>'+m.name+'</div>';
   }).join('');
 }
 
 function selectMember(id){
   selectedMember=(selectedMember===id)?null:id;
   renderMemberGrid();
-  if(selectedMember){var m=getMembers().find(function(x){return x.id===id;});if(m)document.getElementById('nameInp').value=m.name;}
-  else document.getElementById('nameInp').value='';
+  if(selectedMember){
+    var m=getMembers().find(function(x){return x.id===id;});
+    if(m)document.getElementById('nameInp').value=m.name;
+  }else{document.getElementById('nameInp').value='';}
 }
 
 function addPlayer(){
-  var name=document.getElementById('nameInp').value.trim(),hands=parseInt(document.getElementById('buyInp').value)||0;
-  if(!name){alert('Nhập tên đi!');return;}if(hands<1){alert('Nhập số hand mua vào!');return;}
+  var name=document.getElementById('nameInp').value.trim();
+  var hands=parseInt(document.getElementById('buyInp').value)||0;
+  if(!name){alert('Nhập tên đi!');return;}
+  if(hands<1){alert('Nhập số hand mua vào!');return;}
   if(players.find(function(p){return p.name===name;})){alert(name+' đã ở bàn rồi!');return;}
   players.push({name:name,hands:hands,chips:hands*2000,memberId:selectedMember||null});
-  document.getElementById('nameInp').value='';document.getElementById('buyInp').value='';
+  document.getElementById('nameInp').value='';
+  document.getElementById('buyInp').value='';
   selectedMember=null;renderMemberGrid();renderPlayers();
 }
 
@@ -505,8 +464,12 @@ function delPlayer(i){if(confirm('Xoá '+players[i].name+'?')){players.splice(i,
 function renderPlayers(){
   var el=document.getElementById('playerList');
   if(!players.length){el.innerHTML='<div class="empty">Chưa có ai trong bàn</div>';return;}
-  var dateStr=getSessionDate(),h='';
-  if(dateStr)h+='<div class="session-badge"><span class="cal">📅</span> Buổi chơi: <strong>'+dateStr+'</strong></div>';
+  // show session date badge
+  var dateStr=getSessionDate();
+  var h='';
+  if(dateStr){
+    h+='<div class="session-badge"><span class="cal">📅</span> Buổi chơi: <strong>'+dateStr+'</strong></div>';
+  }
   h+='<table class="players"><tr><th>Tên</th><th>Hand</th><th>Chip</th><th></th></tr>';
   players.forEach(function(p,i){
     h+='<tr><td class="name-cell">'+p.name+'<span class="badge">'+fmtAbs(p.hands*100000)+'</span></td>'
@@ -522,8 +485,11 @@ function renderCashout(){
   if(!players.length){el.innerHTML='<div class="empty">Chưa có người chơi nào</div>';return;}
   var h='';
   players.forEach(function(p,i){
-    h+='<div style="margin-bottom:12px;"><div style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text);">'+p.name+' <span style="font-size:10px;color:var(--text3);font-weight:400;">mua '+p.chips.toLocaleString()+' chip</span></div>'
-      +'<div style="display:flex;align-items:center;gap:8px;"><input class="chip-inp" type="number" id="co_'+i+'" placeholder="chip còn" min="0">'
+    h+='<div style="margin-bottom:12px;">'
+      +'<div style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text);">'+p.name
+      +' <span style="font-size:10px;color:var(--text3);font-weight:400;">mua '+p.chips.toLocaleString()+' chip</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;">'
+      +'<input class="chip-inp" type="number" id="co_'+i+'" placeholder="chip còn" min="0">'
       +'<span style="font-size:11px;color:var(--text3);">chip còn lại</span></div></div>';
   });
   el.innerHTML=h;
@@ -535,19 +501,23 @@ function calcResult(){
   players.forEach(function(p,i){
     var co=parseInt((document.getElementById('co_'+i)||{}).value)||0;
     var diff=Math.round((co-p.chips)/2000*100000);
-    tb+=p.chips;results.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
+    tb+=p.chips;
+    results.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
   });
-  window.currentSessionPot=Math.round(tb/2000*100000);
+  window.currentSessionPot = Math.round(tb/2000*100000);
   document.getElementById('totalPot').textContent=fmtAbs(window.currentSessionPot);
   var dateStr=getSessionDate();
-  document.getElementById('sessionDateDisplay').textContent=dateStr?'📅 Buổi chơi: '+dateStr:'';
-  results.sort(function(a,b){return b.diff-a.diff;});lastResults=results;
+  var disp=document.getElementById('sessionDateDisplay');
+  disp.textContent=dateStr?'📅 Buổi chơi: '+dateStr:'';
+  results.sort(function(a,b){return b.diff-a.diff;});
+  lastResults=results;
   var sl='';
   results.forEach(function(r){
     var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
-    sl+='<div class="summary-row"><div><div style="font-weight:600;color:var(--text);">'+r.name+'</div>'
-      +'<div style="font-size:10px;color:var(--text3);">Mua '+r.buyin.toLocaleString()+' → Còn '+r.cashout.toLocaleString()+'</div></div>'
-      +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
+    sl+='<div class="summary-row"><div>'
+      +'<div style="font-weight:600;color:var(--text);">'+r.name+'</div>'
+      +'<div style="font-size:10px;color:var(--text3);">Mua '+r.buyin.toLocaleString()+' → Còn '+r.cashout.toLocaleString()+'</div>'
+      +'</div><div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
   });
   document.getElementById('summaryList').innerHTML=sl;
   document.getElementById('summaryCard').style.display='block';
@@ -556,19 +526,33 @@ function calcResult(){
 function saveSession(){
   if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
   var members=getMembers(),dateStr=getSessionDate(),saved=0;
+  
+  // 1. Lưu vào lịch sử cá nhân từng hội viên
   lastResults.forEach(function(r){
     if(!r.memberId)return;
     var m=members.find(function(x){return x.id===r.memberId;});
     if(!m)return;
     if(!m.history)m.history=[];
-    m.history.unshift({date:dateStr,buyin:r.buyin,cashout:r.cashout,diff:r.diff});saved++;
+    m.history.unshift({date:dateStr,buyin:r.buyin,cashout:r.cashout,diff:r.diff});
+    saved++;
   });
   saveMembers(members);
-  var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
-  sessions.unshift({id:Date.now(),date:dateStr,results:lastResults.map(function(r){return{name:r.name,diff:r.diff,buyin:r.buyin,cashout:r.cashout};})});
-  localStorage.setItem('pk_sessions',JSON.stringify(sessions));
+
+  // 2. Lưu vào lịch sử bàn chơi tổng
+  var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  sessions.unshift({
+     id: Date.now(),
+     date: dateStr,
+     results: lastResults.map(function(r){ return {name:r.name, diff:r.diff, buyin:r.buyin, cashout:r.cashout}; })
+  });
+  localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+
   alert(saved>0?'✅ Đã lưu buổi chơi ngày '+dateStr+' cho '+saved+' hội viên!':'✅ Đã lưu buổi chơi ngày '+dateStr+' (Khách)!');
-  players=[];renderPlayers();renderCashout();
+
+  // 3. Xoá bàn và chuyển về tab Game để chống lưu 2 lần
+  players=[];
+  renderPlayers();
+  renderCashout();
   document.getElementById('summaryCard').style.display='none';
   var d=new Date(),pad=function(n){return n<10?'0'+n:n;};
   document.getElementById('sessionDate').value=d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
@@ -585,56 +569,59 @@ function resetAll(){
   }
 }
 
-function showSessionHistory(){document.getElementById('resultMainView').style.display='none';document.getElementById('sessionHistoryView').style.display='block';renderSessionHistory();}
-function hideSessionHistory(){document.getElementById('resultMainView').style.display='block';document.getElementById('sessionHistoryView').style.display='none';}
-
-function renderSessionHistory(){
-  var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
-  var el=document.getElementById('sessionHistoryList');
-  if(!sessions.length){el.innerHTML='<div class="empty">Chưa có lịch sử bàn chơi nào được lưu.</div>';return;}
-  var h='';
-  sessions.forEach(function(s,idx){
-    h+='<div style="margin-bottom:12px;border:1px solid var(--border2);border-radius:8px;padding:12px;background:var(--bg3);">';
-    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid var(--border2);padding-bottom:8px;">';
-    h+='<span style="color:var(--gold2);font-weight:700;font-size:13px;">📅 '+s.date+'</span>';
-    h+='<button style="background:transparent;border:none;color:var(--red);font-size:11px;cursor:pointer;font-weight:600;" onclick="deleteSession('+idx+')">Xóa</button></div>';
-    (s.results||[]).sort(function(a,b){return b.diff-a.diff;}).forEach(function(r){
-      var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
-      h+='<div class="summary-row" style="padding:5px 0;border-bottom:none;"><div style="font-size:12px;font-weight:600;color:var(--text);">'+r.name+'</div>'
-        +'<div class="summary-val '+cls+'" style="font-size:12px;font-weight:700;">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
-    });
-    h+='</div>';
-  });
-  el.innerHTML=h;
+// LỊCH SỬ BÀN CHƠI FUNCTIONS
+function showSessionHistory() {
+   document.getElementById('resultMainView').style.display = 'none';
+   document.getElementById('sessionHistoryView').style.display = 'block';
+   renderSessionHistory();
 }
 
-function deleteSession(idx){
-  if(confirm('Xóa lịch sử bàn chơi này? Tiền tổng của các hội viên trong bàn cũng sẽ được điều chỉnh lại.')){
-    var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
-    var del=sessions[idx];
-    if(del){
-      var members=getMembers();
-      (del.results||[]).forEach(function(r){
-        var m=members.find(function(x){return x.name===r.name;});
-        if(m&&m.history){var hi=m.history.findIndex(function(h){return h.date===del.date&&h.diff===r.diff&&h.buyin===r.buyin;});if(hi!==-1)m.history.splice(hi,1);}
-      });
-      saveMembers(members);
+function hideSessionHistory() {
+   document.getElementById('resultMainView').style.display = 'block';
+   document.getElementById('sessionHistoryView').style.display = 'none';
+}
+
+function renderSessionHistory() {
+   var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+   var el = document.getElementById('sessionHistoryList');
+   if(!sessions.length) {
+      el.innerHTML = '<div class="empty">Chưa có lịch sử bàn chơi nào được lưu.</div>';
+      return;
+   }
+   var h = '';
+   sessions.forEach(function(s, idx) {
+       h += '<div style="margin-bottom:12px; border:1px solid var(--border2); border-radius:8px; padding:12px; background:var(--bg3);">';
+       h += '<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid var(--border2); padding-bottom:8px;">';
+       h += '<span style="color:var(--gold2); font-weight:700; font-size:13px;">📅 ' + s.date + '</span>';
+       h += '<button style="background:transparent; border:none; color:var(--red); font-size:11px; cursor:pointer; font-weight:600;" onclick="deleteSession('+idx+')">Xóa</button>';
+       h += '</div>';
+
+       var sorted = (s.results||[]).sort(function(a,b){return b.diff - a.diff});
+       sorted.forEach(function(r) {
+           var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
+           h += '<div class="summary-row" style="padding:5px 0; border-bottom:none;">'
+              + '<div style="font-size:12px; font-weight:600; color:var(--text);">' + r.name + '</div>'
+              + '<div class="summary-val '+cls+'" style="font-size:12px; font-weight:700;">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div>'
+              + '</div>';
+       });
+       h += '</div>';
+   });
+   el.innerHTML = h;
+}
+
+function deleteSession(idx) {
+    if(confirm('Xóa lịch sử bàn chơi này? (Lưu ý: Không làm thay đổi lịch sử cá nhân của các hội viên)')) {
+        var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+        sessions.splice(idx, 1);
+        localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+        renderSessionHistory();
     }
-    sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));renderSessionHistory();
-  }
 }
 
 function renderHof(){
-  var el=document.getElementById('hofList'),members=getMembers(),allTimeResults=[],totalBuyinAllTime=0;
-  members.forEach(function(m){
-    if(m.history&&m.history.length>0){
-      var tDiff=0,tBuyin=0,tCashout=0;
-      m.history.forEach(function(h){tDiff+=h.diff;tBuyin+=h.buyin;tCashout+=h.cashout;totalBuyinAllTime+=h.buyin;});
-      allTimeResults.push({name:m.name,diff:tDiff,buyin:tBuyin,cashout:tCashout});
-    }
-  });
-  if(!allTimeResults.length){el.innerHTML='<div class="hof-empty">Chưa có dữ liệu — hãy lưu kết quả buổi chơi để xếp hạng nhé</div>';document.getElementById('hofStats').style.display='none';return;}
-  var sorted=allTimeResults.sort(function(a,b){return b.diff-a.diff;});
+  var el=document.getElementById('hofList');
+  if(!lastResults.length){el.innerHTML='<div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div>';document.getElementById('hofStats').style.display='none';return;}
+  var sorted=lastResults.slice().sort(function(a,b){return b.diff-a.diff;});
   var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
   var medals=['🥇','🥈','🥉'],rc=['rank-1','rank-2','rank-3'];
   var winCount=sorted.filter(function(r){return r.diff>0;}).length,hasLoss=sorted.some(function(r){return r.diff<0;});
@@ -647,13 +634,13 @@ function renderHof(){
     h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
       +'<div class="rank-info"><div class="rank-name">'+r.name+'</div>'
-      +'<div class="rank-sub">Tổng mua: '+r.buyin.toLocaleString()+' · Tổng ra: '+r.cashout.toLocaleString()+'</div></div>'
+      +'<div class="rank-sub">'+r.buyin.toLocaleString()+' vào · '+r.cashout.toLocaleString()+' ra</div></div>'
       +'<div class="rank-amt">'+amt+'</div>'
       +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
   });
   el.innerHTML=h+'</div>';
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
-  var tm=Math.round(totalBuyinAllTime/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
+  var tm=Math.round(lastResults.reduce(function(s,r){return s+r.buyin;},0)/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
   document.getElementById('hofTotalPot').textContent=fmtAbs(tm);
   document.getElementById('hofPlayerCount').textContent=sorted.length+' người';
   document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
@@ -662,13 +649,17 @@ function renderHof(){
   if(bw.diff>0)launchConfetti();
 }
 
-function showMemberListView(){document.getElementById('memberDetailView').style.display='none';document.getElementById('memberListView').style.display='block';}
+function showMemberListView(){
+  document.getElementById('memberDetailView').style.display='none';
+  document.getElementById('memberListView').style.display='block';
+}
 
 function renderMemberList(){
   var el=document.getElementById('memberListEl'),members=getMembers();
   if(!members.length){el.innerHTML='<div class="empty">Chưa có hội viên nào</div>';return;}
   el.innerHTML=members.map(function(m){
-    var hist=m.history||[],totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
+    var hist=m.history||[];
+    var totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
     var wins=hist.filter(function(h){return h.diff>0;}).length;
     var winRate=hist.length>0?Math.round(wins/hist.length*100):0;
     var diffCls=totalDiff>0?'pill-green':totalDiff<0?'pill-red':'pill-gray';
@@ -676,7 +667,8 @@ function renderMemberList(){
     return '<div class="member-list-item" onclick="showMemberDetail(\''+m.id+'\')">'
       +'<div class="member-avatar">'+initials(m.name)+'</div>'
       +'<div class="member-meta"><div class="member-name">'+m.name+'</div>'
-      +'<div class="member-stats-row"><span class="stat-pill pill-gold">'+hist.length+' buổi</span>'
+      +'<div class="member-stats-row">'
+      +'<span class="stat-pill pill-gold">'+hist.length+' buổi</span>'
       +'<span class="stat-pill '+diffCls+'">'+diffTxt+'</span>'
       +(hist.length>0?'<span class="stat-pill pill-gray">WR '+winRate+'%</span>':'')
       +'</div></div><div class="member-arrow">›</div></div>';
@@ -684,23 +676,28 @@ function renderMemberList(){
 }
 
 function showMemberDetail(id){
-  var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
-  var hist=m.history||[],totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
-  var wins=hist.filter(function(h){return h.diff>0;}).length,losses=hist.filter(function(h){return h.diff<0;}).length;
-  var winRate=hist.length>0?Math.round(wins/hist.length*100):0,since=hist.length>0?hist[hist.length-1].date:'—';
-  var diffCls=totalDiff>0?'green':totalDiff<0?'red':'',diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
-  var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h,idx){
+  var members=getMembers(),m=members.find(function(x){return x.id===id;});
+  if(!m)return;
+  var hist=m.history||[];
+  var totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
+  var wins=hist.filter(function(h){return h.diff>0;}).length;
+  var losses=hist.filter(function(h){return h.diff<0;}).length;
+  var winRate=hist.length>0?Math.round(wins/hist.length*100):0;
+  var since=hist.length>0?hist[hist.length-1].date:'—';
+  var diffCls=totalDiff>0?'green':totalDiff<0?'red':'';
+  var diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
+  var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h){
     var cls=h.diff>0?'profit':h.diff<0?'loss':'zero',icon=h.diff>0?'▲':h.diff<0?'▼':'—';
+    var amt=h.diff>0?'+'+fmtAbs(h.diff):h.diff<0?'-'+fmtAbs(Math.abs(h.diff)):'Huề';
     return '<div class="history-row"><div><div class="history-date">📅 '+h.date+'</div>'
       +'<div class="history-detail">Mua '+h.buyin.toLocaleString()+' → Còn '+h.cashout.toLocaleString()+'</div></div>'
-      +'<div style="display:flex;align-items:center;gap:10px;">'
-      +'<div class="summary-val '+cls+'" style="text-align:right;">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div>'
-      +'<button style="background:var(--red-lt);color:var(--red);border:1px solid rgba(192,80,80,.3);border-radius:6px;padding:4px 8px;font-size:10px;font-weight:bold;cursor:pointer;" onclick="deleteMemberHistory(\''+id+'\','+idx+')">Xóa</button>'
-      +'</div></div>';
+      +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div></div>';
   }).join('');
   var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
-    +'<div class="profile-header"><div class="profile-avatar-lg">'+initials(m.name)+'</div>'
-    +'<div><div class="profile-name">'+m.name+'</div><div class="profile-since">Thành viên từ '+since+'</div></div></div>'
+    +'<div class="profile-header">'
+    +'<div class="profile-avatar-lg">'+initials(m.name)+'</div>'
+    +'<div><div class="profile-name">'+m.name+'</div>'
+    +'<div class="profile-since">Thành viên từ '+since+'</div></div></div>'
     +'<div class="profile-stats">'
     +'<div class="pstat"><div class="pstat-val">'+hist.length+'</div><div class="pstat-label">Buổi</div></div>'
     +'<div class="pstat"><div class="pstat-val '+diffCls+'">'+diffTxt+'</div><div class="pstat-label">Tổng</div></div>'
@@ -714,87 +711,25 @@ function showMemberDetail(id){
   document.getElementById('memberListView').style.display='none';
 }
 
-function deleteMemberHistory(memberId,histIndex){
-  if(confirm('Xóa kết quả ngày chơi này?')){
-    var members=getMembers(),m=members.find(function(x){return x.id===memberId;});
-    if(m&&m.history){m.history.splice(histIndex,1);saveMembers(members);showMemberDetail(memberId);}
-  }
-}
-
 function deleteMember(id){
-  var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
-  if(confirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.')){saveMembers(members.filter(function(x){return x.id!==id;}));showMemberListView();renderMemberList();}
+  var members=getMembers(),m=members.find(function(x){return x.id===id;});
+  if(!m)return;
+  if(confirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.')){
+    saveMembers(members.filter(function(x){return x.id!==id;}));
+    showMemberListView();renderMemberList();
+  }
 }
 
 function showAddMemberModal(){document.getElementById('addMemberModal').style.display='flex';setTimeout(function(){document.getElementById('newMemberName').focus();},100);}
 function closeAddMemberModal(){document.getElementById('addMemberModal').style.display='none';document.getElementById('newMemberName').value='';}
 function closeModalOutside(e){if(e.target===document.getElementById('addMemberModal'))closeAddMemberModal();}
 function addMember(){
-  var name=document.getElementById('newMemberName').value.trim();if(!name){alert('Nhập tên đi!');return;}
+  var name=document.getElementById('newMemberName').value.trim();
+  if(!name){alert('Nhập tên đi!');return;}
   var members=getMembers();
   if(members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();})){alert('Tên này đã có rồi!');return;}
   members.push({id:'m_'+Date.now(),name:name,history:[]});
   saveMembers(members);closeAddMemberModal();renderMemberList();renderMemberGrid();
-}
-
-/* ══ EXPORT / IMPORT ══ */
-function getAllData(){
-  return {
-    pk_members: JSON.parse(localStorage.getItem('pk_members')||'[]'),
-    pk_sessions: JSON.parse(localStorage.getItem('pk_sessions')||'[]'),
-    exported_at: new Date().toLocaleString('vi-VN')
-  };
-}
-
-function showExportModal(){
-  var data = JSON.stringify(getAllData(), null, 2);
-  document.getElementById('exportText').value = data;
-  document.getElementById('exportModal').style.display = 'flex';
-  document.getElementById('copyBtn').textContent = '📋 Bấm để Copy toàn bộ';
-  // auto-select after render
-  setTimeout(function(){ document.getElementById('exportText').select(); }, 200);
-}
-function closeExportModal(){document.getElementById('exportModal').style.display='none';}
-function closeExportOutside(e){if(e.target===document.getElementById('exportModal'))closeExportModal();}
-
-function copyExportData(){
-  var ta = document.getElementById('exportText');
-  ta.select();
-  try {
-    document.execCommand('copy');
-    document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu';
-  } catch(e) {
-    // fallback: navigator clipboard
-    navigator.clipboard && navigator.clipboard.writeText(ta.value).then(function(){
-      document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu';
-    });
-  }
-}
-
-function showImportModal(){
-  document.getElementById('importText').value = '';
-  document.getElementById('importModal').style.display = 'flex';
-  setTimeout(function(){ document.getElementById('importText').focus(); }, 200);
-}
-function closeImportModal(){document.getElementById('importModal').style.display='none';}
-function closeImportOutside(e){if(e.target===document.getElementById('importModal'))closeImportModal();}
-
-function doImport(){
-  var raw = document.getElementById('importText').value.trim();
-  if(!raw){alert('Chưa paste dữ liệu vào!');return;}
-  try {
-    var data = JSON.parse(raw);
-    if(!data.pk_members && !data.pk_sessions) throw new Error('Sai định dạng');
-    if(!confirm('⚠️ Dữ liệu hiện tại sẽ bị GHI ĐÈ hoàn toàn!\n\nXác nhận khôi phục?')) return;
-    if(data.pk_members) localStorage.setItem('pk_members', JSON.stringify(data.pk_members));
-    if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
-    closeImportModal();
-    renderMemberList();
-    renderMemberGrid();
-    alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
-  } catch(e) {
-    alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.');
-  }
 }
 
 function launchConfetti(){
@@ -807,6 +742,5 @@ function launchConfetti(){
 
 renderMemberGrid();
 </script>
-
 </body>
 </html>
