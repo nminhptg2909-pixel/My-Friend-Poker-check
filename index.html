@@ -264,6 +264,10 @@ table.players tr:last-child td{border-bottom:none;}
 .modal-close{float:right;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;}
 
 #confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none;}
+
+/* SAVED GAMES SECTION */
+.btn-outline-gold{width:100%;padding:11px;font-size:12px;font-weight:700;background:rgba(200,168,75,.05);color:var(--gold);border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-top:8px;font-family:var(--font);letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
+.btn-outline-gold:active{background:rgba(200,168,75,.15);}
 </style>
 </head>
 <body>
@@ -288,7 +292,7 @@ table.players tr:last-child td{border-bottom:none;}
   <div class="card" id="game-empty">
     <div class="empty" style="padding:40px 0;">
       <div style="font-size:40px;margin-bottom:10px;">🃏</div>
-      <div style="color:var(--gold2);font-weight:600;font-size:14px;">Chưa có bàn chơi nào</div>
+      <div style="color:var(--gold2);font-weight:600;font-size:14px;">Màn hình đang trống</div>
       <div style="margin-top:6px;">Bấm nút bên dưới để tạo bàn mới.</div>
     </div>
     <button class="btn-gold" style="padding:14px;font-size:14px;" onclick="showSetupNumPlayers()">+ TẠO BÀN MỚI</button>
@@ -322,8 +326,8 @@ table.players tr:last-child td{border-bottom:none;}
   <div id="game-active" style="display:none">
     <div class="card">
       <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>Bàn chơi hiện tại</span>
-        <button class="btn-edit" onclick="openEditActiveTableModal()" style="margin-right:0;">✏ Sửa bàn chơi</button>
+        <span>Bàn đang chơi</span>
+        <button class="btn-edit" onclick="openEditActiveTableModal()" style="margin-right:0;">✏ Sửa bàn</button>
       </div>
       <div class="session-badge" style="margin-bottom:15px;">
         <span class="cal">📅</span> <strong id="activeDateDisplay"></strong>
@@ -335,8 +339,13 @@ table.players tr:last-child td{border-bottom:none;}
         <button class="btn-red" onclick="resetAll()" style="margin-top:0;flex:1;background:var(--bg3);">Hủy bàn</button>
       </div>
       <button class="btn-green" onclick="showTab('result')" style="width:100%;margin-top:8px;">› Tính kết quả</button>
+      
+      <button class="btn-outline-gold" onclick="suspendActiveGame()">⏸ Cất tạm bàn này đi</button>
     </div>
   </div>
+
+  <div id="savedGamesSection" style="display:none; margin-top:16px;"></div>
+
 </div>
 
 <div class="page" id="tab-result">
@@ -468,8 +477,8 @@ var activeGame = {
     date: '',
     players: [] // {name, hands, chips, memberId}
 };
-var lastResults = []; // Lưu tạm khi bấm Tính kết quả
-var editingSessionIdx = null; // Dùng cho sửa lịch sử cũ
+var lastResults = []; 
+var editingSessionIdx = null; 
 
 // INIT & MIGRATION
 (function(){
@@ -493,6 +502,9 @@ function saveMembers(m){localStorage.setItem('pk_members',JSON.stringify(m)); up
 function getMembers(){return loadMembers();}
 function fmtAbs(n){return n.toLocaleString('vi-VN')+'đ';}
 function initials(name){return name.trim().split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);}
+
+function loadSavedGames() { return JSON.parse(localStorage.getItem('garini_saved_games')) || []; }
+function saveSavedGames(arr) { localStorage.setItem('garini_saved_games', JSON.stringify(arr)); }
 
 function updateGlobalDatalist() {
     var dl = document.getElementById('memberListGlobal');
@@ -528,13 +540,14 @@ function saveActiveGameToLocal() {
 }
 
 function renderGameTab() {
-    if(activeGame.players.length > 0) {
+    // 1. Render Active Game View
+    if(activeGame && activeGame.players && activeGame.players.length > 0) {
         document.getElementById('game-empty').style.display = 'none';
         document.getElementById('game-setup-num').style.display = 'none';
         document.getElementById('game-setup-form').style.display = 'none';
         document.getElementById('game-active').style.display = 'block';
         
-        var dp = activeGame.date.split('-'); // ISO
+        var dp = activeGame.date.split('-'); 
         var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
         document.getElementById('activeDateDisplay').textContent = displayDate;
         
@@ -545,7 +558,75 @@ function renderGameTab() {
         document.getElementById('game-setup-form').style.display = 'none';
         document.getElementById('game-active').style.display = 'none';
     }
+
+    // 2. Render Saved Games List
+    var saved = loadSavedGames();
+    if(saved.length > 0) {
+        var sh = '<div class="card-title" style="margin-top:20px; font-size:11px;">BÀN ĐANG ĐƯỢC CẤT TẠM ('+saved.length+')</div>';
+        saved.forEach(function(g, i) {
+            var totalHands = g.players.reduce(function(s, p) { return s + p.hands; }, 0);
+            var dp = g.date.split('-'); 
+            var dateDisp = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : g.date;
+            
+            sh += '<div class="card" style="padding:12px;margin-bottom:8px;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+                + '<b style="color:var(--gold2); font-size:14px;">'+(g.tableName || 'Bàn chưa đặt tên')+'</b>'
+                + '<span style="font-size:10px;color:var(--text3)">📅 '+dateDisp+'</span>'
+                + '</div>'
+                + '<div style="font-size:11px;color:var(--text2);margin-bottom:10px;">'
+                + g.players.length+' người chơi · Tổng buy-in: <b style="color:var(--text)">'+totalHands+'</b> hand'
+                + '</div>'
+                + '<div style="display:flex;gap:6px;">'
+                + '<button class="btn-green" style="padding:8px;font-size:11px;flex:2;margin:0" onclick="resumeSavedGame('+i+')">Mở lại bàn này</button>'
+                + '<button class="btn-red" style="padding:8px;font-size:11px;flex:1;margin:0;background:var(--bg3)" onclick="deleteSavedGame('+i+')">Xoá</button>'
+                + '</div></div>';
+        });
+        document.getElementById('savedGamesSection').innerHTML = sh;
+        document.getElementById('savedGamesSection').style.display = 'block';
+    } else {
+        document.getElementById('savedGamesSection').style.display = 'none';
+    }
 }
+
+// Suspend Table Logic
+function suspendActiveGame() {
+    var name = prompt("Nhập tên gợi nhớ để cất tạm bàn này\n(VD: Bàn VIP, Bàn anh Huy...):", "Bàn lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}));
+    if(name === null) return; 
+    
+    var saved = loadSavedGames();
+    activeGame.tableName = name;
+    saved.push(activeGame);
+    saveSavedGames(saved);
+    
+    activeGame = {date: '', players: []};
+    localStorage.removeItem('garini_active_game');
+    renderGameTab();
+}
+
+function resumeSavedGame(idx) {
+    if(activeGame && activeGame.players && activeGame.players.length > 0) {
+        if(!confirm("CẢNH BÁO: Bạn đang có một bàn trên màn hình.\nBàn hiện tại sẽ tự động được cất xuống dưới để nhường chỗ cho bàn bạn vừa chọn.\nTiếp tục?")) return;
+        var sList = loadSavedGames();
+        activeGame.tableName = "Bàn cất tạm lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+        sList.push(activeGame);
+        saveSavedGames(sList);
+    }
+    
+    var saved = loadSavedGames();
+    activeGame = saved.splice(idx, 1)[0];
+    saveSavedGames(saved);
+    saveActiveGameToLocal();
+    renderGameTab();
+}
+
+function deleteSavedGame(idx) {
+    if(!confirm("Xoá bàn đang cất tạm này? Mọi dữ liệu buy-in của bàn này sẽ biến mất vĩnh viễn.")) return;
+    var saved = loadSavedGames();
+    saved.splice(idx, 1);
+    saveSavedGames(saved);
+    renderGameTab();
+}
+
 
 // Setup Flow
 function showSetupNumPlayers() {
@@ -632,7 +713,7 @@ function delActivePlayer(i) {
 }
 
 function resetAll() {
-    if(confirm('Bạn có chắc chắn muốn hủy bỏ bàn chơi hiện tại? (Dữ liệu chưa lưu sẽ mất)')) {
+    if(confirm('Bạn có chắc chắn muốn hủy bỏ hoàn toàn bàn chơi hiện tại? (Sẽ không thể khôi phục)')) {
         activeGame = {date: '', players: []};
         localStorage.removeItem('garini_active_game');
         document.getElementById('summaryCard').style.display='none';
@@ -713,7 +794,7 @@ function renderCashout() {
   var btn = document.getElementById('btnCalcResult');
   document.getElementById('summaryCard').style.display='none';
   
-  if(!activeGame.players.length) {
+  if(!activeGame.players || !activeGame.players.length) {
       el.innerHTML='<div class="empty">Chưa có bàn chơi nào đang diễn ra</div>';
       btn.style.display = 'none';
       return;
@@ -741,7 +822,6 @@ function calcResult(){
   
   document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
   
-  // Convert ISO Date to Display
   var dp = activeGame.date.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
   document.getElementById('sessionDateDisplay').textContent = displayDate ? '📅 Ngày: ' + displayDate : '';
@@ -765,7 +845,6 @@ function saveSessionToHistory(){
   var members = getMembers();
   var dp = activeGame.date.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
-  var savedCount = 0;
   
   lastResults.forEach(function(r){
     if(!r.memberId)return;
@@ -773,7 +852,6 @@ function saveSessionToHistory(){
     if(!m)return;
     if(!m.history) m.history=[];
     m.history.unshift({date:displayDate, buyin:r.buyin, cashout:r.cashout, diff:r.diff});
-    savedCount++;
   });
   saveMembers(members);
   
@@ -783,7 +861,6 @@ function saveSessionToHistory(){
   
   alert('✅ Đã lưu kết quả ván chơi thành công!');
   
-  // Clear active game
   activeGame = {date: '', players: []};
   localStorage.removeItem('garini_active_game');
   lastResults = [];
@@ -872,7 +949,7 @@ function updateSessionData(){
   });
   
   localStorage.setItem('pk_sessions', JSON.stringify(sessions));
-  saveMembers(members); // Save members triggers datalist update
+  saveMembers(members); 
   
   closeEditSessionModal();
   renderSessionHistory();
@@ -1011,6 +1088,8 @@ function getAllData(){
   return {
     pk_members: JSON.parse(localStorage.getItem('pk_members')||'[]'),
     pk_sessions: JSON.parse(localStorage.getItem('pk_sessions')||'[]'),
+    garini_saved_games: JSON.parse(localStorage.getItem('garini_saved_games')||'[]'),
+    garini_active_game: JSON.parse(localStorage.getItem('garini_active_game')||'null'),
     exported_at: new Date().toLocaleString('vi-VN')
   };
 }
@@ -1055,9 +1134,13 @@ function doImport(){
     if(!confirm('⚠️ Dữ liệu hiện tại sẽ bị GHI ĐÈ hoàn toàn!\n\nXác nhận khôi phục?')) return;
     if(data.pk_members) localStorage.setItem('pk_members', JSON.stringify(data.pk_members));
     if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
+    if(data.garini_saved_games) localStorage.setItem('garini_saved_games', JSON.stringify(data.garini_saved_games));
+    if(data.garini_active_game) localStorage.setItem('garini_active_game', JSON.stringify(data.garini_active_game));
+    
     closeImportModal();
     updateGlobalDatalist();
     renderMemberList();
+    loadActiveGameFromLocal();
     alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
   } catch(e) {
     alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.');
