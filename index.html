@@ -154,6 +154,25 @@ table.players tr:last-child td{border-bottom:none;}
 .hof-body{background:var(--bg2);border-radius:0 0 var(--radius) var(--radius);padding:16px;border:1px solid var(--border2);border-top:none;}
 .hof-empty{text-align:center;color:var(--text3);font-size:12px;padding:28px 0;font-style:italic;}
 
+/* CALENDAR FILTER UI */
+.filter-tabs { display:flex; gap:4px; background:var(--bg3); border-radius:8px; padding:4px; margin-bottom:12px; border:1px solid var(--border2); }
+.f-tab { flex:1; text-align:center; padding:8px 4px; font-size:10px; font-weight:700; color:var(--text3); cursor:pointer; border-radius:6px; transition:all .2s; letter-spacing:0.5px; text-transform:uppercase; }
+.f-tab.active { background:var(--bg4); color:var(--gold2); box-shadow:0 1px 4px rgba(0,0,0,.2); border:1px solid var(--border); }
+
+.cal-wrapper { background:var(--bg3); border-radius:10px; border:1px solid var(--border); padding:12px; margin-bottom:16px; }
+.cal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.cal-header button { background:rgba(200,168,75,.1); border:1px solid var(--border2); color:var(--gold); font-size:16px; cursor:pointer; padding:2px 10px; border-radius:6px; }
+.cal-header span { font-size:12px; font-weight:700; color:var(--gold2); letter-spacing:1px; text-transform:uppercase; }
+.cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:6px; text-align:center; }
+.cal-wd { font-size:9px; color:var(--text3); text-transform:uppercase; font-weight:700; margin-bottom:6px; }
+.cal-day { position:relative; height:32px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; border-radius:6px; background:var(--bg4); border:1px solid transparent; cursor:pointer; color:var(--text2); transition:all .15s; }
+.cal-day.empty { background:transparent; pointer-events:none; }
+.cal-day:hover:not(.empty) { background:rgba(200,168,75,.1); }
+.cal-day.has-data { border-color:rgba(200,168,75,.3); color:var(--text); background:linear-gradient(135deg, rgba(200,168,75,.15), rgba(200,168,75,.05)); }
+.cal-day.has-data::after { content:'🏆'; position:absolute; top:-5px; right:-5px; font-size:10px; filter:drop-shadow(0 0 2px rgba(0,0,0,.5)); }
+.cal-day.selected { border-color:var(--gold); box-shadow:0 0 8px var(--gold-glow); background:var(--gold); color:#000; }
+.cal-day.selected::after { content:''; display:none; } /* Ẩn cúp khi đang chọn để dễ nhìn số */
+
 /* RANK CARDS */
 .rank-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .rank-card{border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
@@ -382,15 +401,37 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
   </div>
   <div class="hof-body">
-    <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; background: var(--bg3); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
-        <span style="font-size: 11px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Hiển thị:</span>
-        <select id="hofDateFilter" onchange="renderHof()" style="flex: 1; background: transparent; border: none; color: var(--gold2); font-family: var(--font); font-size: 13px; font-weight: 700; outline: none; cursor: pointer;">
-            <option value="all" style="background: var(--bg3);">🏆 Tất cả thời gian</option>
-        </select>
+    
+    <div class="filter-tabs">
+      <div class="f-tab active" id="fTabAll" onclick="switchFilterTab('all')">🏆 Tất cả</div>
+      <div class="f-tab" id="fTabCal" onclick="switchFilterTab('cal')">📅 Xem Lịch</div>
+      <div class="f-tab" id="fTabRange" onclick="switchFilterTab('range')">🗓 Theo ngày</div>
+    </div>
+
+    <div id="filterViewCal" class="cal-wrapper" style="display:none;">
+      <div class="cal-header">
+        <button onclick="changeCalMonth(-1)">‹</button>
+        <span id="calMonthYearLabel">Tháng 4 / 2026</span>
+        <button onclick="changeCalMonth(1)">›</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-wd">T2</div><div class="cal-wd">T3</div><div class="cal-wd">T4</div><div class="cal-wd">T5</div><div class="cal-wd">T6</div><div class="cal-wd">T7</div><div class="cal-wd">CN</div>
+      </div>
+      <div class="cal-grid" id="calDaysGrid"></div>
+      <button class="btn-outline-gold" style="font-size:10px; margin-top:12px; padding:8px;" onclick="applyHofFilter('month')">📊 Thống kê trọn tháng này</button>
+    </div>
+
+    <div id="filterViewRange" class="cal-wrapper" style="display:none;">
+      <div class="form-row">
+        <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Từ ngày</span><input type="date" id="rangeStart" style="width:100%;font-size:12px;"></div>
+        <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Đến ngày</span><input type="date" id="rangeEnd" style="width:100%;font-size:12px;"></div>
+      </div>
+      <button class="btn-green" style="font-size:11px; padding:9px; margin-top:8px;" onclick="applyHofFilter('range')">Lọc Dữ Liệu</button>
     </div>
 
     <div id="hofList"><div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div></div>
-    <div id="hofStats" style="display:none; margin-top:15px;">
+    
+    <div id="hofStats" style="display:none;">
       <div class="hof-stats">
         <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
         <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
@@ -480,12 +521,14 @@ table.players tr:last-child td{border-bottom:none;}
 
 <script>
 // BIẾN TOÀN CỤC CHẠY GAME
-var activeGame = {
-    date: '',
-    players: [] // {name, hands, chips, memberId}
-};
+var activeGame = { date: '', players: [] };
 var lastResults = []; 
 var editingSessionIdx = null; 
+
+// BIẾN CHO HOF FILTER
+var hofFilter = { mode: 'all', singleDate: null, monthStr: null, rangeStart: null, rangeEnd: null };
+var calCurYear = new Date().getFullYear();
+var calCurMonth = new Date().getMonth();
 
 // INIT & MIGRATION
 (function(){
@@ -527,7 +570,7 @@ function showTab(t){
   document.querySelectorAll('.tab').forEach(function(el,i){el.className='tab'+(['game','result','hof','members'][i]===t?' active':'');});
   if(t==='game') renderGameTab();
   if(t==='result') renderCashout();
-  if(t==='hof') renderHof();
+  if(t==='hof') { renderCalendarUI(); renderHof(); }
   if(t==='members'){showMemberListView();renderMemberList();}
 }
 
@@ -536,18 +579,12 @@ function showTab(t){
 // Nạp bàn chơi đang dở (nếu có)
 function loadActiveGameFromLocal() {
     var saved = localStorage.getItem('garini_active_game');
-    if(saved) {
-        try { activeGame = JSON.parse(saved); } catch(e) {}
-    }
+    if(saved) { try { activeGame = JSON.parse(saved); } catch(e) {} }
     renderGameTab();
 }
-
-function saveActiveGameToLocal() {
-    localStorage.setItem('garini_active_game', JSON.stringify(activeGame));
-}
+function saveActiveGameToLocal() { localStorage.setItem('garini_active_game', JSON.stringify(activeGame)); }
 
 function renderGameTab() {
-    // 1. Render Active Game View
     if(activeGame && activeGame.players && activeGame.players.length > 0) {
         document.getElementById('game-empty').style.display = 'none';
         document.getElementById('game-setup-num').style.display = 'none';
@@ -557,7 +594,6 @@ function renderGameTab() {
         var dp = activeGame.date.split('-'); 
         var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
         document.getElementById('activeDateDisplay').textContent = displayDate;
-        
         renderActivePlayersTable();
     } else {
         document.getElementById('game-empty').style.display = 'block';
@@ -566,7 +602,6 @@ function renderGameTab() {
         document.getElementById('game-active').style.display = 'none';
     }
 
-    // 2. Render Saved Games List
     var saved = loadSavedGames();
     if(saved.length > 0) {
         var sh = '<div class="card-title" style="margin-top:20px; font-size:11px;">BÀN ĐANG ĐƯỢC CẤT TẠM ('+saved.length+')</div>';
@@ -595,16 +630,13 @@ function renderGameTab() {
     }
 }
 
-// Suspend Table Logic
 function suspendActiveGame() {
     var name = prompt("Nhập tên gợi nhớ để cất tạm bàn này\n(VD: Bàn VIP, Bàn anh Huy...):", "Bàn lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}));
     if(name === null) return; 
-    
     var saved = loadSavedGames();
     activeGame.tableName = name;
     saved.push(activeGame);
     saveSavedGames(saved);
-    
     activeGame = {date: '', players: []};
     localStorage.removeItem('garini_active_game');
     renderGameTab();
@@ -618,7 +650,6 @@ function resumeSavedGame(idx) {
         sList.push(activeGame);
         saveSavedGames(sList);
     }
-    
     var saved = loadSavedGames();
     activeGame = saved.splice(idx, 1)[0];
     saveSavedGames(saved);
@@ -633,7 +664,6 @@ function deleteSavedGame(idx) {
     saveSavedGames(saved);
     renderGameTab();
 }
-
 
 // Setup Flow
 function showSetupNumPlayers() {
@@ -653,10 +683,8 @@ function showSetupForm() {
            + '</div></div>';
     }
     document.getElementById('setupPlayerRows').innerHTML = h;
-    
     var d = new Date(), pad = function(n){return n<10?'0'+n:n;};
     document.getElementById('setupSessionDate').value = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
-    
     document.getElementById('game-setup-num').style.display = 'none';
     document.getElementById('game-setup-form').style.display = 'block';
 }
@@ -668,21 +696,14 @@ function saveNewTable() {
     var members = getMembers();
     activeGame.players = [];
     activeGame.date = document.getElementById('setupSessionDate').value;
-
     for(var i=0; i<num; i++){
         var name = document.getElementById('setup_name_'+i).value.trim();
         var hands = parseInt(document.getElementById('setup_hands_'+i).value) || 0;
         if(name && hands > 0) {
             var member = members.find(function(m){ return m.name.toLowerCase() === name.toLowerCase(); });
-            activeGame.players.push({
-                name: name,
-                hands: hands,
-                chips: hands * 2000,
-                memberId: member ? member.id : null
-            });
+            activeGame.players.push({ name: name, hands: hands, chips: hands * 2000, memberId: member ? member.id : null });
         }
     }
-    
     if(activeGame.players.length === 0){ alert('Vui lòng điền ít nhất 1 người chơi!'); return; }
     saveActiveGameToLocal();
     renderGameTab();
@@ -728,7 +749,6 @@ function resetAll() {
     }
 }
 
-// Add single player modal
 function openAddSinglePlayerModal() {
     document.getElementById('singlePlayerName').value = '';
     document.getElementById('singlePlayerHands').value = '1';
@@ -741,19 +761,10 @@ function addSinglePlayerSubmit() {
     var name = document.getElementById('singlePlayerName').value.trim();
     var hands = parseInt(document.getElementById('singlePlayerHands').value) || 0;
     if(!name || hands < 1) { alert('Điền đủ tên và số hand nhé!'); return; }
-    
-    if(activeGame.players.find(function(p){ return p.name.toLowerCase() === name.toLowerCase(); })) {
-        alert('Người này đã ngồi trong bàn rồi!'); return;
-    }
-
+    if(activeGame.players.find(function(p){ return p.name.toLowerCase() === name.toLowerCase(); })) { alert('Người này đã ngồi trong bàn rồi!'); return; }
     var members = getMembers();
     var member = members.find(function(m){ return m.name.toLowerCase() === name.toLowerCase(); });
-    activeGame.players.push({
-        name: name,
-        hands: hands,
-        chips: hands * 2000,
-        memberId: member ? member.id : null
-    });
+    activeGame.players.push({ name: name, hands: hands, chips: hands * 2000, memberId: member ? member.id : null });
     saveActiveGameToLocal();
     renderGameTab();
     closeAddSinglePlayerModal();
@@ -800,12 +811,7 @@ function renderCashout() {
   var el = document.getElementById('cashoutList');
   var btn = document.getElementById('btnCalcResult');
   document.getElementById('summaryCard').style.display='none';
-  
-  if(!activeGame.players || !activeGame.players.length) {
-      el.innerHTML='<div class="empty">Chưa có bàn chơi nào đang diễn ra</div>';
-      btn.style.display = 'none';
-      return;
-  }
+  if(!activeGame.players || !activeGame.players.length) { el.innerHTML='<div class="empty">Chưa có bàn chơi nào đang diễn ra</div>'; btn.style.display = 'none'; return; }
   
   btn.style.display = 'block';
   var h = '';
@@ -819,22 +825,17 @@ function renderCashout() {
 function calcResult(){
   if(!activeGame.players.length){alert('Chưa có người chơi!');return;}
   lastResults = []; var tb=0;
-  
   activeGame.players.forEach(function(p,i){
     var co=parseInt((document.getElementById('co_'+i)||{}).value)||0;
     var diff=Math.round((co-p.chips)/2000*100000);
     tb+=p.chips;
     lastResults.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
   });
-  
   document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
-  
   var dp = activeGame.date.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
   document.getElementById('sessionDateDisplay').textContent = displayDate ? '📅 Ngày: ' + displayDate : '';
-  
   lastResults.sort(function(a,b){return b.diff-a.diff;});
-  
   var sl='';
   lastResults.forEach(function(r){
     var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
@@ -848,11 +849,9 @@ function calcResult(){
 
 function saveSessionToHistory(){
   if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
-  
   var members = getMembers();
   var dp = activeGame.date.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
-  
   lastResults.forEach(function(r){
     if(!r.memberId)return;
     var m = members.find(function(x){return x.id===r.memberId;});
@@ -867,21 +866,16 @@ function saveSessionToHistory(){
   localStorage.setItem('pk_sessions',JSON.stringify(sessions));
   
   alert('✅ Đã lưu kết quả ván chơi thành công!');
-  
   activeGame = {date: '', players: []};
   localStorage.removeItem('garini_active_game');
   lastResults = [];
   
-  // Render lại HOF để cập nhật filter mới nhất trước khi chuyển qua
-  var filterEl = document.getElementById('hofDateFilter');
-  if(filterEl) filterEl.value = 'all'; 
-  renderHof();
+  applyHofFilter('all');
   showTab('hof');
 }
 
 function showSessionHistory(){document.getElementById('resultMainView').style.display='none';document.getElementById('sessionHistoryView').style.display='block';renderSessionHistory();}
 function hideSessionHistory(){document.getElementById('resultMainView').style.display='block';document.getElementById('sessionHistoryView').style.display='none';}
-
 function renderSessionHistory(){
   var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
   var el=document.getElementById('sessionHistoryList');
@@ -903,17 +897,13 @@ function renderSessionHistory(){
   el.innerHTML=h;
 }
 
-/* ══ EDIT SAVED SESSION ══ */
 function openEditSessionHistory(idx){
   editingSessionIdx = idx;
   var sess = JSON.parse(localStorage.getItem('pk_sessions')||'[]')[idx];
-  
   var parts = sess.date.split('/');
   var isoDate = parts.length === 3 ? parts[2]+'-'+parts[1]+'-'+parts[0] : sess.date;
-  
   var dateHtml = '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--gold);">Ngày chơi:</span><input type="date" id="editSessionDate" value="'+isoDate+'" style="flex:1;"></div>';
   document.getElementById('editSessionDateRow').innerHTML = dateHtml;
-  
   var playersHtml = sess.results.map(function(r, i){
     return '<div style="background:var(--bg3);padding:12px;border-radius:8px;margin-bottom:8px;border:1px solid var(--border2);">'
       +'<div style="font-size:11px;font-weight:bold;color:var(--gold);margin-bottom:8px;">Người chơi '+(i+1)+'</div>'
@@ -926,48 +916,32 @@ function openEditSessionHistory(idx){
   document.getElementById('editPlayersContainer').innerHTML = playersHtml;
   document.getElementById('editSessionModal').style.display = 'flex';
 }
-
 function updateSessionData(){
   var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
   var members = getMembers();
   var s = sessions[editingSessionIdx];
-  
   var oldDateStr = s.date;
   var newIsoDate = document.getElementById('editSessionDate').value;
   var dp = newIsoDate.split('-');
   var newDateStr = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : newIsoDate;
-  
   s.date = newDateStr;
-  
   s.results.forEach(function(r, i){
-    var oldBuy = r.buyin;
-    var oldDiff = r.diff;
-    var oldName = r.name;
-    
+    var oldBuy = r.buyin; var oldDiff = r.diff; var oldName = r.name;
     r.name = document.getElementById('edhist_name_'+i).value.trim();
     var newHands = parseInt(document.getElementById('edhist_buy_'+i).value)||0;
-    r.buyin = newHands * 2000;
-    r.cashout = parseInt(document.getElementById('edhist_co_'+i).value)||0;
+    r.buyin = newHands * 2000; r.cashout = parseInt(document.getElementById('edhist_co_'+i).value)||0;
     r.diff = Math.round((r.cashout - r.buyin)/2000*100000);
-    
     var m = members.find(function(x){ return x.name === oldName || x.id === r.memberId; });
     if(m && m.history){
       var hIdx = m.history.findIndex(function(h){ return h.date === oldDateStr && h.buyin === oldBuy && h.diff === oldDiff; });
-      if(hIdx !== -1){
-        m.history[hIdx] = {date: newDateStr, buyin: r.buyin, cashout: r.cashout, diff: r.diff};
-      }
+      if(hIdx !== -1) m.history[hIdx] = {date: newDateStr, buyin: r.buyin, cashout: r.cashout, diff: r.diff};
     }
   });
-  
   localStorage.setItem('pk_sessions', JSON.stringify(sessions));
   saveMembers(members); 
-  
-  closeEditSessionModal();
-  renderSessionHistory();
-  renderHof(); // Update filter dropdown list
+  closeEditSessionModal(); renderSessionHistory(); renderCalendarUI(); renderHof();
   alert('✅ Đã cập nhật lại dữ liệu lịch sử!');
 }
-
 function closeEditSessionModal(){ document.getElementById('editSessionModal').style.display='none'; }
 function closeEditSessionOutside(e){ if(e.target===document.getElementById('editSessionModal'))closeEditSessionModal(); }
 
@@ -984,59 +958,125 @@ function deleteSessionHistory(idx){
       saveMembers(members);
     }
     sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));
-    renderSessionHistory();
-    renderHof(); // Update filter dropdown list
+    renderSessionHistory(); renderCalendarUI(); renderHof();
   }
 }
 
-/* ==================== HOF TAB LOGIC ==================== */
+/* ==================== HOF FILTER & CALENDAR ==================== */
+
+function switchFilterTab(tab) {
+    document.getElementById('fTabAll').className = 'f-tab' + (tab==='all'?' active':'');
+    document.getElementById('fTabCal').className = 'f-tab' + (tab==='cal'?' active':'');
+    document.getElementById('fTabRange').className = 'f-tab' + (tab==='range'?' active':'');
+    
+    document.getElementById('filterViewCal').style.display = (tab==='cal') ? 'block' : 'none';
+    document.getElementById('filterViewRange').style.display = (tab==='range') ? 'block' : 'none';
+    
+    if(tab==='all') applyHofFilter('all');
+}
+
+function changeCalMonth(dir) {
+    calCurMonth += dir;
+    if(calCurMonth < 0) { calCurMonth = 11; calCurYear--; }
+    else if(calCurMonth > 11) { calCurMonth = 0; calCurYear++; }
+    renderCalendarUI();
+}
+
+function renderCalendarUI() {
+    var el = document.getElementById('calDaysGrid');
+    var mStr = (calCurMonth + 1).toString().padStart(2, '0');
+    document.getElementById('calMonthYearLabel').textContent = 'Tháng ' + mStr + ' / ' + calCurYear;
+
+    var ad = {};
+    getMembers().forEach(m => { (m.history||[]).forEach(h => { ad[h.date] = true; }); });
+
+    var firstDay = new Date(calCurYear, calCurMonth, 1).getDay();
+    var daysInMonth = new Date(calCurYear, calCurMonth + 1, 0).getDate();
+    var offset = firstDay === 0 ? 6 : firstDay - 1;
+
+    var h = '';
+    for(var i=0; i<offset; i++) h += '<div class="cal-day empty"></div>';
+
+    for(var d=1; d<=daysInMonth; d++) {
+        var ds = d.toString().padStart(2, '0') + '/' + mStr + '/' + calCurYear;
+        var hasData = ad[ds];
+        var cls = 'cal-day' + (hasData ? ' has-data' : '');
+        
+        if(hofFilter.mode === 'date' && hofFilter.singleDate === ds) cls += ' selected';
+
+        h += '<div class="'+cls+'" onclick="applyHofFilter(\'date\', \''+ds+'\')">'+d+'</div>';
+    }
+    el.innerHTML = h;
+}
+
+function applyHofFilter(mode, val1) {
+    hofFilter.mode = mode;
+    var eyebrow = document.getElementById('hofEyebrow');
+    
+    if(mode === 'all') {
+        eyebrow.textContent = 'All-Time Leaderboard';
+    } 
+    else if(mode === 'date') {
+        hofFilter.singleDate = val1;
+        eyebrow.textContent = 'Bảng Vàng: Ngày ' + val1;
+    } 
+    else if(mode === 'month') {
+        var mStr = (calCurMonth + 1).toString().padStart(2, '0');
+        hofFilter.monthStr = mStr + '/' + calCurYear;
+        eyebrow.textContent = 'Thống Kê: Tháng ' + hofFilter.monthStr;
+    } 
+    else if(mode === 'range') {
+        var d1 = document.getElementById('rangeStart').value;
+        var d2 = document.getElementById('rangeEnd').value;
+        if(!d1 || !d2) { alert('Vui lòng chọn đầy đủ Từ ngày và Đến ngày!'); return; }
+        hofFilter.rangeStart = d1; 
+        hofFilter.rangeEnd = d2;
+        var p1 = d1.split('-'); var dp1 = p1[2]+'/'+p1[1];
+        var p2 = d2.split('-'); var dp2 = p2[2]+'/'+p2[1];
+        eyebrow.textContent = 'Từ ' + dp1 + ' đến ' + dp2;
+    }
+
+    renderCalendarUI(); // re-render to update selected styling
+    renderHof();
+}
+
+/* ==================== HOF AGGREGATION LOGIC ==================== */
 
 function renderHof(){
   var el=document.getElementById('hofList');
   var members=getMembers();
-  var filterEl=document.getElementById('hofDateFilter');
-  var selectedDate=filterEl?filterEl.value:'all';
-
-  // 1. Get unique dates
-  var allDates=new Set();
-  members.forEach(function(m){
-    (m.history||[]).forEach(function(h){ allDates.add(h.date); });
-  });
-  var datesArr=Array.from(allDates).sort(function(a,b){
-    var pa=a.split('/'),pb=b.split('/');
-    return new Date(pb[2],pb[1]-1,pb[0])-new Date(pa[2],pa[1]-1,pa[0]);
-  });
-
-  // 2. Populate Dropdown
-  var opts='<option value="all" style="background:var(--bg3);">🏆 Tất cả thời gian</option>';
-  datesArr.forEach(function(d){
-    opts+='<option value="'+d+'" style="background:var(--bg3);" '+(selectedDate===d?'selected':'')+'>📅 Ngày '+d+'</option>';
-  });
-  if(filterEl) filterEl.innerHTML=opts;
-
-  // Update title
-  var eyebrow = document.getElementById('hofEyebrow');
-  if(eyebrow) eyebrow.textContent = selectedDate==='all' ? 'All-Time Leaderboard' : 'Leaderboard: ' + selectedDate;
-
-  // 3. Aggregate data
   var filteredResults=[], totalBuyinFilter=0;
+
   members.forEach(function(m){
     if(m.history&&m.history.length>0){
       var tDiff=0,tBuyin=0,tCashout=0,hasData=false;
+      
       m.history.forEach(function(h){
-        if(selectedDate === 'all' || h.date === selectedDate) {
+        var parts = h.date.split('/'); // DD/MM/YYYY
+        var dObj = new Date(parts[2], parts[1]-1, parts[0]);
+        var pass = false;
+        
+        if (hofFilter.mode === 'all') { pass = true; }
+        else if (hofFilter.mode === 'date') { pass = (h.date === hofFilter.singleDate); }
+        else if (hofFilter.mode === 'month') { pass = (parts[1]+'/'+parts[2] === hofFilter.monthStr); }
+        else if (hofFilter.mode === 'range') {
+            var st = new Date(hofFilter.rangeStart); st.setHours(0,0,0,0);
+            var en = new Date(hofFilter.rangeEnd); en.setHours(23,59,59,999);
+            pass = (dObj >= st && dObj <= en);
+        }
+
+        if(pass) {
           tDiff+=h.diff; tBuyin+=h.buyin; tCashout+=h.cashout; totalBuyinFilter+=h.buyin;
           hasData=true;
         }
       });
-      if(hasData){
-        filteredResults.push({name:m.name,diff:tDiff,buyin:tBuyin,cashout:tCashout});
-      }
+
+      if(hasData){ filteredResults.push({name:m.name,diff:tDiff,buyin:tBuyin,cashout:tCashout}); }
     }
   });
 
   if(!filteredResults.length){
-      el.innerHTML='<div class="hof-empty">Chưa có dữ liệu cho thời gian này</div>';
+      el.innerHTML='<div class="hof-empty" style="padding:40px 0;">Chưa có dữ liệu cho khoảng thời gian này.<br><span style="font-size:24px;display:block;margin-top:10px;opacity:0.3;">📭</span></div>';
       document.getElementById('hofStats').style.display='none';
       return;
   }
@@ -1165,14 +1205,8 @@ function closeExportOutside(e){if(e.target===document.getElementById('exportModa
 function copyExportData(){
   var ta = document.getElementById('exportText');
   ta.select();
-  try {
-    document.execCommand('copy');
-    document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu';
-  } catch(e) {
-    navigator.clipboard && navigator.clipboard.writeText(ta.value).then(function(){
-      document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu';
-    });
-  }
+  try { document.execCommand('copy'); document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu';
+  } catch(e) { navigator.clipboard && navigator.clipboard.writeText(ta.value).then(function(){ document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu'; }); }
 }
 
 function showImportModal(){
@@ -1194,15 +1228,9 @@ function doImport(){
     if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
     if(data.garini_saved_games) localStorage.setItem('garini_saved_games', JSON.stringify(data.garini_saved_games));
     if(data.garini_active_game) localStorage.setItem('garini_active_game', JSON.stringify(data.garini_active_game));
-    
-    closeImportModal();
-    updateGlobalDatalist();
-    renderMemberList();
-    loadActiveGameFromLocal();
+    closeImportModal(); updateGlobalDatalist(); renderMemberList(); loadActiveGameFromLocal();
     alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
-  } catch(e) {
-    alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.');
-  }
+  } catch(e) { alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.'); }
 }
 
 function launchConfetti(){
@@ -1212,7 +1240,6 @@ function launchConfetti(){
   var ps=Array.from({length:90},function(){return{x:Math.random()*cv.width,y:-30,r:Math.random()*4+2,d:Math.random()*2+1,c:cols[Math.floor(Math.random()*cols.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()>.5};});
   var a=0,t=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);a+=.01;t++;ps.forEach(function(p,i){p.ta+=p.ts;p.y+=p.d+Math.sin(a)*1.2;p.x+=Math.sin(a+i)*.7;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.sin(p.ta)*13*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=.85;p.sq?ctx.fillRect(-p.r,-p.r*.5,p.r*2,p.r):(ctx.beginPath(),ctx.arc(0,0,p.r,0,Math.PI*2),ctx.fill());ctx.restore();});if(t<200)requestAnimationFrame(draw);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';}})();
 }
-
 </script>
 </body>
 </html>
