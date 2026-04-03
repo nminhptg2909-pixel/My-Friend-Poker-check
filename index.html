@@ -197,7 +197,7 @@ table.players tr:last-child td{border-bottom:none;}
 .rank-divider{display:flex;align-items:center;gap:8px;margin:10px 0;}
 .rank-divider::before,.rank-divider::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(192,80,80,.4),transparent);}
 .rank-divider span{font-size:9px;color:rgba(192,80,80,.6);letter-spacing:3px;white-space:nowrap;text-transform:uppercase;font-weight:600;}
-.hof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.hof-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:15px;}
 .hof-stat{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:11px 12px;text-align:center;}
 .hof-stat-label{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;opacity:.7;font-weight:600;}
 .hof-stat-val{font-size:16px;font-weight:800;color:var(--gold2);}
@@ -377,18 +377,25 @@ table.players tr:last-child td{border-bottom:none;}
 <div class="page" id="tab-hof">
   <div class="hof-hero">
     <span class="hof-crown">👑</span>
-    <div class="hof-eyebrow">All-Time Leaderboard</div>
+    <div class="hof-eyebrow" id="hofEyebrow">All-Time Leaderboard</div>
     <div class="hof-title">HALL OF FAME</div>
     <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
   </div>
   <div class="hof-body">
+    <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; background: var(--bg3); padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border);">
+        <span style="font-size: 11px; color: var(--gold); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Hiển thị:</span>
+        <select id="hofDateFilter" onchange="renderHof()" style="flex: 1; background: transparent; border: none; color: var(--gold2); font-family: var(--font); font-size: 13px; font-weight: 700; outline: none; cursor: pointer;">
+            <option value="all" style="background: var(--bg3);">🏆 Tất cả thời gian</option>
+        </select>
+    </div>
+
     <div id="hofList"><div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div></div>
-    <div id="hofStats" style="display:none">
+    <div id="hofStats" style="display:none; margin-top:15px;">
       <div class="hof-stats">
-        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot Các Bàn</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
         <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lời nhất (Tổng)</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất (Tổng)</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
       </div>
     </div>
   </div>
@@ -865,6 +872,10 @@ function saveSessionToHistory(){
   localStorage.removeItem('garini_active_game');
   lastResults = [];
   
+  // Render lại HOF để cập nhật filter mới nhất trước khi chuyển qua
+  var filterEl = document.getElementById('hofDateFilter');
+  if(filterEl) filterEl.value = 'all'; 
+  renderHof();
   showTab('hof');
 }
 
@@ -953,6 +964,7 @@ function updateSessionData(){
   
   closeEditSessionModal();
   renderSessionHistory();
+  renderHof(); // Update filter dropdown list
   alert('✅ Đã cập nhật lại dữ liệu lịch sử!');
 }
 
@@ -971,27 +983,70 @@ function deleteSessionHistory(idx){
       });
       saveMembers(members);
     }
-    sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));renderSessionHistory();
+    sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));
+    renderSessionHistory();
+    renderHof(); // Update filter dropdown list
   }
 }
 
 /* ==================== HOF TAB LOGIC ==================== */
 
 function renderHof(){
-  var el=document.getElementById('hofList'),members=getMembers(),allTimeResults=[],totalBuyinAllTime=0;
+  var el=document.getElementById('hofList');
+  var members=getMembers();
+  var filterEl=document.getElementById('hofDateFilter');
+  var selectedDate=filterEl?filterEl.value:'all';
+
+  // 1. Get unique dates
+  var allDates=new Set();
+  members.forEach(function(m){
+    (m.history||[]).forEach(function(h){ allDates.add(h.date); });
+  });
+  var datesArr=Array.from(allDates).sort(function(a,b){
+    var pa=a.split('/'),pb=b.split('/');
+    return new Date(pb[2],pb[1]-1,pb[0])-new Date(pa[2],pa[1]-1,pa[0]);
+  });
+
+  // 2. Populate Dropdown
+  var opts='<option value="all" style="background:var(--bg3);">🏆 Tất cả thời gian</option>';
+  datesArr.forEach(function(d){
+    opts+='<option value="'+d+'" style="background:var(--bg3);" '+(selectedDate===d?'selected':'')+'>📅 Ngày '+d+'</option>';
+  });
+  if(filterEl) filterEl.innerHTML=opts;
+
+  // Update title
+  var eyebrow = document.getElementById('hofEyebrow');
+  if(eyebrow) eyebrow.textContent = selectedDate==='all' ? 'All-Time Leaderboard' : 'Leaderboard: ' + selectedDate;
+
+  // 3. Aggregate data
+  var filteredResults=[], totalBuyinFilter=0;
   members.forEach(function(m){
     if(m.history&&m.history.length>0){
-      var tDiff=0,tBuyin=0,tCashout=0;
-      m.history.forEach(function(h){tDiff+=h.diff;tBuyin+=h.buyin;tCashout+=h.cashout;totalBuyinAllTime+=h.buyin;});
-      allTimeResults.push({name:m.name,diff:tDiff,buyin:tBuyin,cashout:tCashout});
+      var tDiff=0,tBuyin=0,tCashout=0,hasData=false;
+      m.history.forEach(function(h){
+        if(selectedDate === 'all' || h.date === selectedDate) {
+          tDiff+=h.diff; tBuyin+=h.buyin; tCashout+=h.cashout; totalBuyinFilter+=h.buyin;
+          hasData=true;
+        }
+      });
+      if(hasData){
+        filteredResults.push({name:m.name,diff:tDiff,buyin:tBuyin,cashout:tCashout});
+      }
     }
   });
-  if(!allTimeResults.length){el.innerHTML='<div class="hof-empty">Chưa có dữ liệu — hãy lưu kết quả buổi chơi để xếp hạng nhé</div>';document.getElementById('hofStats').style.display='none';return;}
-  var sorted=allTimeResults.sort(function(a,b){return b.diff-a.diff;});
+
+  if(!filteredResults.length){
+      el.innerHTML='<div class="hof-empty">Chưa có dữ liệu cho thời gian này</div>';
+      document.getElementById('hofStats').style.display='none';
+      return;
+  }
+
+  var sorted=filteredResults.sort(function(a,b){return b.diff-a.diff;});
   var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
   var medals=['🥇','🥈','🥉'],rc=['rank-1','rank-2','rank-3'];
   var winCount=sorted.filter(function(r){return r.diff>0;}).length,hasLoss=sorted.some(function(r){return r.diff<0;});
   var h='<div class="rank-list">';
+  
   sorted.forEach(function(r,i){
     var cls=i<3?rc[i]:(r.diff>0?'rank-win':r.diff<0?'rank-loss':'rank-even');
     var badge=i<3?medals[i]:(i+1),barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
@@ -1005,13 +1060,16 @@ function renderHof(){
       +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
   });
   el.innerHTML=h+'</div>';
+  
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
-  var tm=Math.round(totalBuyinAllTime/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
+  
+  var tm=Math.round(totalBuyinFilter/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
   document.getElementById('hofTotalPot').textContent=fmtAbs(tm);
   document.getElementById('hofPlayerCount').textContent=sorted.length+' người';
   document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
   document.getElementById('hofBigLoss').textContent=bl.diff<0?'-'+fmtAbs(Math.abs(bl.diff)):'—';
   document.getElementById('hofStats').style.display='block';
+  
   if(bw.diff>0)launchConfetti();
 }
 
