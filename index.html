@@ -384,6 +384,7 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="card" id="summaryCard" style="display:none">
       <div class="card-title">Tổng kết ván</div>
       <div class="pot-info">Tổng pot: <span id="totalPot">0đ</span></div>
+      <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
       <div id="summaryList"></div>
       <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
     </div>
@@ -471,6 +472,16 @@ table.players tr:last-child td{border-bottom:none;}
 <div class="modal-overlay" id="thuChiModal" style="display:none" onclick="closeThuChiOutside(event)">
   <div class="modal-box">
     <div class="modal-title">Quản lý Thu / Chi <span class="modal-close" onclick="closeThuChiModal()">✕</span></div>
+    
+    <div style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg, rgba(200,168,75,.1), rgba(0,0,0,0));padding:12px;border-radius:8px;border:1px dashed var(--gold);margin-bottom:15px;">
+      <img src="image_462f77.png" alt="QR Code" style="width:70px;height:70px;border-radius:8px;border:2px solid var(--gold2);object-fit:cover;background:#fff;">
+      <div>
+        <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Chuyển tiền vào quỹ</div>
+        <div style="font-size:14px;font-weight:800;color:var(--gold2);letter-spacing:1px;user-select:all;cursor:text;">PSG2608712600000022</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;">(Bôi đen hoặc ấn giữ số để Copy)</div>
+      </div>
+    </div>
+    
     <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Cấn trừ tiền phòng (nếu có) và theo dõi tiến độ nộp/trả tiền.</div>
     
     <div class="form-row" style="background:var(--bg3);padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:15px;">
@@ -841,7 +852,6 @@ function renderCashout() {
   el.innerHTML=h;
 }
 
-// ---- ĐÃ SỬA LỖI TẠI ĐÂY ----
 function calcResult(){
   if(!activeGame.players.length){alert('Chưa có người chơi!');return;}
   lastResults = []; var tb=0;
