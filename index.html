@@ -241,4 +241,1131 @@ table.players tr:last-child td{border-bottom:none;}
 .profile-header::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.5;}
 .profile-avatar-lg{width:56px;height:56px;border-radius:50%;background:var(--bg4);border:2px solid var(--border);color:var(--gold2);font-size:20px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 14px var(--gold-glow);}
 .profile-name{font-size:20px;font-weight:800;color:var(--text);}
-.profile-since{font-size:10px
+.profile-since{font-size:10px;color:var(--text3);margin-top:3px;letter-spacing:.5px;}
+.profile-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.pstat{background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px 6px;text-align:center;}
+.pstat-val{font-size:15px;font-weight:800;color:var(--gold2);}
+.pstat-val.green{color:#6dbf80;}.pstat-val.red{color:#d07070;}
+.pstat-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-top:2px;font-weight:600;}
+.history-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px;}
+.history-row:last-child{border-bottom:none;}
+.history-date{color:var(--gold);font-size:12px;font-weight:600;}
+.history-detail{font-size:10px;color:var(--text3);margin-top:2px;}
+.back-btn{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--gold);font-size:13px;font-weight:600;cursor:pointer;padding:0 0 12px;font-family:var(--font);}
+
+/* BACKUP BUTTONS */
+.backup-row{display:flex;gap:8px;margin-top:10px;}
+.btn-backup{flex:1;padding:10px 8px;font-size:11px;font-weight:700;border-radius:8px;cursor:pointer;font-family:var(--font);letter-spacing:.8px;text-transform:uppercase;transition:all .2s;border:1px solid var(--border);}
+.btn-export{background:rgba(200,168,75,.1);color:var(--gold2);}
+.btn-export:active{opacity:.7;}
+.btn-import{background:rgba(74,140,92,.1);color:#6dbf80;border-color:rgba(74,140,92,.3);}
+.btn-import:active{opacity:.7;}
+
+/* BACKUP MODAL TEXTAREA */
+.backup-textarea{
+  width:100%;height:130px;padding:10px;
+  background:var(--bg3);border:1px solid var(--border);border-radius:8px;
+  color:var(--text);font-family:monospace;font-size:11px;
+  resize:none;margin-top:10px;
+  line-height:1.4;
+}
+.backup-textarea:focus{border-color:var(--gold);outline:none;}
+.backup-hint{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(4px);}
+.modal-box{background:var(--bg2);border-radius:16px 16px 0 0;padding:20px 16px 36px;width:100%;max-height:85vh;overflow-y:auto;max-width:500px;animation:slideUp .22s ease;border:1px solid var(--border);border-bottom:none;position:relative;}
+.modal-box::-webkit-scrollbar { width: 4px; }
+.modal-box::-webkit-scrollbar-thumb { background: rgba(200,168,75,.3); border-radius: 4px; }
+.modal-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.4;}
+@keyframes slideUp{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.modal-title{font-size:15px;font-weight:700;color:var(--gold2);margin-bottom:16px;letter-spacing:.5px;}
+.modal-close{float:right;font-size:22px;cursor:pointer;color:var(--text3);line-height:1;}
+
+#confetti-canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none;}
+
+/* SAVED GAMES SECTION */
+.btn-outline-gold{width:100%;padding:11px;font-size:12px;font-weight:700;background:rgba(200,168,75,.05);color:var(--gold);border:1px solid var(--border);border-radius:8px;cursor:pointer;margin-top:8px;font-family:var(--font);letter-spacing:1px;text-transform:uppercase;transition:all .2s;}
+.btn-outline-gold:active{background:rgba(200,168,75,.15);}
+
+/* THU CHI LIST SCROLL */
+#tcListsContainer::-webkit-scrollbar { width: 4px; }
+#tcListsContainer::-webkit-scrollbar-thumb { background: rgba(200,168,75,.3); border-radius: 4px; }
+
+</style>
+</head>
+<body>
+<canvas id="confetti-canvas"></canvas>
+
+<datalist id="memberListGlobal"></datalist>
+
+<div class="app-header">
+  <div class="app-logo">Private Game</div>
+  <div class="app-title">♠ GARINI</div>
+  <div class="app-divider"><span class="app-divider-icon">◆</span></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('game')">🎮 Game</div>
+  <div class="tab" onclick="showTab('result')">Kết quả</div>
+  <div class="tab" onclick="showTab('hof')">🏆 Fame</div>
+  <div class="tab" onclick="showTab('members')">Hội viên</div>
+</div>
+
+<div class="page show" id="tab-game">
+  <div class="card" id="game-empty">
+    <div class="empty" style="padding:40px 0;">
+      <div style="font-size:40px;margin-bottom:10px;">🃏</div>
+      <div style="color:var(--gold2);font-weight:600;font-size:14px;">Màn hình đang trống</div>
+      <div style="margin-top:6px;">Bấm nút bên dưới để tạo bàn mới.</div>
+    </div>
+    <button class="btn-gold" style="padding:14px;font-size:14px;" onclick="showSetupNumPlayers()">+ TẠO BÀN MỚI</button>
+  </div>
+
+  <div class="card" id="game-setup-num" style="display:none">
+    <div class="card-title">Thiết lập bàn</div>
+    <div class="form-row">
+      <label style="min-width:100px;">Số người chơi</label>
+      <input type="number" id="numPlayersSetup" value="6" min="2" max="20" style="font-size:16px;text-align:center;">
+    </div>
+    <button class="btn-green" onclick="showSetupForm()">Tiếp tục ›</button>
+    <button class="btn-red" onclick="cancelSetup()">Hủy</button>
+  </div>
+
+  <div class="card" id="game-setup-form" style="display:none">
+    <div class="card-title">Thông tin người chơi</div>
+    <div class="session-date-bar">
+      <span class="cal-icon">📅</span>
+      <div>
+        <div class="date-label">Ngày chơi</div>
+        <input type="date" id="setupSessionDate">
+      </div>
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:10px;font-style:italic;">* Gõ tên sẽ tự động gợi ý Hội viên đã lưu.</div>
+    <div id="setupPlayerRows"></div>
+    <button class="btn-gold" onclick="saveNewTable()" style="margin-top:12px;">💾 Lưu bàn chơi</button>
+    <button class="btn-red" onclick="cancelSetup()">Hủy</button>
+  </div>
+
+  <div id="game-active" style="display:none">
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Bàn đang chơi</span>
+        <button class="btn-edit" onclick="openEditActiveTableModal()" style="margin-right:0;">✏ Sửa bàn</button>
+      </div>
+      <div class="session-badge" style="margin-bottom:15px;">
+        <span class="cal">📅</span> <strong id="activeDateDisplay"></strong>
+      </div>
+      <div id="activePlayerList"></div>
+      
+      <div style="display:flex;gap:8px;margin-top:16px;">
+        <button class="btn-gold" onclick="openAddSinglePlayerModal()" style="margin-top:0;flex:1;">+ Thêm người</button>
+        <button class="btn-red" onclick="resetAll()" style="margin-top:0;flex:1;background:var(--bg3);">Hủy bàn</button>
+      </div>
+      <button class="btn-green" onclick="showTab('result')" style="width:100%;margin-top:8px;">› Tính kết quả</button>
+      
+      <button class="btn-outline-gold" onclick="suspendActiveGame()">⏸ Cất tạm bàn này đi</button>
+    </div>
+  </div>
+
+  <div id="savedGamesSection" style="display:none; margin-top:16px;"></div>
+</div>
+
+<div class="page" id="tab-result">
+  <div id="resultMainView">
+    <div class="card">
+      <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>Cash Out</span>
+        <span style="font-size:10px;color:var(--gold);text-transform:none;letter-spacing:0;cursor:pointer;background:rgba(200,168,75,.1);padding:5px 8px;border-radius:6px;border:1px solid var(--border);" onclick="showSessionHistory()">🕒 Lịch sử bàn chơi</span>
+      </div>
+      <div id="cashoutList"><div class="empty">Chưa có bàn chơi nào đang diễn ra</div></div>
+      <button class="btn-green" id="btnCalcResult" onclick="calcResult()" style="margin-top:10px;display:none;">Tính kết quả</button>
+    </div>
+    <div class="card" id="summaryCard" style="display:none">
+      <div class="card-title">Tổng kết ván</div>
+      <div class="pot-info">Tổng pot: <span id="totalPot">0đ</span></div>
+      <div id="summaryList"></div>
+      <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
+    </div>
+  </div>
+  <div id="sessionHistoryView" style="display:none">
+    <button class="back-btn" onclick="hideSessionHistory()">‹ Quay lại Cash Out</button>
+    <div class="card">
+      <div class="card-title">Lịch sử các buổi chơi (Tổng)</div>
+      <div id="sessionHistoryList"><div class="empty">Chưa có dữ liệu lịch sử</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-hof">
+  <div class="hof-hero">
+    <span class="hof-crown">👑</span>
+    <div class="hof-eyebrow" id="hofEyebrow">All-Time Leaderboard</div>
+    <div class="hof-title">HALL OF FAME</div>
+    <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
+  </div>
+  <div class="hof-body">
+    
+    <div class="filter-tabs">
+      <div class="f-tab active" id="fTabAll" onclick="switchFilterTab('all')">🏆 Tất cả</div>
+      <div class="f-tab" id="fTabCal" onclick="switchFilterTab('cal')">📅 Xem Lịch</div>
+      <div class="f-tab" id="fTabRange" onclick="switchFilterTab('range')">🗓 Theo ngày</div>
+    </div>
+
+    <div id="filterViewCal" class="cal-wrapper" style="display:none;">
+      <div class="cal-header">
+        <button onclick="changeCalMonth(-1)">‹</button>
+        <span id="calMonthYearLabel">Tháng 4 / 2026</span>
+        <button onclick="changeCalMonth(1)">›</button>
+      </div>
+      <div class="cal-grid">
+        <div class="cal-wd">T2</div><div class="cal-wd">T3</div><div class="cal-wd">T4</div><div class="cal-wd">T5</div><div class="cal-wd">T6</div><div class="cal-wd">T7</div><div class="cal-wd">CN</div>
+      </div>
+      <div class="cal-grid" id="calDaysGrid"></div>
+      <button class="btn-outline-gold" style="font-size:10px; margin-top:12px; padding:8px;" onclick="applyHofFilter('month')">📊 Thống kê trọn tháng này</button>
+    </div>
+
+    <div id="filterViewRange" class="cal-wrapper" style="display:none;">
+      <div class="form-row">
+        <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Từ ngày</span><input type="date" id="rangeStart" style="width:100%;font-size:12px;"></div>
+        <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Đến ngày</span><input type="date" id="rangeEnd" style="width:100%;font-size:12px;"></div>
+      </div>
+      <button class="btn-green" style="font-size:11px; padding:9px; margin-top:8px;" onclick="applyHofFilter('range')">Lọc Dữ Liệu</button>
+    </div>
+
+    <div id="hofList"><div class="hof-empty">Chưa có dữ liệu — tính kết quả trước nhé</div></div>
+    
+    <div id="hofStats" style="display:none;">
+      <div class="hof-stats">
+        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
+        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-members">
+  <div id="memberDetailView" style="display:none"></div>
+  <div id="memberListView">
+    <div class="card">
+      <div class="card-title">Danh sách hội viên</div>
+      <div id="memberListEl"><div class="empty">Chưa có hội viên nào</div></div>
+      <button class="btn-gold" style="margin-top:12px;" onclick="showAddMemberModal()">+ Thêm hội viên mới</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💾 Sao lưu dữ liệu</div>
+      <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">
+        Xuất toàn bộ dữ liệu hội viên + lịch sử để lưu trữ hoặc chuyển sang thiết bị khác.
+      </div>
+      <div class="backup-row">
+        <button class="btn-backup btn-export" onclick="showExportModal()">📤 Xuất dữ liệu</button>
+        <button class="btn-backup btn-import" onclick="showImportModal()">📥 Nhập dữ liệu</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="thuChiModal" style="display:none" onclick="closeThuChiOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">Quản lý Thu / Chi <span class="modal-close" onclick="closeThuChiModal()">✕</span></div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Cấn trừ tiền phòng (nếu có) và theo dõi tiến độ nộp/trả tiền.</div>
+    
+    <div class="form-row" style="background:var(--bg3);padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:15px;">
+      <div style="flex:1;">
+        <span style="font-size:10px;color:var(--gold);font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Tổng tiền phòng</span>
+        <input type="number" id="tcRoomFee" placeholder="Ví dụ: 150000" style="width:100%;font-size:14px;color:var(--gold2);font-weight:bold;">
+      </div>
+      <button class="btn-gold" style="width:auto;margin-top:0;padding:0 15px;" onclick="applyRoomFee()">Chia khoản</button>
+    </div>
+    
+    <div id="tcListsContainer" style="max-height:45vh;overflow-y:auto;padding-right:4px;"></div>
+    
+    <button class="btn-green" onclick="closeThuChiModal()" style="margin-top:15px;">Hoàn tất</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editActiveTableModal" style="display:none" onclick="closeEditActiveOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">Sửa Bàn Chơi <span class="modal-close" onclick="closeEditActiveTableModal()">✕</span></div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Bạn có thể đổi tên người chơi hoặc điều chỉnh lại tổng số lượng Hand họ đã mua.</div>
+    <div id="editActivePlayersRows"></div>
+    <button class="btn-green" onclick="saveEditedActiveTable()">💾 Cập nhật bàn chơi</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addSinglePlayerModal" style="display:none" onclick="closeAddSingleOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">Thêm người chơi mới <span class="modal-close" onclick="closeAddSinglePlayerModal()">✕</span></div>
+    <div class="form-row">
+      <input type="text" id="singlePlayerName" placeholder="Tên người chơi" list="memberListGlobal" style="flex:2">
+      <input type="number" id="singlePlayerHands" value="1" min="1" placeholder="Hand" style="flex:1">
+    </div>
+    <button class="btn-gold" onclick="addSinglePlayerSubmit()" style="margin-top:8px;">Thêm vào bàn</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editSessionModal" style="display:none" onclick="closeEditSessionOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">Sửa Lịch Sử <span class="modal-close" onclick="closeEditSessionModal()">✕</span></div>
+    <div id="editSessionDateRow" style="margin-bottom:15px;"></div>
+    <div id="editPlayersContainer" style="margin-bottom:15px;"></div>
+    <button class="btn-green" onclick="updateSessionData()">💾 Lưu thay đổi</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addMemberModal" style="display:none" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">Thêm hội viên mới <span class="modal-close" onclick="closeAddMemberModal()">✕</span></div>
+    <div class="form-row"><label>Tên</label><input type="text" id="newMemberName" placeholder="Nhập tên..." maxlength="20"></div>
+    <button class="btn-gold" onclick="addMember()" style="margin-top:8px;">Xác nhận</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="exportModal" style="display:none" onclick="closeExportOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">📤 Xuất dữ liệu <span class="modal-close" onclick="closeExportModal()">✕</span></div>
+    <div class="backup-hint">Bôi đen toàn bộ → Copy → Lưu vào <strong style="color:var(--gold2);">Notes</strong> hoặc gửi cho bạn bè.</div>
+    <textarea class="backup-textarea" id="exportText" readonly onclick="this.select()"></textarea>
+    <button class="btn-gold" onclick="copyExportData()" style="margin-top:10px;" id="copyBtn">📋 Bấm để Copy toàn bộ</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="importModal" style="display:none" onclick="closeImportOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">📥 Nhập dữ liệu <span class="modal-close" onclick="closeImportModal()">✕</span></div>
+    <div class="backup-hint">Paste đoạn JSON đã sao lưu vào ô bên dưới rồi bấm <strong style="color:#6dbf80;">Khôi phục</strong>.<br><span style="color:var(--red);font-weight:600;">⚠ Dữ liệu hiện tại sẽ bị ghi đè!</span></div>
+    <textarea class="backup-textarea" id="importText" placeholder="Paste JSON vào đây..."></textarea>
+    <button class="btn-green" onclick="doImport()" style="margin-top:10px;">✓ Khôi phục dữ liệu</button>
+  </div>
+</div>
+
+<script>
+// BIẾN TOÀN CỤC CHẠY GAME
+var activeGame = { date: '', players: [] };
+var lastResults = []; 
+var editingSessionIdx = null; 
+
+// BIẾN CHO HOF FILTER & THU CHI
+var hofFilter = { mode: 'all', singleDate: null, monthStr: null, rangeStart: null, rangeEnd: null };
+var calCurYear = new Date().getFullYear();
+var calCurMonth = new Date().getMonth();
+var currentTcIdx = null;
+
+// INIT & MIGRATION
+(function(){
+  if(!localStorage.getItem('pk_sessions')&&localStorage.getItem('pk_members')){
+    var members=JSON.parse(localStorage.getItem('pk_members')||'[]');
+    var sessMap={};
+    members.forEach(function(m){(m.history||[]).forEach(function(h){if(!sessMap[h.date])sessMap[h.date]=[];sessMap[h.date].push({name:m.name,diff:h.diff,buyin:h.buyin,cashout:h.cashout,memberId:m.id});});});
+    var sessions=[];
+    for(var date in sessMap)sessions.push({id:date,date:date,results:sessMap[date]});
+    sessions.sort(function(a,b){var pA=a.date.split('/'),pB=b.date.split('/');return new Date(pB[2],pB[1]-1,pB[0])-new Date(pA[2],pA[1]-1,pA[0]);});
+    localStorage.setItem('pk_sessions',JSON.stringify(sessions));
+  }
+  
+  updateGlobalDatalist();
+  loadActiveGameFromLocal();
+})();
+
+// DỮ LIỆU CƠ BẢN
+function loadMembers(){try{return JSON.parse(localStorage.getItem('pk_members'))||[];}catch(e){return[];}}
+function saveMembers(m){localStorage.setItem('pk_members',JSON.stringify(m)); updateGlobalDatalist(); }
+function getMembers(){return loadMembers();}
+function fmtAbs(n){return n.toLocaleString('vi-VN')+'đ';}
+function initials(name){return name.trim().split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);}
+
+function loadSavedGames() { return JSON.parse(localStorage.getItem('garini_saved_games')) || []; }
+function saveSavedGames(arr) { localStorage.setItem('garini_saved_games', JSON.stringify(arr)); }
+
+function updateGlobalDatalist() {
+    var dl = document.getElementById('memberListGlobal');
+    if(!dl) return;
+    var h = '';
+    getMembers().forEach(m => { h += '<option value="'+m.name+'">'; });
+    dl.innerHTML = h;
+}
+
+// ĐIỀU HƯỚNG TABS
+function showTab(t){
+  ['game','result','hof','members'].forEach(function(id){document.getElementById('tab-'+id).className='page'+(t===id?' show':'');});
+  document.querySelectorAll('.tab').forEach(function(el,i){el.className='tab'+(['game','result','hof','members'][i]===t?' active':'');});
+  if(t==='game') renderGameTab();
+  if(t==='result') renderCashout();
+  if(t==='hof') { renderCalendarUI(); renderHof(); }
+  if(t==='members'){showMemberListView();renderMemberList();}
+}
+
+/* ==================== GAME TAB LOGIC ==================== */
+function loadActiveGameFromLocal() {
+    var saved = localStorage.getItem('garini_active_game');
+    if(saved) { try { activeGame = JSON.parse(saved); } catch(e) {} }
+    renderGameTab();
+}
+function saveActiveGameToLocal() { localStorage.setItem('garini_active_game', JSON.stringify(activeGame)); }
+
+function renderGameTab() {
+    if(activeGame && activeGame.players && activeGame.players.length > 0) {
+        document.getElementById('game-empty').style.display = 'none';
+        document.getElementById('game-setup-num').style.display = 'none';
+        document.getElementById('game-setup-form').style.display = 'none';
+        document.getElementById('game-active').style.display = 'block';
+        
+        var dp = activeGame.date.split('-'); 
+        var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
+        document.getElementById('activeDateDisplay').textContent = displayDate;
+        renderActivePlayersTable();
+    } else {
+        document.getElementById('game-empty').style.display = 'block';
+        document.getElementById('game-setup-num').style.display = 'none';
+        document.getElementById('game-setup-form').style.display = 'none';
+        document.getElementById('game-active').style.display = 'none';
+    }
+
+    var saved = loadSavedGames();
+    if(saved.length > 0) {
+        var sh = '<div class="card-title" style="margin-top:20px; font-size:11px;">BÀN ĐANG ĐƯỢC CẤT TẠM ('+saved.length+')</div>';
+        saved.forEach(function(g, i) {
+            var totalHands = g.players.reduce(function(s, p) { return s + p.hands; }, 0);
+            var dp = g.date.split('-'); 
+            var dateDisp = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : g.date;
+            
+            sh += '<div class="card" style="padding:12px;margin-bottom:8px;">'
+                + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+                + '<b style="color:var(--gold2); font-size:14px;">'+(g.tableName || 'Bàn chưa đặt tên')+'</b>'
+                + '<span style="font-size:10px;color:var(--text3)">📅 '+dateDisp+'</span>'
+                + '</div>'
+                + '<div style="font-size:11px;color:var(--text2);margin-bottom:10px;">'
+                + g.players.length+' người chơi · Tổng buy-in: <b style="color:var(--text)">'+totalHands+'</b> hand'
+                + '</div>'
+                + '<div style="display:flex;gap:6px;">'
+                + '<button class="btn-green" style="padding:8px;font-size:11px;flex:2;margin:0" onclick="resumeSavedGame('+i+')">Mở lại bàn này</button>'
+                + '<button class="btn-red" style="padding:8px;font-size:11px;flex:1;margin:0;background:var(--bg3)" onclick="deleteSavedGame('+i+')">Xoá</button>'
+                + '</div></div>';
+        });
+        document.getElementById('savedGamesSection').innerHTML = sh;
+        document.getElementById('savedGamesSection').style.display = 'block';
+    } else {
+        document.getElementById('savedGamesSection').style.display = 'none';
+    }
+}
+
+function suspendActiveGame() {
+    var name = prompt("Nhập tên gợi nhớ để cất tạm bàn này\n(VD: Bàn VIP, Bàn anh Huy...):", "Bàn lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'}));
+    if(name === null) return; 
+    var saved = loadSavedGames();
+    activeGame.tableName = name;
+    saved.push(activeGame);
+    saveSavedGames(saved);
+    activeGame = {date: '', players: []};
+    localStorage.removeItem('garini_active_game');
+    renderGameTab();
+}
+
+function resumeSavedGame(idx) {
+    if(activeGame && activeGame.players && activeGame.players.length > 0) {
+        if(!confirm("CẢNH BÁO: Bạn đang có một bàn trên màn hình.\nBàn hiện tại sẽ tự động được cất xuống dưới để nhường chỗ cho bàn bạn vừa chọn.\nTiếp tục?")) return;
+        var sList = loadSavedGames();
+        activeGame.tableName = "Bàn cất tạm lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+        sList.push(activeGame);
+        saveSavedGames(sList);
+    }
+    var saved = loadSavedGames();
+    activeGame = saved.splice(idx, 1)[0];
+    saveSavedGames(saved);
+    saveActiveGameToLocal();
+    renderGameTab();
+}
+
+function deleteSavedGame(idx) {
+    if(!confirm("Xoá bàn đang cất tạm này? Mọi dữ liệu buy-in của bàn này sẽ biến mất vĩnh viễn.")) return;
+    var saved = loadSavedGames();
+    saved.splice(idx, 1);
+    saveSavedGames(saved);
+    renderGameTab();
+}
+
+function showSetupNumPlayers() {
+    document.getElementById('game-empty').style.display = 'none';
+    document.getElementById('game-setup-num').style.display = 'block';
+}
+
+function showSetupForm() {
+    var num = parseInt(document.getElementById('numPlayersSetup').value) || 6;
+    var h = '';
+    for(var i=0; i<num; i++){
+        h += '<div class="form-row" style="background:var(--bg3);padding:10px;border-radius:8px;border:1px solid var(--border2);">'
+           + '<input type="text" id="setup_name_'+i+'" placeholder="Người chơi '+(i+1)+'" list="memberListGlobal" style="flex:2">'
+           + '<div style="flex:1; display:flex; align-items:center; gap:6px;">'
+           + '<span style="font-size:10px;color:var(--text3);">Hand:</span>'
+           + '<input type="number" id="setup_hands_'+i+'" value="1" min="1" style="width:100%;">'
+           + '</div></div>';
+    }
+    document.getElementById('setupPlayerRows').innerHTML = h;
+    var d = new Date(), pad = function(n){return n<10?'0'+n:n;};
+    document.getElementById('setupSessionDate').value = d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+    document.getElementById('game-setup-num').style.display = 'none';
+    document.getElementById('game-setup-form').style.display = 'block';
+}
+
+function cancelSetup() { renderGameTab(); }
+
+function saveNewTable() {
+    var num = parseInt(document.getElementById('numPlayersSetup').value) || 0;
+    var members = getMembers();
+    activeGame.players = [];
+    activeGame.date = document.getElementById('setupSessionDate').value;
+    for(var i=0; i<num; i++){
+        var name = document.getElementById('setup_name_'+i).value.trim();
+        var hands = parseInt(document.getElementById('setup_hands_'+i).value) || 0;
+        if(name && hands > 0) {
+            var member = members.find(function(m){ return m.name.toLowerCase() === name.toLowerCase(); });
+            activeGame.players.push({ name: name, hands: hands, chips: hands * 2000, memberId: member ? member.id : null });
+        }
+    }
+    if(activeGame.players.length === 0){ alert('Vui lòng điền ít nhất 1 người chơi!'); return; }
+    saveActiveGameToLocal();
+    renderGameTab();
+}
+
+function renderActivePlayersTable() {
+    var el = document.getElementById('activePlayerList');
+    var h = '<table class="players"><tr><th>Tên</th><th>Hand</th><th>Chip</th><th></th></tr>';
+    activeGame.players.forEach(function(p, i){
+        h += '<tr><td class="name-cell">'+p.name+'<span class="badge">'+fmtAbs(p.hands*100000)+'</span></td>'
+           + '<td>'+p.hands+'<button class="rebuy-btn" onclick="rebuy('+i+')">+</button></td>'
+           + '<td>'+p.chips.toLocaleString()+'</td>'
+           + '<td><button class="del-btn" onclick="delActivePlayer('+i+')">✕</button></td></tr>';
+    });
+    el.innerHTML = h + '</table>';
+}
+
+function rebuy(i) {
+    var h = parseInt(prompt(activeGame.players[i].name + ' mua thêm mấy hand? (Nhập số)')) || 0;
+    if(h > 0) {
+        activeGame.players[i].hands += h;
+        activeGame.players[i].chips += h * 2000;
+        saveActiveGameToLocal();
+        renderActivePlayersTable();
+    }
+}
+
+function delActivePlayer(i) {
+    if(confirm('Xoá '+activeGame.players[i].name+' khỏi bàn chơi này?')) {
+        activeGame.players.splice(i, 1);
+        saveActiveGameToLocal();
+        renderGameTab();
+    }
+}
+
+function resetAll() {
+    if(confirm('Bạn có chắc chắn muốn hủy bỏ hoàn toàn bàn chơi hiện tại? (Sẽ không thể khôi phục)')) {
+        activeGame = {date: '', players: []};
+        localStorage.removeItem('garini_active_game');
+        document.getElementById('summaryCard').style.display='none';
+        renderGameTab();
+    }
+}
+
+function openAddSinglePlayerModal() {
+    document.getElementById('singlePlayerName').value = '';
+    document.getElementById('singlePlayerHands').value = '1';
+    document.getElementById('addSinglePlayerModal').style.display = 'flex';
+}
+function closeAddSinglePlayerModal() { document.getElementById('addSinglePlayerModal').style.display = 'none'; }
+function closeAddSingleOutside(e){ if(e.target===document.getElementById('addSinglePlayerModal')) closeAddSinglePlayerModal(); }
+
+function addSinglePlayerSubmit() {
+    var name = document.getElementById('singlePlayerName').value.trim();
+    var hands = parseInt(document.getElementById('singlePlayerHands').value) || 0;
+    if(!name || hands < 1) { alert('Điền đủ tên và số hand nhé!'); return; }
+    if(activeGame.players.find(function(p){ return p.name.toLowerCase() === name.toLowerCase(); })) { alert('Người này đã ngồi trong bàn rồi!'); return; }
+    var members = getMembers();
+    var member = members.find(function(m){ return m.name.toLowerCase() === name.toLowerCase(); });
+    activeGame.players.push({ name: name, hands: hands, chips: hands * 2000, memberId: member ? member.id : null });
+    saveActiveGameToLocal();
+    renderGameTab();
+    closeAddSinglePlayerModal();
+}
+
+function openEditActiveTableModal() {
+    var h = '';
+    activeGame.players.forEach(function(p, i){
+        h += '<div class="form-row" style="background:var(--bg3);padding:10px;border-radius:8px;border:1px solid var(--border2);margin-bottom:8px;">'
+           + '<input type="text" id="edact_name_'+i+'" value="'+p.name+'" placeholder="Tên" list="memberListGlobal" style="flex:2">'
+           + '<div style="flex:1; display:flex; align-items:center; gap:6px;">'
+           + '<span style="font-size:10px;color:var(--text3);">Tổng Hand:</span>'
+           + '<input type="number" id="edact_hands_'+i+'" value="'+p.hands+'" min="1" style="width:100%;">'
+           + '</div></div>';
+    });
+    document.getElementById('editActivePlayersRows').innerHTML = h;
+    document.getElementById('editActiveTableModal').style.display = 'flex';
+}
+function closeEditActiveTableModal() { document.getElementById('editActiveTableModal').style.display = 'none'; }
+function closeEditActiveOutside(e){ if(e.target===document.getElementById('editActiveTableModal')) closeEditActiveTableModal(); }
+
+function saveEditedActiveTable() {
+    var members = getMembers();
+    for(var i=0; i<activeGame.players.length; i++) {
+        var n = document.getElementById('edact_name_'+i).value.trim();
+        var h = parseInt(document.getElementById('edact_hands_'+i).value) || 1;
+        if(n) {
+            activeGame.players[i].name = n;
+            activeGame.players[i].hands = h;
+            activeGame.players[i].chips = h * 2000;
+            var member = members.find(function(m){ return m.name.toLowerCase() === n.toLowerCase(); });
+            activeGame.players[i].memberId = member ? member.id : null;
+        }
+    }
+    saveActiveGameToLocal();
+    renderGameTab();
+    closeEditActiveTableModal();
+}
+
+/* ==================== RESULT TAB LOGIC ==================== */
+
+function renderCashout() {
+  var el = document.getElementById('cashoutList');
+  var btn = document.getElementById('btnCalcResult');
+  document.getElementById('summaryCard').style.display='none';
+  if(!activeGame.players || !activeGame.players.length) { el.innerHTML='<div class="empty">Chưa có bàn chơi nào đang diễn ra</div>'; btn.style.display = 'none'; return; }
+  
+  btn.style.display = 'block';
+  var h = '';
+  activeGame.players.forEach(function(p,i){
+    h+='<div style="margin-bottom:12px;"><div style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text);">'+p.name+' <span style="font-size:10px;color:var(--text3);font-weight:400;">mua '+p.chips.toLocaleString()+' chip</span></div>'
+      +'<div style="display:flex;align-items:center;gap:8px;"><input class="chip-inp" type="number" id="co_'+i+'" placeholder="Chip còn lại..." min="0" style="flex:1;"></div></div>';
+  });
+  el.innerHTML=h;
+}
+
+// ---- ĐÃ SỬA LỖI TẠI ĐÂY ----
+function calcResult(){
+  if(!activeGame.players.length){alert('Chưa có người chơi!');return;}
+  lastResults = []; var tb=0;
+  activeGame.players.forEach(function(p,i){
+    var co=parseInt((document.getElementById('co_'+i)||{}).value)||0;
+    var diff=Math.round((co-p.chips)/2000*100000);
+    tb+=p.chips;
+    lastResults.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
+  });
+  
+  document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
+  var dp = activeGame.date.split('-');
+  var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
+  
+  var dateEl = document.getElementById('sessionDateDisplay');
+  if(dateEl) { dateEl.textContent = displayDate ? '📅 Ngày: ' + displayDate : ''; }
+  
+  lastResults.sort(function(a,b){return b.diff-a.diff;});
+  var sl='';
+  lastResults.forEach(function(r){
+    var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
+    sl+='<div class="summary-row"><div><div style="font-weight:600;color:var(--text);">'+r.name+'</div>'
+      +'<div style="font-size:10px;color:var(--text3);">Mua '+r.buyin.toLocaleString()+' → Còn '+r.cashout.toLocaleString()+'</div></div>'
+      +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
+  });
+  document.getElementById('summaryList').innerHTML=sl;
+  document.getElementById('summaryCard').style.display='block';
+}
+
+function saveSessionToHistory(){
+  if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
+  var members = getMembers();
+  var dp = activeGame.date.split('-');
+  var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
+  lastResults.forEach(function(r){
+    if(!r.memberId)return;
+    var m = members.find(function(x){return x.id===r.memberId;});
+    if(!m)return;
+    if(!m.history) m.history=[];
+    m.history.unshift({date:displayDate, buyin:r.buyin, cashout:r.cashout, diff:r.diff});
+  });
+  saveMembers(members);
+  
+  var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  sessions.unshift({
+      id:Date.now(), 
+      date:displayDate, 
+      roomFee: 0,
+      settled: {},
+      results:lastResults.map(function(r){return{name:r.name,diff:r.diff,buyin:r.buyin,cashout:r.cashout,memberId:r.memberId};})
+  });
+  localStorage.setItem('pk_sessions',JSON.stringify(sessions));
+  
+  alert('✅ Đã lưu kết quả ván chơi thành công!');
+  activeGame = {date: '', players: []};
+  localStorage.removeItem('garini_active_game');
+  lastResults = [];
+  
+  applyHofFilter('all');
+  showTab('hof');
+}
+
+function showSessionHistory(){document.getElementById('resultMainView').style.display='none';document.getElementById('sessionHistoryView').style.display='block';renderSessionHistory();}
+function hideSessionHistory(){document.getElementById('resultMainView').style.display='block';document.getElementById('sessionHistoryView').style.display='none';}
+function renderSessionHistory(){
+  var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  var el=document.getElementById('sessionHistoryList');
+  if(!sessions.length){el.innerHTML='<div class="empty">Chưa có lịch sử bàn chơi nào được lưu.</div>';return;}
+  var h='';
+  sessions.forEach(function(s,idx){
+    h+='<div style="margin-bottom:12px;border:1px solid var(--border2);border-radius:8px;padding:12px;background:var(--bg3);">';
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid var(--border2);padding-bottom:8px;">';
+    h+='<span style="color:var(--gold2);font-weight:700;font-size:13px;">📅 '+s.date+'</span>';
+    h+='<div>';
+    h+='<button class="btn-edit" style="color:#6dbf80; border-color:rgba(74,140,92,.4); background:rgba(74,140,92,.1); margin-right:6px;" onclick="openThuChiModal('+idx+')">💰 Thu/Chi</button>';
+    h+='<button class="btn-edit" onclick="openEditSessionHistory('+idx+')">✏ Sửa</button>';
+    h+='<button style="background:transparent;border:none;color:var(--red);font-size:11px;cursor:pointer;font-weight:600;" onclick="deleteSessionHistory('+idx+')">Xóa</button></div></div>';
+    
+    (s.results||[]).sort(function(a,b){return b.diff-a.diff;}).forEach(function(r){
+      var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
+      h+='<div class="summary-row" style="padding:5px 0;border-bottom:none;"><div style="font-size:12px;font-weight:600;color:var(--text);">'+r.name+'</div>'
+        +'<div class="summary-val '+cls+'" style="font-size:12px;font-weight:700;">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
+    });
+    h+='</div>';
+  });
+  el.innerHTML=h;
+}
+
+/* ==================== QUẢN LÝ THU / CHI LOGIC ==================== */
+function openThuChiModal(idx) {
+    currentTcIdx = idx;
+    var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+    var sess = sessions[idx];
+    document.getElementById('tcRoomFee').value = sess.roomFee || '';
+    renderThuChiLists();
+    document.getElementById('thuChiModal').style.display = 'flex';
+}
+
+function closeThuChiModal() { document.getElementById('thuChiModal').style.display = 'none'; }
+function closeThuChiOutside(e) { if(e.target === document.getElementById('thuChiModal')) closeThuChiModal(); }
+
+function applyRoomFee() {
+    var fee = parseInt(document.getElementById('tcRoomFee').value) || 0;
+    var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+    if(sessions[currentTcIdx]) {
+        sessions[currentTcIdx].roomFee = fee;
+        localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+    }
+    renderThuChiLists();
+}
+
+function toggleTcDone(name) {
+    var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+    var sess = sessions[currentTcIdx];
+    if(!sess) return;
+    sess.settled = sess.settled || {};
+    sess.settled[name] = !sess.settled[name];
+    localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+    renderThuChiLists();
+}
+
+function renderThuChiLists() {
+    var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+    var sess = sessions[currentTcIdx];
+    if(!sess) return;
+    
+    var fee = sess.roomFee || 0;
+    var numPlayers = sess.results.length;
+    var feePerPerson = numPlayers > 0 ? Math.round(fee / numPlayers) : 0;
+    sess.settled = sess.settled || {};
+    
+    var thuList = [];
+    var chiList = [];
+    
+    sess.results.forEach(function(r) {
+        var net = r.diff - feePerPerson;
+        var isDone = !!sess.settled[r.name];
+        var item = { name: r.name, net: net, done: isDone };
+        
+        if (net < 0) thuList.push(item);
+        else if (net > 0) chiList.push(item);
+        else if (net === 0 && feePerPerson > 0) thuList.push(item);
+    });
+    
+    thuList.sort((a,b) => a.net - b.net);
+    chiList.sort((a,b) => b.net - a.net);
+    
+    var h = '';
+    if(fee > 0) {
+        h += '<div style="font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;background:rgba(200,168,75,0.1);padding:6px;border-radius:6px;border:1px solid var(--border2);">Mỗi người gánh khoản thu: <b>' + fmtAbs(feePerPerson) + '</b></div>';
+    }
+    
+    h += '<div style="margin-bottom:20px;">';
+    h += '<div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--red-lt);padding-bottom:4px;">CẦN THU VÀO (LỖ + PHÍ)</div>';
+    if(thuList.length === 0) h += '<div class="empty">Không có ai</div>';
+    thuList.forEach(function(item) { h += tcRowHtml(item.name, Math.abs(item.net), item.done, 'thu'); });
+    h += '</div>';
+    
+    h += '<div style="margin-bottom:10px;">';
+    h += '<div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--green-lt);padding-bottom:4px;">CẦN TRẢ RA (LỜI)</div>';
+    if(chiList.length === 0) h += '<div class="empty">Không có ai</div>';
+    chiList.forEach(function(item) { h += tcRowHtml(item.name, item.net, item.done, 'chi'); });
+    h += '</div>';
+    
+    document.getElementById('tcListsContainer').innerHTML = h;
+}
+
+function tcRowHtml(name, amt, isDone, type) {
+    var color = type === 'thu' ? 'var(--red)' : '#6dbf80';
+    var bg = isDone ? 'var(--bg3)' : 'var(--bg2)';
+    var opacity = isDone ? '0.45' : '1';
+    var checkStyle = isDone ? 'background:var(--gold);color:#000;border-color:var(--gold);' : 'background:transparent;border-color:var(--border);';
+    var checkIcon = isDone ? '✓' : '';
+    
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:'+bg+';border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;opacity:'+opacity+';transition:all .2s;" onclick="toggleTcDone(\''+name+'\')">'
+         + '<div style="font-weight:700;font-size:14px;">'+name+'</div>'
+         + '<div style="display:flex;align-items:center;gap:12px;">'
+         + '<div style="font-weight:800;color:'+color+';font-size:14px;">'+fmtAbs(amt)+'</div>'
+         + '<div style="width:20px;height:20px;border-radius:5px;border:1px solid;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;'+checkStyle+'">'+checkIcon+'</div>'
+         + '</div></div>';
+}
+
+/* ==================== EDIT SAVED SESSION ==================== */
+function openEditSessionHistory(idx){
+  editingSessionIdx = idx;
+  var sess = JSON.parse(localStorage.getItem('pk_sessions')||'[]')[idx];
+  var parts = sess.date.split('/');
+  var isoDate = parts.length === 3 ? parts[2]+'-'+parts[1]+'-'+parts[0] : sess.date;
+  var dateHtml = '<div style="display:flex;align-items:center;gap:10px;"><span style="font-size:12px;color:var(--gold);">Ngày chơi:</span><input type="date" id="editSessionDate" value="'+isoDate+'" style="flex:1;"></div>';
+  document.getElementById('editSessionDateRow').innerHTML = dateHtml;
+  var playersHtml = sess.results.map(function(r, i){
+    return '<div style="background:var(--bg3);padding:12px;border-radius:8px;margin-bottom:8px;border:1px solid var(--border2);">'
+      +'<div style="font-size:11px;font-weight:bold;color:var(--gold);margin-bottom:8px;">Người chơi '+(i+1)+'</div>'
+      +'<div class="form-row"><input type="text" id="edhist_name_'+i+'" value="'+r.name+'" placeholder="Tên" list="memberListGlobal" style="flex:1;"></div>'
+      +'<div class="form-row">'
+      +'<div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:2px;">Hand Mua Vào</span><input type="number" id="edhist_buy_'+i+'" value="'+(r.buyin/2000)+'" style="width:100%;"></div>'
+      +'<div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:2px;">Chip Còn Lại</span><input type="number" id="edhist_co_'+i+'" value="'+r.cashout+'" style="width:100%;"></div>'
+      +'</div></div>';
+  }).join('');
+  document.getElementById('editPlayersContainer').innerHTML = playersHtml;
+  document.getElementById('editSessionModal').style.display = 'flex';
+}
+
+function updateSessionData(){
+  var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  var members = getMembers();
+  var s = sessions[editingSessionIdx];
+  var oldDateStr = s.date;
+  var newIsoDate = document.getElementById('editSessionDate').value;
+  var dp = newIsoDate.split('-');
+  var newDateStr = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : newIsoDate;
+  s.date = newDateStr;
+  s.results.forEach(function(r, i){
+    var oldBuy = r.buyin; var oldDiff = r.diff; var oldName = r.name;
+    r.name = document.getElementById('edhist_name_'+i).value.trim();
+    var newHands = parseInt(document.getElementById('edhist_buy_'+i).value)||0;
+    r.buyin = newHands * 2000; r.cashout = parseInt(document.getElementById('edhist_co_'+i).value)||0;
+    r.diff = Math.round((r.cashout - r.buyin)/2000*100000);
+    var m = members.find(function(x){ return x.name === oldName || x.id === r.memberId; });
+    if(m && m.history){
+      var hIdx = m.history.findIndex(function(h){ return h.date === oldDateStr && h.buyin === oldBuy && h.diff === oldDiff; });
+      if(hIdx !== -1) m.history[hIdx] = {date: newDateStr, buyin: r.buyin, cashout: r.cashout, diff: r.diff};
+    }
+  });
+  localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+  saveMembers(members); 
+  closeEditSessionModal(); renderSessionHistory(); renderCalendarUI(); renderHof();
+  alert('✅ Đã cập nhật lại dữ liệu lịch sử!');
+}
+function closeEditSessionModal(){ document.getElementById('editSessionModal').style.display='none'; }
+function closeEditSessionOutside(e){ if(e.target===document.getElementById('editSessionModal'))closeEditSessionModal(); }
+
+function deleteSessionHistory(idx){
+  if(confirm('Xóa lịch sử bàn chơi này? Tiền tổng của các hội viên trong bàn cũng sẽ được trừ đi.')){
+    var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+    var del=sessions[idx];
+    if(del){
+      var members=getMembers();
+      (del.results||[]).forEach(function(r){
+        var m=members.find(function(x){return x.name===r.name || x.id===r.memberId;});
+        if(m&&m.history){var hi=m.history.findIndex(function(h){return h.date===del.date&&h.diff===r.diff&&h.buyin===r.buyin;});if(hi!==-1)m.history.splice(hi,1);}
+      });
+      saveMembers(members);
+    }
+    sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));
+    renderSessionHistory(); renderCalendarUI(); renderHof();
+  }
+}
+
+/* ==================== HOF FILTER & CALENDAR ==================== */
+function switchFilterTab(tab) {
+    document.getElementById('fTabAll').className = 'f-tab' + (tab==='all'?' active':'');
+    document.getElementById('fTabCal').className = 'f-tab' + (tab==='cal'?' active':'');
+    document.getElementById('fTabRange').className = 'f-tab' + (tab==='range'?' active':'');
+    
+    document.getElementById('filterViewCal').style.display = (tab==='cal') ? 'block' : 'none';
+    document.getElementById('filterViewRange').style.display = (tab==='range') ? 'block' : 'none';
+    
+    if(tab==='all') applyHofFilter('all');
+}
+
+function changeCalMonth(dir) {
+    calCurMonth += dir;
+    if(calCurMonth < 0) { calCurMonth = 11; calCurYear--; }
+    else if(calCurMonth > 11) { calCurMonth = 0; calCurYear++; }
+    renderCalendarUI();
+}
+
+function renderCalendarUI() {
+    var el = document.getElementById('calDaysGrid');
+    var mStr = (calCurMonth + 1).toString().padStart(2, '0');
+    document.getElementById('calMonthYearLabel').textContent = 'Tháng ' + mStr + ' / ' + calCurYear;
+
+    var ad = {};
+    getMembers().forEach(m => { (m.history||[]).forEach(h => { ad[h.date] = true; }); });
+
+    var firstDay = new Date(calCurYear, calCurMonth, 1).getDay();
+    var daysInMonth = new Date(calCurYear, calCurMonth + 1, 0).getDate();
+    var offset = firstDay === 0 ? 6 : firstDay - 1;
+
+    var h = '';
+    for(var i=0; i<offset; i++) h += '<div class="cal-day empty"></div>';
+
+    for(var d=1; d<=daysInMonth; d++) {
+        var ds = d.toString().padStart(2, '0') + '/' + mStr + '/' + calCurYear;
+        var hasData = ad[ds];
+        var cls = 'cal-day' + (hasData ? ' has-data' : '');
+        
+        if(hofFilter.mode === 'date' && hofFilter.singleDate === ds) cls += ' selected';
+
+        h += '<div class="'+cls+'" onclick="applyHofFilter(\'date\', \''+ds+'\')">'+d+'</div>';
+    }
+    el.innerHTML = h;
+}
+
+function applyHofFilter(mode, val1) {
+    hofFilter.mode = mode;
+    var eyebrow = document.getElementById('hofEyebrow');
+    
+    if(mode === 'all') {
+        eyebrow.textContent = 'All-Time Leaderboard';
+    } 
+    else if(mode === 'date') {
+        hofFilter.singleDate = val1;
+        eyebrow.textContent = 'Bảng Vàng: Ngày ' + val1;
+    } 
+    else if(mode === 'month') {
+        var mStr = (calCurMonth + 1).toString().padStart(2, '0');
+        hofFilter.monthStr = mStr + '/' + calCurYear;
+        eyebrow.textContent = 'Thống Kê: Tháng ' + hofFilter.monthStr;
+    } 
+    else if(mode === 'range') {
+        var d1 = document.getElementById('rangeStart').value;
+        var d2 = document.getElementById('rangeEnd').value;
+        if(!d1 || !d2) { alert('Vui lòng chọn đầy đủ Từ ngày và Đến ngày!'); return; }
+        hofFilter.rangeStart = d1; 
+        hofFilter.rangeEnd = d2;
+        var p1 = d1.split('-'); var dp1 = p1[2]+'/'+p1[1];
+        var p2 = d2.split('-'); var dp2 = p2[2]+'/'+p2[1];
+        eyebrow.textContent = 'Từ ' + dp1 + ' đến ' + dp2;
+    }
+
+    renderCalendarUI();
+    renderHof();
+}
+
+/* ==================== HOF AGGREGATION LOGIC ==================== */
+function renderHof(){
+  var el=document.getElementById('hofList');
+  var members=getMembers();
+  var filteredResults=[], totalBuyinFilter=0;
+
+  members.forEach(function(m){
+    if(m.history&&m.history.length>0){
+      var tDiff=0,tBuyin=0,tCashout=0,hasData=false;
+      
+      m.history.forEach(function(h){
+        var parts = h.date.split('/'); 
+        var dObj = new Date(parts[2], parts[1]-1, parts[0]);
+        var pass = false;
+        
+        if (hofFilter.mode === 'all') { pass = true; }
+        else if (hofFilter.mode === 'date') { pass = (h.date === hofFilter.singleDate); }
+        else if (hofFilter.mode === 'month') { pass = (parts[1]+'/'+parts[2] === hofFilter.monthStr); }
+        else if (hofFilter.mode === 'range') {
+            var st = new Date(hofFilter.rangeStart); st.setHours(0,0,0,0);
+            var en = new Date(hofFilter.rangeEnd); en.setHours(23,59,59,999);
+            pass = (dObj >= st && dObj <= en);
+        }
+
+        if(pass) {
+          tDiff+=h.diff; tBuyin+=h.buyin; tCashout+=h.cashout; totalBuyinFilter+=h.buyin;
+          hasData=true;
+        }
+      });
+
+      if(hasData){ filteredResults.push({name:m.name,diff:tDiff,buyin:tBuyin,cashout:tCashout}); }
+    }
+  });
+
+  if(!filteredResults.length){
+      el.innerHTML='<div class="hof-empty" style="padding:40px 0;">Chưa có dữ liệu cho khoảng thời gian này.<br><span style="font-size:24px;display:block;margin-top:10px;opacity:0.3;">📭</span></div>';
+      document.getElementById('hofStats').style.display='none';
+      return;
+  }
+
+  var sorted=filteredResults.sort(function(a,b){return b.diff-a.diff;});
+  var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
+  var medals=['🥇','🥈','🥉'],rc=['rank-1','rank-2','rank-3'];
+  var winCount=sorted.filter(function(r){return r.diff>0;}).length,hasLoss=sorted.some(function(r){return r.diff<0;});
+  var h='<div class="rank-list">';
+  
+  sorted.forEach(function(r,i){
+    var cls=i<3?rc[i]:(r.diff>0?'rank-win':r.diff<0?'rank-loss':'rank-even');
+    var badge=i<3?medals[i]:(i+1),barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
+    var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Huề';
+    if(i===winCount&&hasLoss&&winCount>0)h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
+    h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
+      +'<div class="medal">'+badge+'</div>'
+      +'<div class="rank-info"><div class="rank-name">'+r.name+'</div>'
+      +'<div class="rank-sub">Tổng mua: '+r.buyin.toLocaleString()+' · Tổng ra: '+r.cashout.toLocaleString()+'</div></div>'
+      +'<div class="rank-amt">'+amt+'</div>'
+      +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
+  });
+  el.innerHTML=h+'</div>';
+  
+  setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
+  
+  var tm=Math.round(totalBuyinFilter/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
+  document.getElementById('hofTotalPot').textContent=fmtAbs(tm);
+  document.getElementById('hofPlayerCount').textContent=sorted.length+' người';
+  document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
+  document.getElementById('hofBigLoss').textContent=bl.diff<0?'-'+fmtAbs(Math.abs(bl.diff)):'—';
+  document.getElementById('hofStats').style.display='block';
+  
+  if(bw.diff>0)launchConfetti();
+}
+
+/* ==================== MEMBERS TAB LOGIC ==================== */
+function showMemberListView(){document.getElementById('memberDetailView').style.display='none';document.getElementById('memberListView').style.display='block';}
+
+function renderMemberList(){
+  var el=document.getElementById('memberListEl'),members=getMembers();
+  if(!members.length){el.innerHTML='<div class="empty">Chưa có hội viên nào</div>';return;}
+  el.innerHTML=members.map(function(m){
+    var hist=m.history||[],totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
+    var wins=hist.filter(function(h){return h.diff>0;}).length;
+    var winRate=hist.length>0?Math.round(wins/hist.length*100):0;
+    var diffCls=totalDiff>0?'pill-green':totalDiff<0?'pill-red':'pill-gray';
+    var diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
+    return '<div class="member-list-item" onclick="showMemberDetail(\''+m.id+'\')">'
+      +'<div class="member-avatar">'+initials(m.name)+'</div>'
+      +'<div class="member-meta"><div class="member-name">'+m.name+'</div>'
+      +'<div class="member-stats-row"><span class="stat-pill pill-gold">'+hist.length+' buổi</span>'
+      +'<span class="stat-pill '+diffCls+'">'+diffTxt+'</span>'
+      +(hist.length>0?'<span class="stat-pill pill-gray">WR '+winRate+'%</span>':'')
+      +'</div></div><div class="member-arrow">›</div></div>';
+  }).join('');
+}
+
+function showMemberDetail(id){
+  var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
+  var hist=m.history||[],totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
+  var wins=hist.filter(function(h){return h.diff>0;}).length,losses=hist.filter(function(h){return h.diff<0;}).length;
+  var winRate=hist.length>0?Math.round(wins/hist.length*100):0,since=hist.length>0?hist[hist.length-1].date:'—';
+  var diffCls=totalDiff>0?'green':totalDiff<0?'red':'',diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
+  var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h,idx){
+    var cls=h.diff>0?'profit':h.diff<0?'loss':'zero',icon=h.diff>0?'▲':h.diff<0?'▼':'—';
+    return '<div class="history-row"><div><div class="history-date">📅 '+h.date+'</div>'
+      +'<div class="history-detail">Mua '+h.buyin.toLocaleString()+' → Còn '+h.cashout.toLocaleString()+'</div></div>'
+      +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div></div>';
+  }).join('');
+  var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
+    +'<div class="profile-header"><div class="profile-avatar-lg">'+initials(m.name)+'</div>'
+    +'<div><div class="profile-name">'+m.name+'</div><div class="profile-since">Thành viên từ '+since+'</div></div></div>'
+    +'<div class="profile-stats">'
+    +'<div class="pstat"><div class="pstat-val">'+hist.length+'</div><div class="pstat-label">Buổi</div></div>'
+    +'<div class="pstat"><div class="pstat-val '+diffCls+'">'+diffTxt+'</div><div class="pstat-label">Tổng</div></div>'
+    +'<div class="pstat"><div class="pstat-val">'+winRate+'%</div><div class="pstat-label">Win rate</div></div>'
+    +'<div class="pstat"><div class="pstat-val">'+wins+'/'+losses+'</div><div class="pstat-label">W / L</div></div>'
+    +'</div>'
+    +'<div class="card"><div class="card-title">Lịch sử buổi chơi</div>'+histHTML+'</div>'
+    +'<button class="btn-red" onclick="deleteMember(\''+id+'\')">Xoá hội viên này</button>';
+  document.getElementById('memberDetailView').innerHTML=html;
+  document.getElementById('memberDetailView').style.display='block';
+  document.getElementById('memberListView').style.display='none';
+}
+
+function deleteMember(id){
+  var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
+  if(confirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.')){saveMembers(members.filter(function(x){return x.id!==id;}));showMemberListView();renderMemberList();}
+}
+
+function showAddMemberModal(){document.getElementById('addMemberModal').style.display='flex';setTimeout(function(){document.getElementById('newMemberName').focus();},100);}
+function closeAddMemberModal(){document.getElementById('addMemberModal').style.display='none';document.getElementById('newMemberName').value='';}
+function closeModalOutside(e){if(e.target===document.getElementById('addMemberModal'))closeAddMemberModal();}
+function addMember(){
+  var name=document.getElementById('newMemberName').value.trim();if(!name){alert('Nhập tên đi!');return;}
+  var members=getMembers();
+  if(members.find(function(m){return m.name.toLowerCase()===name.toLowerCase();})){alert('Tên này đã có rồi!');return;}
+  members.push({id:'m_'+Date.now(),name:name,history:[]});
+  saveMembers(members);closeAddMemberModal();renderMemberList();
+  if(document.getElementById('tab-game').classList.contains('show')) renderGameTab();
+}
+
+/* ==================== EXPORT / IMPORT ==================== */
+function getAllData(){
+  return {
+    pk_members: JSON.parse(localStorage.getItem('pk_members')||'[]'),
+    pk_sessions: JSON.parse(localStorage.getItem('pk_sessions')||'[]'),
+    garini_saved_games: JSON.parse(localStorage.getItem('garini_saved_games')||'[]'),
+    garini_active_game: JSON.parse(localStorage.getItem('garini_active_game')||'null'),
+    exported_at: new Date().toLocaleString('vi-VN')
+  };
+}
+
+function showExportModal(){
+  var data = JSON.stringify(getAllData(), null, 2);
+  document.getElementById('exportText').value = data;
+  document.getElementById('exportModal').style.display = 'flex';
+  document.getElementById('copyBtn').textContent = '📋 Bấm để Copy toàn bộ';
+  setTimeout(function(){ document.getElementById('exportText').select(); }, 200);
+}
+function closeExportModal(){document.getElementById('exportModal').style.display='none';}
+function closeExportOutside(e){if(e.target===document.getElementById('exportModal'))closeExportModal();}
+
+function copyExportData(){
+  var ta = document.getElementById('exportText');
+  ta.select();
+  try { document.execCommand('copy'); document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu';
+  } catch(e) { navigator.clipboard && navigator.clipboard.writeText(ta.value).then(function(){ document.getElementById('copyBtn').textContent = '✅ Đã copy! Dán vào Notes để lưu'; }); }
+}
+
+function showImportModal(){
+  document.getElementById('importText').value = '';
+  document.getElementById('importModal').style.display = 'flex';
+  setTimeout(function(){ document.getElementById('importText').focus(); }, 200);
+}
+function closeImportModal(){document.getElementById('importModal').style.display='none';}
+function closeImportOutside(e){if(e.target===document.getElementById('importModal'))closeImportModal();}
+
+function doImport(){
+  var raw = document.getElementById('importText').value.trim();
+  if(!raw){alert('Chưa paste dữ liệu vào!');return;}
+  try {
+    var data = JSON.parse(raw);
+    if(!data.pk_members && !data.pk_sessions) throw new Error('Sai định dạng');
+    if(!confirm('⚠️ Dữ liệu hiện tại sẽ bị GHI ĐÈ hoàn toàn!\n\nXác nhận khôi phục?')) return;
+    if(data.pk_members) localStorage.setItem('pk_members', JSON.stringify(data.pk_members));
+    if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
+    if(data.garini_saved_games) localStorage.setItem('garini_saved_games', JSON.stringify(data.garini_saved_games));
+    if(data.garini_active_game) localStorage.setItem('garini_active_game', JSON.stringify(data.garini_active_game));
+    closeImportModal(); updateGlobalDatalist(); renderMemberList(); loadActiveGameFromLocal();
+    alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
+  } catch(e) { alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.'); }
+}
+
+function launchConfetti(){
+  var cv=document.getElementById('confetti-canvas'),ctx=cv.getContext('2d');
+  cv.width=window.innerWidth;cv.height=window.innerHeight;cv.style.display='block';
+  var cols=['#c8a84b','#f0d878','#e8c96a','#ffffff','#8a6a20','#f5e09a'];
+  var ps=Array.from({length:90},function(){return{x:Math.random()*cv.width,y:-30,r:Math.random()*4+2,d:Math.random()*2+1,c:cols[Math.floor(Math.random()*cols.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()>.5};});
+  var a=0,t=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);a+=.01;t++;ps.forEach(function(p,i){p.ta+=p.ts;p.y+=p.d+Math.sin(a)*1.2;p.x+=Math.sin(a+i)*.7;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.sin(p.ta)*13*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=.85;p.sq?ctx.fillRect(-p.r,-p.r*.5,p.r*2,p.r):(ctx.beginPath(),ctx.arc(0,0,p.r,0,Math.PI*2),ctx.fill());ctx.restore();});if(t<200)requestAnimationFrame(draw);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';}})();
+}
+</script>
+</body>
+</html>
