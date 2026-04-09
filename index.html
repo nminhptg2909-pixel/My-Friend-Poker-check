@@ -59,9 +59,10 @@ body>*{position:relative;z-index:1;}
 .app-divider-icon{font-size:11px;color:var(--gold);opacity:.5;}
 
 /* TABS */
-.tabs{display:flex;gap:4px;margin-bottom:16px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:4px;}
-.tab{flex:1;padding:8px 2px;font-size:10px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;background:transparent;color:var(--text3);transition:all .2s;letter-spacing:.5px;text-transform:uppercase;font-family:var(--font);border:1px solid transparent;}
+.tabs{display:flex;gap:3px;margin-bottom:16px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:4px;}
+.tab{flex:1;padding:8px 1px;font-size:9px;font-weight:700;text-align:center;border-radius:7px;cursor:pointer;background:transparent;color:var(--text3);transition:all .2s;letter-spacing:.5px;text-transform:uppercase;font-family:var(--font);border:1px solid transparent;white-space:nowrap;}
 .tab.active{background:linear-gradient(135deg,#1e1a0e,#2a2210);color:var(--gold2);border-color:var(--border);box-shadow:0 0 12px var(--gold-glow);}
+.tab.active-blood{background:linear-gradient(135deg,#2a0a0a,#1a0000);color:#ff4d4d;border-color:rgba(255,77,77,0.4);box-shadow:0 0 12px rgba(255,77,77,0.3);}
 .page{display:none;}.page.show{display:block;}
 
 /* CARDS */
@@ -232,6 +233,28 @@ table.players tr:last-child td{border-bottom:none;}
 .hof-stat-val{font-size:16px;font-weight:800;color:var(--gold2);}
 .hof-stat-val.green{color:#6dbf80;}.hof-stat-val.red{color:#d07070;}
 
+/* KILL BLOOD TAB (ĐẪM MÁU) */
+#tab-killblood { padding: 0; }
+.kb-hero { background: linear-gradient(160deg, #1a0505 0%, #0d0202 40%, #050000 100%); border-radius: var(--radius) var(--radius) 0 0; padding: 28px 16px 22px; text-align: center; position: relative; overflow: hidden; border: 1px solid rgba(192,80,80,.3); border-bottom: none; }
+.kb-hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 50% 0%, rgba(192,80,80,.2) 0%, transparent 70%); pointer-events: none; }
+.kb-skull { font-size: 46px; display: block; margin-bottom: 8px; position: relative; z-index: 1; filter: drop-shadow(0 0 15px rgba(192,80,80,.8)); animation: skullShake 2s infinite; }
+@keyframes skullShake { 0%,100%{transform:rotate(-3deg) scale(1);} 50%{transform:rotate(3deg) scale(1.05);} }
+.kb-eyebrow { font-size: 9px; font-weight: 600; letter-spacing: 6px; color: rgba(192,80,80,.7); text-transform: uppercase; margin-bottom: 4px; position: relative; z-index: 1; }
+.kb-title { font-weight: 800; font-size: 26px; letter-spacing: 6px; color: #ff4d4d; text-shadow: 0 0 10px rgba(255,0,0,0.5), 0 0 20px rgba(255,0,0,0.3); position: relative; z-index: 1; margin-bottom: 4px; font-family: 'Montserrat', sans-serif; }
+.kb-drops { display: flex; justify-content: center; gap: 12px; position: relative; z-index: 1; margin-top: 8px; }
+.kb-drops span { font-size: 14px; opacity: 0.8; animation: bloodDrop 1.5s ease-in infinite; display: inline-block; }
+.kb-drops span:nth-child(2) { animation-delay: 0.3s; }
+.kb-drops span:nth-child(3) { animation-delay: 0.6s; }
+@keyframes bloodDrop { 0% { transform: translateY(-5px); opacity: 1; } 100% { transform: translateY(15px); opacity: 0; } }
+.kb-body { background: #0a0303; border-radius: 0 0 var(--radius) var(--radius); padding: 16px; border: 1px solid rgba(192,80,80,.3); border-top: none; min-height: 200px; }
+.kb-card { background: linear-gradient(135deg, #170707, #0a0202); border: 1px solid rgba(192,80,80,.4); border-radius: 10px; padding: 14px; margin-bottom: 12px; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+.kb-card::after { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 4px; background: linear-gradient(to bottom, #ff4d4d, #8b0000); }
+.kb-date { font-size: 13px; font-weight: 800; color: #ff7675; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed rgba(192,80,80,.3); padding-bottom: 6px; }
+.kb-total { font-size: 15px; font-weight: 900; color: #ff4d4d; text-shadow: 0 0 8px rgba(255,0,0,0.4); }
+.kb-row { display: flex; justify-content: space-between; align-items:center; font-size: 12px; margin-top: 8px; background: rgba(0,0,0,.3); padding: 6px 8px; border-radius: 6px;}
+.kb-killer { color: #6dbf80; font-weight: 800; font-size: 13px; }
+.kb-victim { color: #ff4d4d; font-weight: 800; font-size: 13px; }
+
 /* MEMBERS */
 .member-list-item{display:flex;align-items:center;gap:12px;padding:13px;border-radius:10px;background:var(--bg3);border:1px solid var(--border2);margin-bottom:8px;cursor:pointer;transition:all .15s;}
 .member-list-item:active{border-color:var(--border);background:var(--bg4);}
@@ -317,8 +340,9 @@ table.players tr:last-child td{border-bottom:none;}
 
 <div class="tabs">
   <div class="tab active" onclick="showTab('game')">🎮 Game</div>
-  <div class="tab" onclick="showTab('result')">Kết quả</div>
+  <div class="tab" onclick="showTab('result')">K.Quả</div>
   <div class="tab" onclick="showTab('hof')">🏆 Fame</div>
+  <div class="tab" onclick="showTab('killblood')">🩸 Blood</div>
   <div class="tab" onclick="showTab('members')">Hội viên</div>
 </div>
 
@@ -456,6 +480,23 @@ table.players tr:last-child td{border-bottom:none;}
     </div>
   </div>
 </div>
+
+<div class="page" id="tab-killblood">
+  <div class="kb-hero">
+    <span class="kb-skull">💀</span>
+    <div class="kb-eyebrow">Những Ngày Đẫm Máu</div>
+    <div class="kb-title">KILL BLOOD</div>
+    <div class="kb-drops"><span>🩸</span><span>🩸</span><span>🩸</span></div>
+  </div>
+  <div class="kb-body">
+    <div style="text-align:center;font-size:11px;color:var(--text3);margin-bottom:15px;border-bottom:1px solid rgba(192,80,80,.2);padding-bottom:10px;">
+      Chỉ hiển thị các buổi chơi có tổng tiền "Thảm sát" trên <b>500.000đ</b>
+    </div>
+    <div id="kbList">
+      </div>
+  </div>
+</div>
+
 
 <div class="page" id="tab-members">
   <div id="memberDetailView" style="display:none"></div>
@@ -606,13 +647,26 @@ function updateGlobalDatalist() {
     dl.innerHTML = h;
 }
 
-// ĐIỀU HƯỚNG TABS
+// ĐIỀU HƯỚNG TABS (CẬP NHẬT KILL BLOOD)
 function showTab(t){
-  ['game','result','hof','members'].forEach(function(id){document.getElementById('tab-'+id).className='page'+(t===id?' show':'');});
-  document.querySelectorAll('.tab').forEach(function(el,i){el.className='tab'+(['game','result','hof','members'][i]===t?' active':'');});
+  ['game','result','hof','killblood','members'].forEach(function(id){
+    var el = document.getElementById('tab-'+id);
+    if(el) el.className='page'+(t===id?' show':'');
+  });
+  document.querySelectorAll('.tab').forEach(function(el,i){
+    var tabId = ['game','result','hof','killblood','members'][i];
+    // Nếu là tab Kill Blood và đang được chọn thì dùng style đỏ máu
+    if(tabId === 'killblood' && t === 'killblood') {
+        el.className = 'tab active-blood';
+    } else {
+        el.className='tab'+(tabId===t?' active':'');
+    }
+  });
+  
   if(t==='game') renderGameTab();
   if(t==='result') renderCashout();
   if(t==='hof') { renderCalendarUI(); renderHof(); }
+  if(t==='killblood') renderKillBlood();
   if(t==='members'){showMemberListView();renderMemberList();}
 }
 
@@ -1085,7 +1139,7 @@ function updateSessionData(){
   });
   localStorage.setItem('pk_sessions', JSON.stringify(sessions));
   saveMembers(members); 
-  closeEditSessionModal(); renderSessionHistory(); renderCalendarUI(); renderHof();
+  closeEditSessionModal(); renderSessionHistory(); renderCalendarUI(); renderHof(); renderKillBlood();
   alert('✅ Đã cập nhật lại dữ liệu lịch sử!');
 }
 function closeEditSessionModal(){ document.getElementById('editSessionModal').style.display='none'; }
@@ -1104,7 +1158,7 @@ function deleteSessionHistory(idx){
       saveMembers(members);
     }
     sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));
-    renderSessionHistory(); renderCalendarUI(); renderHof();
+    renderSessionHistory(); renderCalendarUI(); renderHof(); renderKillBlood();
   }
 }
 
@@ -1185,7 +1239,7 @@ function applyHofFilter(mode, val1) {
     renderHof();
 }
 
-/* ==================== HOF AGGREGATION LOGIC (WITH BADGES) ==================== */
+/* ==================== HOF AGGREGATION LOGIC ==================== */
 function renderHof(){
   var el=document.getElementById('hofList');
   var members=getMembers();
@@ -1219,7 +1273,6 @@ function renderHof(){
       });
 
       if(hasData){ 
-        // Tính chuỗi (Streaks) dựa trên toàn bộ lịch sử (ko bị giới hạn bởi bộ lọc)
         var streakType = 'none', streakCount = 0;
         if (m.history[0].diff > 0) streakType = 'win';
         else if (m.history[0].diff < 0) streakType = 'loss';
@@ -1231,7 +1284,6 @@ function renderHof(){
             else break;
         }
 
-        // Tính tổng số buổi chơi trong bộ lọc hiện tại
         var totalSessionsFiltered = wCount + lCount + m.history.filter(function(h) {
             if (hofFilter.mode === 'all') return h.diff === 0;
             var pts = h.date.split('/'); 
@@ -1265,7 +1317,6 @@ function renderHof(){
   var sorted=filteredResults.sort(function(a,b){return b.diff-a.diff;});
   var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
   
-  // Tìm Đại Gia và ATM
   var maxBuyin = Math.max.apply(null, sorted.map(function(r) { return r.buyin; }));
   var biggestLoserName = sorted[sorted.length-1].diff < 0 ? sorted[sorted.length-1].name : null;
 
@@ -1279,7 +1330,6 @@ function renderHof(){
     var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Huề';
     if(i===winCount&&hasLoss&&winCount>0)h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
     
-    // RENDER BADGES (NHÃN DÁN)
     var badgesHtml = '';
     if (r.streakCount >= 2) {
         if (r.streakType === 'win') badgesHtml += '<span class="h-badge hb-hot">🔥 Win x' + r.streakCount + '</span>';
@@ -1311,6 +1361,50 @@ function renderHof(){
   document.getElementById('hofStats').style.display='block';
   
   if(bw.diff>0)launchConfetti();
+}
+
+/* ==================== KILL BLOOD TAB LOGIC (ĐẪM MÁU) ==================== */
+function renderKillBlood() {
+    var el = document.getElementById('kbList');
+    var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+    var kbSessions = [];
+    
+    sessions.forEach(function(s) {
+        var totalLoss = 0;
+        var biggestWinner = { name: '', diff: 0 };
+        var biggestLoser = { name: '', diff: 0 };
+        
+        (s.results || []).forEach(function(r) {
+            if (r.diff < 0) totalLoss += Math.abs(r.diff);
+            if (r.diff > biggestWinner.diff) biggestWinner = r;
+            if (r.diff < biggestLoser.diff) biggestLoser = r;
+        });
+        
+        // Điều kiện Thảm sát: Tổng tiền thua >= 500,000đ
+        if (totalLoss >= 500000) {
+            kbSessions.push({
+                date: s.date,
+                totalLoss: totalLoss,
+                killer: biggestWinner,
+                victim: biggestLoser
+            });
+        }
+    });
+    
+    if (kbSessions.length === 0) {
+        el.innerHTML = '<div class="empty" style="color:var(--text3); padding:40px 0;">Chưa có ngày nào đủ đẫm máu...<br><span style="font-size:24px;display:block;margin-top:10px;opacity:0.3;">🪦</span></div>';
+        return;
+    }
+    
+    var h = '';
+    kbSessions.forEach(function(kb) {
+        h += '<div class="kb-card">'
+           + '<div class="kb-date"><span>📅 ' + kb.date + '</span><span class="kb-total">💀 ' + fmtAbs(kb.totalLoss) + '</span></div>'
+           + '<div class="kb-row"><span style="color:var(--text2)">🔪 Sát thủ (Ăn đậm):</span> <span class="kb-killer">' + kb.killer.name + ' (+' + fmtAbs(kb.killer.diff) + ')</span></div>'
+           + '<div class="kb-row" style="margin-top:4px;"><span style="color:var(--text2)">🩸 Nạn nhân (Nát gáo):</span> <span class="kb-victim">' + kb.victim.name + ' (-' + fmtAbs(Math.abs(kb.victim.diff)) + ')</span></div>'
+           + '</div>';
+    });
+    el.innerHTML = h;
 }
 
 /* ==================== MEMBERS TAB LOGIC ==================== */
