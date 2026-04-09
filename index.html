@@ -209,13 +209,14 @@ table.players tr:last-child td{border-bottom:none;}
 .rank-loss .rank-name{color:#e08888;}
 .rank-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 
-/* HOF BADGES */
+/* HOF BADGES NÂNG CẤP */
 .hof-badges { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
 .h-badge { font-size: 8px; padding: 2px 5px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 .hb-hot { background: rgba(255, 107, 107, 0.15); color: #ff7675; border: 1px solid rgba(255, 107, 107, 0.3); }
 .hb-cold { background: rgba(116, 185, 255, 0.15); color: #74b9ff; border: 1px solid rgba(116, 185, 255, 0.3); }
 .hb-atm { background: rgba(223, 230, 233, 0.1); color: #b2bec3; border: 1px solid rgba(223, 230, 233, 0.2); }
 .hb-god { background: rgba(253, 203, 110, 0.15); color: #ffeaa7; border: 1px solid rgba(253, 203, 110, 0.3); }
+.hb-lidon { background: rgba(162, 155, 254, 0.15); color: #a29bfe; border: 1px solid rgba(162, 155, 254, 0.3); } /* MỚI: Vua lì đòn */
 .hb-baothu { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.4); } 
 .hb-hoa { background: rgba(180, 180, 180, 0.15); color: #dcdde1; border: 1px solid rgba(180, 180, 180, 0.3); }
 .hb-shark { background: rgba(0, 210, 211, 0.15); color: #00d2d3; border: 1px solid rgba(0, 210, 211, 0.3); }
@@ -252,7 +253,7 @@ table.players tr:last-child td{border-bottom:none;}
 .legend-title { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border2); display: flex; align-items: center; gap: 6px; }
 .legend-grid { display: flex; flex-direction: column; gap: 10px; }
 .legend-item { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; line-height: 1.45; color: var(--text2); }
-.legend-item .h-badge { flex-shrink: 0; min-width: 75px; text-align: center; font-size: 9px; }
+.legend-item .h-badge { flex-shrink: 0; min-width: 65px; text-align: center; font-size: 9px; }
 
 /* KILL BLOOD TAB (ĐẪM MÁU) */
 #tab-killblood { padding: 0; }
@@ -502,13 +503,20 @@ table.players tr:last-child td{border-bottom:none;}
       <div class="hof-legend">
         <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
         <div class="legend-grid">
-          <div class="legend-item"><span class="h-badge hb-hot">🔥 Win x...</span> <span><strong>Chuỗi Thắng/Thua:</strong> Có phong độ lên cao (hoặc chạm đáy) từ 2 buổi liên tiếp trở lên.</span></div>
+          <div class="legend-item">
+            <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
+              <span class="h-badge hb-hot">🔥 Win x2</span>
+              <span class="h-badge hb-cold">🧊 Lose x2</span>
+            </div>
+            <span>Đang có chuỗi <strong>thắng/thua 2 buổi liên tiếp</strong>.</span>
+          </div>
+          <div class="legend-item"><span class="h-badge hb-god">🌟 Bất bại</span> <span>Đang có chuỗi <strong>thắng từ 3 buổi liên tiếp</strong> trở lên. Đánh đâu thắng đó.</span></div>
+          <div class="legend-item"><span class="h-badge hb-lidon">🥊 Vua lì đòn</span> <span>Đang có chuỗi <strong>thua từ 3 buổi liên tiếp</strong> trở lên. Tinh thần thép, thua không nản!</span></div>
           <div class="legend-item"><span class="h-badge hb-baothu">💣 Báo Thủ</span> <span>Người <strong>mua vào nhiều chip nhất</strong> hội. Chơi khô máu không màng ngày mai.</span></div>
           <div class="legend-item"><span class="h-badge hb-atm">🏧 Cây ATM</span> <span>Người <strong>lỗ đậm nhất</strong>. Nhà tài trợ kim cương, cỗ máy bơm tiền cho anh em.</span></div>
           <div class="legend-item"><span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span> <span>Cày cuốc vã mồ hôi hột xong chốt sổ <strong>huề vốn</strong> (hoặc xê dịch nhỏ hơn 50k).</span></div>
           <div class="legend-item"><span class="h-badge hb-shark">🦈 Cá Mập</span> <span>Bỏ ra ít vốn nhưng mang về lợi nhuận cực khủng (<strong>Tỷ suất sinh lời cao nhất</strong>).</span></div>
           <div class="legend-item"><span class="h-badge hb-thocay">⛏️ Thợ Cày</span> <span>Gương mặt vàng trong làng chuyên cần, <strong>tham gia nhiều buổi nhất</strong>.</span></div>
-          <div class="legend-item"><span class="h-badge hb-god">🌟 Bất bại</span> <span>Đánh đâu thắng đó, <strong>chưa biết mùi thất bại</strong> là gì (từ 3 buổi trở lên).</span></div>
         </div>
       </div>
 
@@ -1398,21 +1406,24 @@ function renderHof(){
 
     if(i===winCount&&hasLoss&&winCount>0) h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
     
-    // GẮN BADGES
+    // GẮN BADGES (LOGIC MỚI CHO BẤT BẠI & VUA LÌ ĐÒN)
     var badgesHtml = '';
     var s = streakMap[r.name] || {type: 'none', count: 0};
-    if (s.count >= 2) {
-        if (s.type === 'win') badgesHtml += '<span class="h-badge hb-hot">🔥 Win x' + s.count + '</span>';
-        if (s.type === 'loss') badgesHtml += '<span class="h-badge hb-cold">🧊 Lose x' + s.count + '</span>';
+    
+    if (s.type === 'win') {
+        if (s.count === 2) badgesHtml += '<span class="h-badge hb-hot">🔥 Win x2</span>';
+        else if (s.count >= 3) badgesHtml += '<span class="h-badge hb-god">🌟 Bất bại</span>';
+    } else if (s.type === 'loss') {
+        if (s.count === 2) badgesHtml += '<span class="h-badge hb-cold">🧊 Lose x2</span>';
+        else if (s.count >= 3) badgesHtml += '<span class="h-badge hb-lidon">🥊 Vua lì đòn</span>';
     }
     
-    // BADGES MỚI
+    // BADGES KHÁC
     if (r.buyin === maxBuyin && r.buyin > 0) badgesHtml += '<span class="h-badge hb-baothu">💣 Báo Thủ</span>';
     if (r.name === biggestLoserName && r.diff < 0) badgesHtml += '<span class="h-badge hb-atm">🏧 Cây ATM</span>';
     if (Math.abs(r.diff) <= 50000 && r.totalSessions > 0 && r.diff !== 0) badgesHtml += '<span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span>';
     if (r.diff > 0 && r.buyin > 0 && (r.diff / r.buyin) === maxROI && maxROI > 0.5) badgesHtml += '<span class="h-badge hb-shark">🦈 Cá Mập</span>';
     if (r.totalSessions === maxSessions && maxSessions >= 3) badgesHtml += '<span class="h-badge hb-thocay">⛏️ Thợ Cày</span>';
-    if (r.diff > 0 && r.wCount === r.totalSessions && r.totalSessions >= 3) badgesHtml += '<span class="h-badge hb-god">🌟 Bất bại</span>';
     
     var badgesDiv = badgesHtml ? '<div class="hof-badges">' + badgesHtml + '</div>' : '';
 
