@@ -174,7 +174,20 @@ table.players tr:last-child td{border-bottom:none;}
 .cal-day.selected { border-color:var(--gold); box-shadow:0 0 8px var(--gold-glow); background:var(--gold); color:#000; }
 .cal-day.selected::after { content:''; display:none; }
 
-/* RANK CARDS & BADGES */
+/* RANK CARDS & MOVEMENT & GLOW */
+.name-glow {
+  animation: rankUpGlow 1.5s ease-in-out infinite alternate;
+}
+@keyframes rankUpGlow {
+  from { filter: brightness(1); text-shadow: 0 0 5px rgba(255,255,255,0.2); }
+  to { filter: brightness(1.5); text-shadow: 0 0 12px rgba(255,255,255,0.7), 0 0 20px rgba(200,168,75,0.5); }
+}
+
+.move-up { color: #7dd890; font-size: 10px; font-weight: 800; margin-left: 6px; text-shadow: none; display: inline-block; }
+.move-down { color: #e08888; font-size: 10px; font-weight: 800; margin-left: 6px; text-shadow: none; display: inline-block; }
+.move-stable { color: var(--text3); font-size: 10px; font-weight: 800; margin-left: 6px; text-shadow: none; display: inline-block; }
+.move-new { color: var(--gold2); font-size: 8px; font-weight: 800; margin-left: 6px; padding: 1px 4px; border: 1px solid var(--border); border-radius: 4px; background: rgba(200,168,75,0.15); text-shadow: none; display: inline-block; vertical-align: middle; }
+
 .rank-list{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
 .rank-card{border-radius:10px;padding:13px 14px;display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;}
 .rank-1{background:linear-gradient(135deg,rgba(50,36,6,.95),rgba(30,22,4,.98));border:1.5px solid rgba(200,168,75,.6);box-shadow:0 0 20px rgba(200,168,75,.15),inset 0 1px 0 rgba(200,168,75,.2);}
@@ -198,14 +211,19 @@ table.players tr:last-child td{border-bottom:none;}
 .rank-loss .rank-name{color:#e08888;}
 .rank-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 
-/* HOF BADGES */
+/* HOF BADGES NÂNG CẤP */
 .hof-badges { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
 .h-badge { font-size: 8px; padding: 2px 5px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 .hb-hot { background: rgba(255, 107, 107, 0.15); color: #ff7675; border: 1px solid rgba(255, 107, 107, 0.3); }
 .hb-cold { background: rgba(116, 185, 255, 0.15); color: #74b9ff; border: 1px solid rgba(116, 185, 255, 0.3); }
-.hb-whale { background: rgba(200, 168, 75, 0.15); color: var(--gold2); border: 1px solid var(--border); }
 .hb-atm { background: rgba(223, 230, 233, 0.1); color: #b2bec3; border: 1px solid rgba(223, 230, 233, 0.2); }
 .hb-god { background: rgba(253, 203, 110, 0.15); color: #ffeaa7; border: 1px solid rgba(253, 203, 110, 0.3); }
+
+/* NEW BADGES */
+.hb-baothu { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.4); } 
+.hb-hoa { background: rgba(180, 180, 180, 0.15); color: #dcdde1; border: 1px solid rgba(180, 180, 180, 0.3); }
+.hb-shark { background: rgba(0, 210, 211, 0.15); color: #00d2d3; border: 1px solid rgba(0, 210, 211, 0.3); }
+.hb-thocay { background: rgba(253, 150, 68, 0.15); color: #fd9644; border: 1px solid rgba(253, 150, 68, 0.3); }
 
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
 .rank-1 .rank-amt{color:var(--gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
@@ -647,7 +665,7 @@ function updateGlobalDatalist() {
     dl.innerHTML = h;
 }
 
-// ĐIỀU HƯỚNG TABS (CẬP NHẬT KILL BLOOD)
+// ĐIỀU HƯỚNG TABS
 function showTab(t){
   ['game','result','hof','killblood','members'].forEach(function(id){
     var el = document.getElementById('tab-'+id);
@@ -655,7 +673,6 @@ function showTab(t){
   });
   document.querySelectorAll('.tab').forEach(function(el,i){
     var tabId = ['game','result','hof','killblood','members'][i];
-    // Nếu là tab Kill Blood và đang được chọn thì dùng style đỏ máu
     if(tabId === 'killblood' && t === 'killblood') {
         el.className = 'tab active-blood';
     } else {
@@ -1243,106 +1260,148 @@ function applyHofFilter(mode, val1) {
 function renderHof(){
   var el=document.getElementById('hofList');
   var members=getMembers();
-  var filteredResults=[], totalBuyinFilter=0;
-
+  
+  // 1. Lọc dữ liệu theo Filter hiện tại
+  var validHistories = [];
   members.forEach(function(m){
     if(m.history && m.history.length > 0){
-      var tDiff=0, tBuyin=0, tCashout=0, hasData=false;
-      var wCount=0, lCount=0;
-      
       m.history.forEach(function(h){
         var parts = h.date.split('/'); 
         var dObj = new Date(parts[2], parts[1]-1, parts[0]);
         var pass = false;
-        
-        if (hofFilter.mode === 'all') { pass = true; }
-        else if (hofFilter.mode === 'date') { pass = (h.date === hofFilter.singleDate); }
-        else if (hofFilter.mode === 'month') { pass = (parts[1]+'/'+parts[2] === hofFilter.monthStr); }
+        if (hofFilter.mode === 'all') pass = true;
+        else if (hofFilter.mode === 'date') pass = (h.date === hofFilter.singleDate);
+        else if (hofFilter.mode === 'month') pass = (parts[1]+'/'+parts[2] === hofFilter.monthStr);
         else if (hofFilter.mode === 'range') {
             var st = new Date(hofFilter.rangeStart); st.setHours(0,0,0,0);
             var en = new Date(hofFilter.rangeEnd); en.setHours(23,59,59,999);
             pass = (dObj >= st && dObj <= en);
         }
-
-        if(pass) {
-          tDiff += h.diff; tBuyin += h.buyin; tCashout += h.cashout; totalBuyinFilter += h.buyin;
-          if (h.diff > 0) wCount++;
-          if (h.diff < 0) lCount++;
-          hasData = true;
-        }
+        if(pass) validHistories.push({name: m.name, date: h.date, diff: h.diff, buyin: h.buyin, cashout: h.cashout});
       });
-
-      if(hasData){ 
-        var streakType = 'none', streakCount = 0;
-        if (m.history[0].diff > 0) streakType = 'win';
-        else if (m.history[0].diff < 0) streakType = 'loss';
-        
-        for(var i = 0; i < m.history.length; i++) {
-            var d = m.history[i].diff;
-            if(streakType === 'win' && d > 0) streakCount++;
-            else if(streakType === 'loss' && d < 0) streakCount++;
-            else break;
-        }
-
-        var totalSessionsFiltered = wCount + lCount + m.history.filter(function(h) {
-            if (hofFilter.mode === 'all') return h.diff === 0;
-            var pts = h.date.split('/'); 
-            var dObj = new Date(pts[2], pts[1]-1, pts[0]);
-            var isPass = false;
-            if (hofFilter.mode === 'date') isPass = (h.date === hofFilter.singleDate);
-            else if (hofFilter.mode === 'month') isPass = (pts[1]+'/'+pts[2] === hofFilter.monthStr);
-            else if (hofFilter.mode === 'range') {
-                var st = new Date(hofFilter.rangeStart); st.setHours(0,0,0,0);
-                var en = new Date(hofFilter.rangeEnd); en.setHours(23,59,59,999);
-                isPass = (dObj >= st && dObj <= en);
-            }
-            return isPass && h.diff === 0;
-        }).length;
-
-        filteredResults.push({
-            name:m.name, diff:tDiff, buyin:tBuyin, cashout:tCashout,
-            wCount: wCount, lCount: lCount, totalSessions: totalSessionsFiltered,
-            streakType: streakType, streakCount: streakCount
-        }); 
-      }
     }
   });
 
-  if(!filteredResults.length){
+  if(!validHistories.length){
       el.innerHTML='<div class="hof-empty" style="padding:40px 0;">Chưa có dữ liệu cho khoảng thời gian này.<br><span style="font-size:24px;display:block;margin-top:10px;opacity:0.3;">📭</span></div>';
       document.getElementById('hofStats').style.display='none';
       return;
   }
 
-  var sorted=filteredResults.sort(function(a,b){return b.diff-a.diff;});
-  var maxAbs=Math.max.apply(null,sorted.map(function(r){return Math.abs(r.diff)||1;}));
-  
-  var maxBuyin = Math.max.apply(null, sorted.map(function(r) { return r.buyin; }));
-  var biggestLoserName = sorted[sorted.length-1].diff < 0 ? sorted[sorted.length-1].name : null;
+  // 2. Tách Ngày gần nhất để tính Ranking
+  var uniqueDates = Array.from(new Set(validHistories.map(function(h){return h.date;})));
+  uniqueDates.sort(function(a,b){
+      var pa=a.split('/'), pb=b.split('/');
+      return new Date(pa[2], pa[1]-1, pa[0]) - new Date(pb[2], pb[1]-1, pb[0]);
+  });
+  var latestDate = uniqueDates[uniqueDates.length - 1];
 
-  var medals=['🥇','🥈','🥉'],rc=['rank-1','rank-2','rank-3'];
-  var winCount=sorted.filter(function(r){return r.diff>0;}).length,hasLoss=sorted.some(function(r){return r.diff<0;});
+  function aggregateStats(histories) {
+      var map = {};
+      histories.forEach(function(h){
+          if(!map[h.name]) map[h.name] = {name: h.name, diff: 0, buyin: 0, cashout: 0, wCount: 0, lCount: 0, totalSessions: 0};
+          map[h.name].diff += h.diff;
+          map[h.name].buyin += h.buyin;
+          map[h.name].cashout += h.cashout;
+          map[h.name].totalSessions++;
+          if(h.diff > 0) map[h.name].wCount++;
+          if(h.diff < 0) map[h.name].lCount++;
+      });
+      var arr = Object.values(map);
+      arr.sort(function(a,b){ return b.diff - a.diff; });
+      return arr;
+  }
+
+  // Hiện tại
+  var currentStats = aggregateStats(validHistories);
+  var totalBuyinFilter = currentStats.reduce(function(s,r){return s+r.buyin;},0);
+  
+  // Quá khứ (Loại bỏ ngày gần nhất)
+  var prevHistories = validHistories.filter(function(h){ return h.date !== latestDate; });
+  var prevStats = aggregateStats(prevHistories);
+  var prevRankMap = {};
+  prevStats.forEach(function(r, idx){ prevRankMap[r.name] = idx + 1; });
+
+  // Map chuỗi Win/Lose tổng
+  var streakMap = {};
+  members.forEach(function(m){
+      if(m.history && m.history.length > 0) {
+          var sType = 'none', sCount = 0;
+          if (m.history[0].diff > 0) sType = 'win';
+          else if (m.history[0].diff < 0) sType = 'loss';
+          for(var i=0; i<m.history.length; i++) {
+              var d = m.history[i].diff;
+              if(sType === 'win' && d > 0) sCount++;
+              else if(sType === 'loss' && d < 0) sCount++;
+              else break;
+          }
+          streakMap[m.name] = { type: sType, count: sCount };
+      }
+  });
+
+  // Tìm các kỷ lục cho Badges
+  var maxBuyin = Math.max.apply(null, currentStats.map(function(r){return r.buyin;}));
+  var maxSessions = Math.max.apply(null, currentStats.map(function(r){return r.totalSessions;}));
+  var maxROI = Math.max.apply(null, currentStats.map(function(r){return r.buyin > 0 ? (r.diff / r.buyin) : 0;}));
+  var biggestLoserName = currentStats[currentStats.length-1].diff < 0 ? currentStats[currentStats.length-1].name : null;
+
+  var maxAbs=Math.max.apply(null,currentStats.map(function(r){return Math.abs(r.diff)||1;}));
+  var medals=['🥇','🥈','🥉'], rc=['rank-1','rank-2','rank-3'];
+  var winCount=currentStats.filter(function(r){return r.diff>0;}).length, hasLoss=currentStats.some(function(r){return r.diff<0;});
+  
   var h='<div class="rank-list">';
   
-  sorted.forEach(function(r,i){
+  currentStats.forEach(function(r, i){
     var cls=i<3?rc[i]:(r.diff>0?'rank-win':r.diff<0?'rank-loss':'rank-even');
-    var badge=i<3?medals[i]:(i+1),barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
+    var badge=i<3?medals[i]:(i+1), barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
     var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Huề';
-    if(i===winCount&&hasLoss&&winCount>0)h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
     
-    var badgesHtml = '';
-    if (r.streakCount >= 2) {
-        if (r.streakType === 'win') badgesHtml += '<span class="h-badge hb-hot">🔥 Win x' + r.streakCount + '</span>';
-        if (r.streakType === 'loss') badgesHtml += '<span class="h-badge hb-cold">🧊 Lose x' + r.streakCount + '</span>';
+    // TÍNH TOÁN LÊN XUỐNG HẠNG
+    var currentRank = i + 1;
+    var rankMoveHtml = '';
+    var nameGlowClass = '';
+    
+    if(uniqueDates.length > 1) { 
+        var pRank = prevRankMap[r.name];
+        if(pRank === undefined) {
+            rankMoveHtml = '<span class="move-new">🆕 MỚI</span>';
+            nameGlowClass = 'name-glow'; // Người mới lọt top cũng sáng
+        } else {
+            var diffRank = pRank - currentRank; // rank 5 -> rank 3 = 5 - 3 = +2
+            if(diffRank > 0) {
+                rankMoveHtml = '<span class="move-up">▲ ' + diffRank + '</span>';
+                nameGlowClass = 'name-glow'; // CHỈ LÀM SÁNG NẾU THĂNG HẠNG
+            } else if(diffRank < 0) {
+                rankMoveHtml = '<span class="move-down">▼ ' + Math.abs(diffRank) + '</span>';
+            } else {
+                rankMoveHtml = '<span class="move-stable">—</span>';
+            }
+        }
     }
-    if (r.buyin === maxBuyin && r.buyin > 0) badgesHtml += '<span class="h-badge hb-whale">🐳 Cá Voi</span>';
+
+    if(i===winCount&&hasLoss&&winCount>0) h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
+    
+    // GẮN BADGES
+    var badgesHtml = '';
+    var s = streakMap[r.name] || {type: 'none', count: 0};
+    if (s.count >= 2) {
+        if (s.type === 'win') badgesHtml += '<span class="h-badge hb-hot">🔥 Win x' + s.count + '</span>';
+        if (s.type === 'loss') badgesHtml += '<span class="h-badge hb-cold">🧊 Lose x' + s.count + '</span>';
+    }
+    
+    // BADGES MỚI
+    if (r.buyin === maxBuyin && r.buyin > 0) badgesHtml += '<span class="h-badge hb-baothu">💣 Báo Thủ</span>';
     if (r.name === biggestLoserName && r.diff < 0) badgesHtml += '<span class="h-badge hb-atm">🏧 Cây ATM</span>';
+    if (Math.abs(r.diff) <= 50000 && r.totalSessions > 0 && r.diff !== 0) badgesHtml += '<span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span>';
+    if (r.diff > 0 && r.buyin > 0 && (r.diff / r.buyin) === maxROI && maxROI > 0.5) badgesHtml += '<span class="h-badge hb-shark">🦈 Cá Mập</span>';
+    if (r.totalSessions === maxSessions && maxSessions >= 3) badgesHtml += '<span class="h-badge hb-thocay">⛏️ Thợ Cày</span>';
     if (r.diff > 0 && r.wCount === r.totalSessions && r.totalSessions >= 3) badgesHtml += '<span class="h-badge hb-god">🌟 Bất bại</span>';
+    
     var badgesDiv = badgesHtml ? '<div class="hof-badges">' + badgesHtml + '</div>' : '';
 
     h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
-      +'<div class="rank-info"><div class="rank-name">'+r.name+'</div>'
+      +'<div class="rank-info"><div class="rank-name '+nameGlowClass+'">'+r.name+' ' + rankMoveHtml + '</div>'
       +'<div class="rank-sub">Tổng mua: '+r.buyin.toLocaleString()+' · Tổng ra: '+r.cashout.toLocaleString()+'</div>'
       + badgesDiv
       +'</div>'
@@ -1353,9 +1412,9 @@ function renderHof(){
   
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
   
-  var tm=Math.round(totalBuyinFilter/2000*100000),bw=sorted[0],bl=sorted[sorted.length-1];
+  var tm=Math.round(totalBuyinFilter/2000*100000), bw=currentStats[0], bl=currentStats[currentStats.length-1];
   document.getElementById('hofTotalPot').textContent=fmtAbs(tm);
-  document.getElementById('hofPlayerCount').textContent=sorted.length+' người';
+  document.getElementById('hofPlayerCount').textContent=currentStats.length+' người';
   document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
   document.getElementById('hofBigLoss').textContent=bl.diff<0?'-'+fmtAbs(Math.abs(bl.diff)):'—';
   document.getElementById('hofStats').style.display='block';
@@ -1380,7 +1439,6 @@ function renderKillBlood() {
             if (r.diff < biggestLoser.diff) biggestLoser = r;
         });
         
-        // Điều kiện Thảm sát: Tổng tiền thua >= 500,000đ
         if (totalLoss >= 500000) {
             kbSessions.push({
                 date: s.date,
