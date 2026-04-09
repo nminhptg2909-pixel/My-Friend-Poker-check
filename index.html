@@ -175,9 +175,7 @@ table.players tr:last-child td{border-bottom:none;}
 .cal-day.selected::after { content:''; display:none; }
 
 /* RANK CARDS & MOVEMENT & GLOW */
-.name-glow {
-  animation: rankUpGlow 1.5s ease-in-out infinite alternate;
-}
+.name-glow { animation: rankUpGlow 1.5s ease-in-out infinite alternate; }
 @keyframes rankUpGlow {
   from { filter: brightness(1); text-shadow: 0 0 5px rgba(255,255,255,0.2); }
   to { filter: brightness(1.5); text-shadow: 0 0 12px rgba(255,255,255,0.7), 0 0 20px rgba(200,168,75,0.5); }
@@ -211,15 +209,13 @@ table.players tr:last-child td{border-bottom:none;}
 .rank-loss .rank-name{color:#e08888;}
 .rank-sub{font-size:10px;color:var(--text3);margin-top:2px;}
 
-/* HOF BADGES NÂNG CẤP */
+/* HOF BADGES */
 .hof-badges { display: flex; gap: 4px; margin-top: 5px; flex-wrap: wrap; }
 .h-badge { font-size: 8px; padding: 2px 5px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 .hb-hot { background: rgba(255, 107, 107, 0.15); color: #ff7675; border: 1px solid rgba(255, 107, 107, 0.3); }
 .hb-cold { background: rgba(116, 185, 255, 0.15); color: #74b9ff; border: 1px solid rgba(116, 185, 255, 0.3); }
 .hb-atm { background: rgba(223, 230, 233, 0.1); color: #b2bec3; border: 1px solid rgba(223, 230, 233, 0.2); }
 .hb-god { background: rgba(253, 203, 110, 0.15); color: #ffeaa7; border: 1px solid rgba(253, 203, 110, 0.3); }
-
-/* NEW BADGES */
 .hb-baothu { background: rgba(255, 77, 77, 0.15); color: #ff4d4d; border: 1px solid rgba(255, 77, 77, 0.4); } 
 .hb-hoa { background: rgba(180, 180, 180, 0.15); color: #dcdde1; border: 1px solid rgba(180, 180, 180, 0.3); }
 .hb-shark { background: rgba(0, 210, 211, 0.15); color: #00d2d3; border: 1px solid rgba(0, 210, 211, 0.3); }
@@ -250,6 +246,13 @@ table.players tr:last-child td{border-bottom:none;}
 .hof-stat-label{font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;opacity:.7;font-weight:600;}
 .hof-stat-val{font-size:16px;font-weight:800;color:var(--gold2);}
 .hof-stat-val.green{color:#6dbf80;}.hof-stat-val.red{color:#d07070;}
+
+/* LEGEND (TỪ ĐIỂN DANH HIỆU) */
+.hof-legend { margin-top: 20px; padding: 14px; background: var(--bg3); border: 1px solid var(--border2); border-radius: 10px; }
+.legend-title { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px dashed var(--border2); display: flex; align-items: center; gap: 6px; }
+.legend-grid { display: flex; flex-direction: column; gap: 10px; }
+.legend-item { display: flex; align-items: flex-start; gap: 10px; font-size: 11px; line-height: 1.45; color: var(--text2); }
+.legend-item .h-badge { flex-shrink: 0; min-width: 75px; text-align: center; font-size: 9px; }
 
 /* KILL BLOOD TAB (ĐẪM MÁU) */
 #tab-killblood { padding: 0; }
@@ -495,6 +498,20 @@ table.players tr:last-child td{border-bottom:none;}
         <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
         <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
       </div>
+      
+      <div class="hof-legend">
+        <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
+        <div class="legend-grid">
+          <div class="legend-item"><span class="h-badge hb-hot">🔥 Win x...</span> <span><strong>Chuỗi Thắng/Thua:</strong> Có phong độ lên cao (hoặc chạm đáy) từ 2 buổi liên tiếp trở lên.</span></div>
+          <div class="legend-item"><span class="h-badge hb-baothu">💣 Báo Thủ</span> <span>Người <strong>mua vào nhiều chip nhất</strong> hội. Chơi khô máu không màng ngày mai.</span></div>
+          <div class="legend-item"><span class="h-badge hb-atm">🏧 Cây ATM</span> <span>Người <strong>lỗ đậm nhất</strong>. Nhà tài trợ kim cương, cỗ máy bơm tiền cho anh em.</span></div>
+          <div class="legend-item"><span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span> <span>Cày cuốc vã mồ hôi hột xong chốt sổ <strong>huề vốn</strong> (hoặc xê dịch nhỏ hơn 50k).</span></div>
+          <div class="legend-item"><span class="h-badge hb-shark">🦈 Cá Mập</span> <span>Bỏ ra ít vốn nhưng mang về lợi nhuận cực khủng (<strong>Tỷ suất sinh lời cao nhất</strong>).</span></div>
+          <div class="legend-item"><span class="h-badge hb-thocay">⛏️ Thợ Cày</span> <span>Gương mặt vàng trong làng chuyên cần, <strong>tham gia nhiều buổi nhất</strong>.</span></div>
+          <div class="legend-item"><span class="h-badge hb-god">🌟 Bất bại</span> <span>Đánh đâu thắng đó, <strong>chưa biết mùi thất bại</strong> là gì (từ 3 buổi trở lên).</span></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -952,7 +969,7 @@ function calcResult(){
   lastResults.forEach(function(r){
     var cls=r.diff>0?'profit':r.diff<0?'loss':'zero',icon=r.diff>0?'▲':r.diff<0?'▼':'—';
     sl+='<div class="summary-row"><div><div style="font-weight:600;color:var(--text);">'+r.name+'</div>'
-      +'<div style="font-size:10px;color:var(--text3);">Mua '+r.buyin.toLocaleString()+' → Còn '+r.cashout.toLocaleString()+'</div></div>'
+      +'<div style="font-size:10px;color:var(--text3);">Mua vào: '+r.buyin.toLocaleString()+' → Bán ra: '+r.cashout.toLocaleString()+'</div></div>'
       +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(r.diff))+'</div></div>';
   });
   document.getElementById('summaryList').innerHTML=sl;
@@ -1402,7 +1419,7 @@ function renderHof(){
     h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
       +'<div class="rank-info"><div class="rank-name '+nameGlowClass+'">'+r.name+' ' + rankMoveHtml + '</div>'
-      +'<div class="rank-sub">Tổng mua: '+r.buyin.toLocaleString()+' · Tổng ra: '+r.cashout.toLocaleString()+'</div>'
+      +'<div class="rank-sub">Mua vào: '+r.buyin.toLocaleString()+' · Bán ra: '+r.cashout.toLocaleString()+'</div>'
       + badgesDiv
       +'</div>'
       +'<div class="rank-amt">'+amt+'</div>'
@@ -1496,7 +1513,7 @@ function showMemberDetail(id){
   var histHTML=!hist.length?'<div class="empty">Chưa có lịch sử buổi chơi</div>':hist.map(function(h,idx){
     var cls=h.diff>0?'profit':h.diff<0?'loss':'zero',icon=h.diff>0?'▲':h.diff<0?'▼':'—';
     return '<div class="history-row"><div><div class="history-date">📅 '+h.date+'</div>'
-      +'<div class="history-detail">Mua '+h.buyin.toLocaleString()+' → Còn '+h.cashout.toLocaleString()+'</div></div>'
+      +'<div class="history-detail">Mua vào: '+h.buyin.toLocaleString()+' → Bán ra: '+h.cashout.toLocaleString()+'</div></div>'
       +'<div class="summary-val '+cls+'">'+icon+' '+fmtAbs(Math.abs(h.diff))+'</div></div>';
   }).join('');
   var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
