@@ -1110,34 +1110,57 @@ function calcResult(){
 }
 
 function saveSessionToHistory(){
-  if(!lastResults.length){alert('Tính kết quả trước nhé!');return;}
+  if(!lastResults || lastResults.length === 0){
+    alert('⚠️ Lỗi: Phải bấm "Tính kết quả" trước khi Hoàn tất!');
+    return;
+  }
+  
   var members = getMembers();
-  var dp = activeGame.date.split('-');
-  var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
+  
+  // FIX NGÀY THÁNG: Nếu không có ngày, tự lấy ngày hôm nay
+  let rawDate = activeGame.date;
+  if(!rawDate) {
+      let d = new Date();
+      let pad = (n) => n < 10 ? '0'+n : n;
+      rawDate = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+  }
+
+  var dp = rawDate.split('-');
+  var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : rawDate;
+
+  // 1. Cập nhật lịch sử từng hội viên (nếu có linked)
   lastResults.forEach(function(r){
-    if(!r.memberId)return;
-    var m = members.find(function(x){return x.id===r.memberId;});
-    if(!m)return;
-    if(!m.history) m.history=[];
-    m.history.unshift({date:displayDate, buyin:r.buyin, cashout:r.cashout, diff:r.diff});
+    if(!r.memberId) return;
+    var m = members.find(function(x){return x.id === r.memberId;});
+    if(!m) return;
+    if(!m.history) m.history = [];
+    m.history.unshift({date: displayDate, buyin: r.buyin, cashout: r.cashout, diff: r.diff});
   });
   saveMembers(members);
   
-  var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  // 2. Cập nhật vào danh sách Session tổng
+  var sessions = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
   sessions.unshift({
-      id:Date.now(), 
-      date:displayDate, 
+      id: Date.now(), 
+      date: displayDate, 
       roomFee: 0,
       settled: {},
-      results:lastResults.map(function(r){return{name:r.name,diff:r.diff,buyin:r.buyin,cashout:r.cashout,memberId:r.memberId};})
+      results: lastResults.map(function(r){
+          return {name: r.name, diff: r.diff, buyin: r.buyin, cashout: r.cashout, memberId: r.memberId};
+      })
   });
-  localStorage.setItem('pk_sessions',JSON.stringify(sessions));
   
-  alert('✅ Đã lưu kết quả ván chơi thành công!');
+  // LƯU VÀO LOCALSTORAGE -> Tự động kích hoạt PUSH FIREBASE
+  localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+  
+  // 3. Dọn dẹp bàn đang chơi
   activeGame = {date: '', players: []};
   localStorage.removeItem('garini_active_game');
   lastResults = [];
   
+  alert('✅ Đã lưu kết quả ván ngày ' + displayDate + ' thành công!');
+  
+  // Chuyển về tab Fame để xem bảng xếp hạng mới
   applyHofFilter('all');
   showTab('hof');
 }
