@@ -1116,19 +1116,19 @@ function saveSessionToHistory(){
   }
   
   var members = getMembers();
+  var sessions = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
   
-  // FIX NGÀY THÁNG: Nếu không có ngày, tự lấy ngày hôm nay
+  // 1. Xử lý ngày tháng
   let rawDate = activeGame.date;
   if(!rawDate) {
       let d = new Date();
       let pad = (n) => n < 10 ? '0'+n : n;
       rawDate = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
   }
-
   var dp = rawDate.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : rawDate;
 
-  // 1. Cập nhật lịch sử từng hội viên (nếu có linked)
+  // 2. Lưu vào Lịch sử từng Hội viên (để hiện bên tab Fame)
   lastResults.forEach(function(r){
     if(!r.memberId) return;
     var m = members.find(function(x){return x.id === r.memberId;});
@@ -1136,10 +1136,8 @@ function saveSessionToHistory(){
     if(!m.history) m.history = [];
     m.history.unshift({date: displayDate, buyin: r.buyin, cashout: r.cashout, diff: r.diff});
   });
-  saveMembers(members);
-  
-  // 2. Cập nhật vào danh sách Session tổng
-  var sessions = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
+
+  // 3. Lưu vào Danh sách Session tổng (để hiện bên tab K.Quả lịch sử)
   sessions.unshift({
       id: Date.now(), 
       date: displayDate, 
@@ -1149,19 +1147,21 @@ function saveSessionToHistory(){
           return {name: r.name, diff: r.diff, buyin: r.buyin, cashout: r.cashout, memberId: r.memberId};
       })
   });
-  
-  // LƯU VÀO LOCALSTORAGE -> Tự động kích hoạt PUSH FIREBASE
+
+  // 4. LƯU TẤT CẢ VÀO LOCALSTORAGE (Nó sẽ tự push lên Firebase của ông)
+  localStorage.setItem('pk_members', JSON.stringify(members));
   localStorage.setItem('pk_sessions', JSON.stringify(sessions));
   
-  // 3. Dọn dẹp bàn đang chơi
+  // 5. Reset bàn chơi
   activeGame = {date: '', players: []};
   localStorage.removeItem('garini_active_game');
   lastResults = [];
   
-  alert('✅ Đã lưu kết quả ván ngày ' + displayDate + ' thành công!');
+  alert('✅ Đã lưu ván ngày ' + displayDate + ' vào cả Fame và Lịch sử!');
   
-  // Chuyển về tab Fame để xem bảng xếp hạng mới
-  applyHofFilter('all');
+  // Tự động làm mới UI và chuyển tab
+  updateGlobalDatalist();
+  renderSessionHistory(); 
   showTab('hof');
 }
 
