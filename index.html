@@ -1544,6 +1544,11 @@ function renderHof(){
   });
 
   // Tìm các kỷ lục cho Badges
+  var maxBuyin = Math.max.apply(null, currentStats.map(function(r){return r.buyin;}));
+  var maxSessions = Math.max.apply(null, currentStats.map(function(r){return r.totalSessions;}));
+  var maxROI = Math.max.apply(null, currentStats.map(function(r){return r.buyin > 0 ? (r.diff / r.buyin) : 0;}));
+  var biggestLoserName = currentStats[currentStats.length-1].diff < 0 ? currentStats[currentStats.length-1].name : null;
+
   var maxAbs=Math.max.apply(null,currentStats.map(function(r){return Math.abs(r.diff)||1;}));
   var medals=['🥇','🥈','🥉'], rc=['rank-1','rank-2','rank-3'];
   var winCount=currentStats.filter(function(r){return r.diff>0;}).length, hasLoss=currentStats.some(function(r){return r.diff<0;});
@@ -1553,32 +1558,7 @@ function renderHof(){
   currentStats.forEach(function(r, i){
     var cls=i<3?rc[i]:(r.diff>0?'rank-win':r.diff<0?'rank-loss':'rank-even');
     var badge=i<3?medals[i]:(i+1), barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
-    
-    // 👇 --- ĐỔI ĐOẠN KHAI BÁO SỐ TIỀN THÀNH 3 DÒNG NÀY --- 👇
-    var amt = r.diff > 0 ? '+' + fmtAbs(r.diff) : r.diff < 0 ? '-' + fmtAbs(Math.abs(r.diff)) : 'Huề';
-    var lossIcon = getLossIcon(r.diff); 
-    var amtHtml = lossIcon + amt; 
-    // 👆 ------------------------------------------------ 👆
-    
-    // (Phần tính toán TÍNH TOÁN LÊN XUỐNG HẠNG pRank, diffRank... ở giữa ông cứ giữ nguyên)
-    
-    if(i===winCount&&hasLoss&&winCount>0) h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
-    
-    // (Phần GẮN BADGES giữ nguyên)
-    
-    var badgesDiv = badgesHtml ? '<div class="hof-badges">' + badgesHtml + '</div>' : '';
-
-    // 👇 --- SỬA CÁI BIẾN amt THÀNH amtHtml Ở DÒNG rank-amt NÀY --- 👇
-    h+='<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
-      +'<div class="medal">'+badge+'</div>'
-      +'<div class="rank-info"><div class="rank-name '+nameGlowClass+'">'+r.name+' ' + rankMoveHtml + '</div>'
-      +'<div class="rank-sub">Mua vào: '+r.buyin.toLocaleString()+' · Bán ra: '+r.cashout.toLocaleString()+'</div>'
-      + badgesDiv
-      +'</div>'
-      +'<div class="rank-amt">'+amtHtml+'</div>' // <--- SỬA CHÍNH XÁC CHỖ NÀY
-      +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
-  });
-  el.innerHTML=h+'</div>';
+    var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Huề';
     
     // TÍNH TOÁN LÊN XUỐNG HẠNG
     var currentRank = i + 1;
