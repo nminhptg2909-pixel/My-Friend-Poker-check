@@ -352,6 +352,21 @@ table.players tr:last-child td{border-bottom:none;}
 #tcListsContainer::-webkit-scrollbar { width: 4px; }
 #tcListsContainer::-webkit-scrollbar-thumb { background: rgba(200,168,75,.3); border-radius: 4px; }
 
+/* Styling cho biểu tượng hề */
+.loss-icon {
+  font-size: 1.3em; 
+  margin-right: 5px; 
+  vertical-align: middle; 
+  display: inline-block; 
+  animation: clownSpin 3s linear infinite; 
+}
+
+/* Hiệu ứng xoay */
+@keyframes clownSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+  
 </style>
 </head>
 <body>
