@@ -1791,6 +1791,14 @@ function launchConfetti(){
   var ps=Array.from({length:90},function(){return{x:Math.random()*cv.width,y:-30,r:Math.random()*4+2,d:Math.random()*2+1,c:cols[Math.floor(Math.random()*cols.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()>.5};});
   var a=0,t=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);a+=.01;t++;ps.forEach(function(p,i){p.ta+=p.ts;p.y+=p.d+Math.sin(a)*1.2;p.x+=Math.sin(a+i)*.7;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.sin(p.ta)*13*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=.85;p.sq?ctx.fillRect(-p.r,-p.r*.5,p.r*2,p.r):(ctx.beginPath(),ctx.arc(0,0,p.r,0,Math.PI*2),ctx.fill());ctx.restore();});if(t<200)requestAnimationFrame(draw);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';}})();
 }
+  // Thêm hàm getLossIcon
+function getLossIcon(diff) {
+  if (diff < 0) {
+    // Trả về icon hề nếu thua, bọc trong span để styling bằng CSS
+    return '<span class="loss-icon">🤡</span>';
+  }
+  return ''; // Không trả về gì nếu huề hoặc lời
+}
 </script>
 </body>
 </html>
