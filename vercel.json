@@ -9,9 +9,7 @@
         }
       ]
     }
-  ]
-}
-/* Styling cho biểu tượng hề */
+    /* Styling cho biểu tượng hề */
 .loss-icon {
   font-size: 1.2em; /* Điều chỉnh kích thước lớn hơn một chút */
   margin-right: 5px; /* Khoảng cách với số tiền */
@@ -24,4 +22,6 @@
 @keyframes clownSpin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+  ]
 }
