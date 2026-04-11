@@ -672,46 +672,67 @@ const ROOM_REF = 'poker_data_chung'; // Tên kho chứa chung
 // ==========================================
 // 2. ĐỘNG CƠ ĐỒNG BỘ DỮ LIỆU TỰ ĐỘNG
 // ==========================================
-let skipNextSync = false;
+
+// FIX: Dùng 2 cờ riêng biệt:
+// - isSyncingFromFirebase: đang nhận data từ Firebase về → KHÔNG push ngược lại
+// - firebaseReady: Firebase SDK đã init xong, an toàn để gọi db.ref()
+let isSyncingFromFirebase = false;
+let firebaseReady = false;
+let pushDebounceTimer = null;
 
 // A. Hàm đẩy dữ liệu lên mạng
+// FIX: Kiểm tra firebaseReady trước khi push + debounce 400ms tránh push liên tục
 function pushDataToFirebase() {
-    if (skipNextSync) return;
-    const data = {
-        members: JSON.parse(localStorage.getItem('pk_members') || '[]'),
-        sessions: JSON.parse(localStorage.getItem('pk_sessions') || '[]'),
-        activeGame: JSON.parse(localStorage.getItem('garini_active_game') || 'null'),
-        savedGames: JSON.parse(localStorage.getItem('garini_saved_games') || '[]'),
-        timestamp: Date.now()
-    };
-    db.ref(ROOM_REF).set(data);
+    if (isSyncingFromFirebase) return; // Đang nhận data về → không push ngược
+    if (!firebaseReady) return;        // SDK chưa ready (iPhone mạng chậm) → bỏ qua
+
+    // Debounce: đợi 400ms sau lần gọi cuối mới thực sự push
+    // Tránh push 5-6 lần liên tiếp khi lưu nhiều key cùng lúc
+    clearTimeout(pushDebounceTimer);
+    pushDebounceTimer = setTimeout(function() {
+        if (isSyncingFromFirebase) return;
+        const data = {
+            members: JSON.parse(localStorage.getItem('pk_members') || '[]'),
+            sessions: JSON.parse(localStorage.getItem('pk_sessions') || '[]'),
+            activeGame: JSON.parse(localStorage.getItem('garini_active_game') || 'null'),
+            savedGames: JSON.parse(localStorage.getItem('garini_saved_games') || '[]'),
+            timestamp: Date.now()
+        };
+        db.ref(ROOM_REF).set(data).catch(function(err) {
+            console.warn('[Firebase] Push thất bại:', err.message);
+        });
+    }, 400);
 }
 
 // B. Lắng nghe dữ liệu trên mạng đẩy về điện thoại
 db.ref(ROOM_REF).on('value', (snapshot) => {
     const data = snapshot.val();
-    if (!data) return; // Nếu database mạng trống thì bỏ qua
+    if (!data) return;
 
-    skipNextSync = true; // Bật cờ chặn vòng lặp
+    // FIX: Dùng isSyncingFromFirebase thay vì skipNextSync + timeout không đủ
+    isSyncingFromFirebase = true;
 
-    // Cập nhật ngầm vào LocalStorage của máy
-    if(data.members) localStorage.setItem('pk_members', JSON.stringify(data.members));
-    if(data.sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.sessions));
-    if(data.savedGames) localStorage.setItem('garini_saved_games', JSON.stringify(data.savedGames));
+    // Ghi thẳng vào localStorage gốc (không qua override) để tránh vòng lặp
+    const _set = Object.getPrototypeOf(localStorage).setItem.bind(localStorage);
+    const _remove = Object.getPrototypeOf(localStorage).removeItem.bind(localStorage);
+
+    if(data.members) _set('pk_members', JSON.stringify(data.members));
+    if(data.sessions) _set('pk_sessions', JSON.stringify(data.sessions));
+    if(data.savedGames) _set('garini_saved_games', JSON.stringify(data.savedGames));
     if(data.activeGame) {
-        localStorage.setItem('garini_active_game', JSON.stringify(data.activeGame));
-        activeGame = data.activeGame; // Cập nhật biến RAM
+        _set('garini_active_game', JSON.stringify(data.activeGame));
+        activeGame = data.activeGame;
     } else {
-        localStorage.removeItem('garini_active_game');
+        _remove('garini_active_game');
         activeGame = { date: '', players: [] };
     }
 
-    // Tự động Load lại UI màn hình người dùng đang xem
+    // Cập nhật UI
     updateGlobalDatalist();
     if(document.getElementById('tab-game').classList.contains('show')) renderGameTab();
     if(document.getElementById('tab-result').classList.contains('show')) {
         if(document.getElementById('resultMainView').style.display !== 'none') {
-            renderCashout(true); // render im lặng, không chớp màn hình để tránh làm mất số đang gõ
+            renderCashout(true);
         } else {
             renderSessionHistory();
         }
@@ -722,25 +743,41 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
         if(document.getElementById('memberListView').style.display !== 'none') renderMemberList();
     }
 
-    // Đợi UI cập nhật xong mới tắt cờ
-    setTimeout(() => { skipNextSync = false; }, 300);
+    // Tắt cờ sau khi xong — dùng requestAnimationFrame đảm bảo sau khi render xong
+    requestAnimationFrame(function() {
+        isSyncingFromFirebase = false;
+    });
 });
 
-// C. Kiểm tra lúc mới mở App: Nếu mạng trống thì đẩy máy mình lên làm chuẩn
+// C. Kiểm tra lúc mới mở App: Đánh dấu Firebase đã sẵn sàng
+// FIX: once('value') callback đảm bảo Firebase SDK đã connected thành công
 db.ref(ROOM_REF).once('value', (snapshot) => {
-    if (!snapshot.exists()) { pushDataToFirebase(); }
+    firebaseReady = true; // ← Chỉ set true sau khi biết chắc Firebase OK
+    if (!snapshot.exists()) {
+        pushDataToFirebase(); // Mạng trống → đẩy data máy mình lên làm chuẩn
+    }
+}).catch(function(err) {
+    console.warn('[Firebase] Không kết nối được:', err.message);
+    // Vẫn cho app chạy offline bình thường, chỉ không sync
 });
 
-// D. "Bắt cóc" lệnh lưu LocalStorage để tự động Push Firebase bất cứ khi nào ông bấm "Lưu"
-const originalSetItem = localStorage.setItem;
+// D. Override localStorage để tự động push Firebase khi lưu
+// FIX: Lưu reference gốc vào biến đóng (closure) để dùng trong handler
+// và trong phần B gọi trực tiếp prototype để tránh đụng override
+const _originalSetItem = localStorage.setItem.bind(localStorage);
+const _originalRemoveItem = localStorage.removeItem.bind(localStorage);
+
 localStorage.setItem = function(key, value) {
-    originalSetItem.apply(this, arguments);
-    if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games'].includes(key)) pushDataToFirebase();
+    _originalSetItem(key, value);
+    if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games'].includes(key)) {
+        pushDataToFirebase();
+    }
 };
-const originalRemoveItem = localStorage.removeItem;
 localStorage.removeItem = function(key) {
-    originalRemoveItem.apply(this, arguments);
-    if(['garini_active_game'].includes(key)) pushDataToFirebase();
+    _originalRemoveItem(key);
+    if(['garini_active_game'].includes(key)) {
+        pushDataToFirebase();
+    }
 };
 // ==========================================
 
