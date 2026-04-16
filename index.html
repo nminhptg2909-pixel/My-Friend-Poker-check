@@ -977,7 +977,12 @@ function renderActivePlayersTable() {
     var el = document.getElementById('activePlayerList');
     var h = '<table class="players"><tr><th>Tên</th><th>Hand</th><th>Chip</th><th></th></tr>';
     activeGame.players.forEach(function(p, i){
-        h += '<tr><td class="name-cell">'+p.name+'<span class="badge">'+fmtAbs(p.hands*100000)+'</span></td>'
+        var note = p.note || ''; // Lấy ghi chú cũ nếu có
+        h += '<tr><td class="name-cell">'
+           + p.name+'<span class="badge">'+fmtAbs(p.hands*100000)+'</span>'
+           // Thêm ô ghi chú nhỏ gọn dưới tên
+           + '<br><input type="text" placeholder="Ghi chú (VD: bán Hùng 2k)..." value="'+note+'" oninput="activeGame.players['+i+'].note=this.value; saveActiveGameToLocal();" style="font-size:9px; padding:2px 4px; background:transparent; border:1px solid var(--border2); border-radius:4px; color:var(--text3); margin-top:4px; width:90%;">'
+           + '</td>'
            + '<td>'+p.hands+'<button class="rebuy-btn" onclick="rebuy('+i+')">+</button></td>'
            + '<td>'+p.chips.toLocaleString()+'</td>'
            + '<td><button class="del-btn" onclick="delActivePlayer('+i+')">✕</button></td></tr>';
