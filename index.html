@@ -5,9 +5,6 @@
 <title>♠ GARINI Poker Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
-
 <style>
 :root{
   --bg:        #0b0c0f;
@@ -368,6 +365,8 @@ table.players tr:last-child td{border-bottom:none;}
 }
   
 </style>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
@@ -561,7 +560,6 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-
 <div class="page" id="tab-members">
   <div id="memberDetailView" style="display:none"></div>
   <div id="memberListView">
@@ -665,6 +663,26 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<div class="modal-overlay" id="transferModal" style="display:none" onclick="closeTransferOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">🤝 Sang tay Chip <span class="modal-close" onclick="closeTransferModal()">✕</span></div>
+    <div style="font-size:12px; margin-bottom:12px; color:var(--text2);" id="transferSellerName"></div>
+    <input type="hidden" id="transferSellerIdx">
+    
+    <div class="form-row" style="margin-bottom:12px;">
+      <label style="min-width:70px; color:var(--gold);">Bán cho:</label>
+      <select id="transferBuyerSelect" style="flex:1; padding:10px; border-radius:8px; background:var(--bg3); color:var(--text); border:1px solid var(--border); outline:none; font-family:var(--font);"></select>
+    </div>
+    
+    <div class="form-row" style="margin-bottom:16px;">
+      <label style="min-width:70px; color:var(--gold);">Số Hand:</label>
+      <input type="number" id="transferHands" value="1" min="1" style="flex:1; padding:10px; font-size:14px; text-align:center;">
+    </div>
+    
+    <button class="btn-gold" onclick="confirmTransfer()">Xác nhận giao dịch</button>
+  </div>
+</div>
+
 <script>
 // ==========================================
 // 1. CẤU HÌNH & KHỞI TẠO FIREBASE
@@ -672,7 +690,7 @@ table.players tr:last-child td{border-bottom:none;}
 const firebaseConfig = {
   apiKey: "AIzaSyDdA0kDVRSJl6RK_Q3SvCI8MSwiwrh6dMs",
   authDomain: "garinipk.firebaseapp.com",
-  databaseURL: "https://garinipk-default-rtdb.firebaseio.com", // <--- Thêm đúng dòng này vào
+  databaseURL: "https://garinipk-default-rtdb.firebaseio.com",
   projectId: "garinipk",
   storageBucket: "garinipk.firebasestorage.app",
   messagingSenderId: "975033773674",
@@ -682,27 +700,35 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
-const ROOM_REF = 'poker_data_chung'; // Tên kho chứa chung
+const ROOM_REF = 'poker_data_chung'; 
 
 // ==========================================
-// 2. ĐỘNG CƠ ĐỒNG BỘ DỮ LIỆU TỰ ĐỘNG (BẢN BULLETPROOF CHO MOBILE)
+// 2. ĐỘNG CƠ ĐỒNG BỘ DỮ LIỆU TỰ ĐỘNG (ĐÃ FIX LỖI GHI ĐÈ TRẮNG)
 // ==========================================
 
 let firebaseReady = false;
 let pushDebounceTimer = null;
 
-// Lấy "Bản gốc" của hàm lưu trữ (Tuyệt đối an toàn, Mobile không thể chặn)
 const _originalSetItem = Storage.prototype.setItem;
 const _originalRemoveItem = Storage.prototype.removeItem;
 
-// A. Hàm đẩy dữ liệu lên mạng (Bỏ mọi cờ khóa, có thay đổi là bắn thẳng)
+// Hàm đẩy dữ liệu lên mạng (Bản đã bọc thép chống xóa nhầm)
 function pushDataToFirebase() {
     if (!firebaseReady) return;
     clearTimeout(pushDebounceTimer);
     pushDebounceTimer = setTimeout(function() {
+        const membersList = JSON.parse(localStorage.getItem('pk_members') || '[]');
+        const sessionsList = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
+        
+        // 🛑 BỨC TƯỜNG LỬA CHỐNG XÓA DATA: Nếu bộ nhớ máy trống, chặn đẩy lên Firebase
+        if (membersList.length === 0 && sessionsList.length === 0) {
+            console.warn("⚠️ Bỏ qua Push: Bộ nhớ máy đang trống, chặn lệnh để bảo vệ Firebase!");
+            return;
+        }
+
         const data = {
-            members: JSON.parse(localStorage.getItem('pk_members') || '[]'),
-            sessions: JSON.parse(localStorage.getItem('pk_sessions') || '[]'),
+            members: membersList,
+            sessions: sessionsList,
             activeGame: JSON.parse(localStorage.getItem('garini_active_game') || 'null'),
             savedGames: JSON.parse(localStorage.getItem('garini_saved_games') || '[]'),
             timestamp: Date.now()
@@ -720,7 +746,6 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
     firebaseReady = true;
 
     try {
-        // DÙNG HÀM GỐC ĐỂ LƯU -> Nó sẽ âm thầm ghi vào máy mà KHÔNG kích hoạt bắn ngược lên mây
         if(data.members) _originalSetItem.call(localStorage, 'pk_members', JSON.stringify(data.members));
         if(data.sessions) _originalSetItem.call(localStorage, 'pk_sessions', JSON.stringify(data.sessions));
         if(data.savedGames) _originalSetItem.call(localStorage, 'garini_saved_games', JSON.stringify(data.savedGames));
@@ -733,7 +758,6 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
             activeGame = { date: '', players: [] };
         }
 
-        // Cập nhật UI
         updateGlobalDatalist();
         if(document.getElementById('tab-game').classList.contains('show')) renderGameTab();
         if(document.getElementById('tab-result').classList.contains('show')) {
@@ -771,8 +795,6 @@ Storage.prototype.removeItem = function(key) {
         pushDataToFirebase();
     }
 };
-// ==========================================
-// ==========================================
 
 // BIẾN TOÀN CỤC CHẠY GAME
 var activeGame = { date: '', players: [] };
@@ -973,16 +995,61 @@ function saveNewTable() {
     renderGameTab();
 }
 
+// ================= HÀM SANG TAY CHIP (AUTO BUY/SELL) =================
+function openTransferModal(i) {
+    document.getElementById('transferSellerIdx').value = i;
+    document.getElementById('transferSellerName').innerHTML = 'Người xả chip: <b style="color:var(--gold2); font-size:14px;">' + activeGame.players[i].name + '</b>';
+    
+    var select = document.getElementById('transferBuyerSelect');
+    var opts = '';
+    activeGame.players.forEach(function(p, idx) {
+        if(idx !== i) { // Không cho tự bán cho mình
+            opts += '<option value="'+idx+'">'+p.name+'</option>';
+        }
+    });
+    select.innerHTML = opts;
+    document.getElementById('transferHands').value = '1';
+    document.getElementById('transferModal').style.display = 'flex';
+}
+
+function closeTransferModal() { document.getElementById('transferModal').style.display = 'none'; }
+function closeTransferOutside(e) { if(e.target === document.getElementById('transferModal')) closeTransferModal(); }
+
+function confirmTransfer() {
+    var sIdx = parseInt(document.getElementById('transferSellerIdx').value);
+    var bIdx = parseInt(document.getElementById('transferBuyerSelect').value);
+    var hands = parseInt(document.getElementById('transferHands').value) || 0;
+    
+    if(hands <= 0) { alert('Số hand bán phải lớn hơn 0!'); return; }
+    
+    var seller = activeGame.players[sIdx];
+    var buyer = activeGame.players[bIdx];
+    var chipAmount = hands * 2000;
+    
+    // 1. Cập nhật cho thằng Mua (Tăng Hand, Tăng Chip mua vào)
+    buyer.hands += hands;
+    buyer.chips += chipAmount;
+    
+    // 2. Cập nhật cho thằng Bán (Lưu lại số chip nó đã xả để cuối giờ tự cộng)
+    seller.soldChips = (seller.soldChips || 0) + chipAmount;
+    
+    saveActiveGameToLocal();
+    renderGameTab();
+    closeTransferModal();
+}
+
 function renderActivePlayersTable() {
     var el = document.getElementById('activePlayerList');
     var h = '<table class="players"><tr><th>Tên</th><th>Hand</th><th>Chip</th><th></th></tr>';
     activeGame.players.forEach(function(p, i){
-        var note = p.note || ''; // Lấy ghi chú cũ nếu có
+        // Hiển thị số chip đã bán ngay dưới tên
+        var soldText = p.soldChips ? '<br><span style="font-size:10px;color:#6dbf80;">(Đã xả: '+p.soldChips.toLocaleString()+' chip)</span>' : '';
+        
         h += '<tr><td class="name-cell">'
            + p.name+'<span class="badge">'+fmtAbs(p.hands*100000)+'</span>'
-           // Thêm ô ghi chú nhỏ gọn dưới tên
-// Thay chữ "oninput" thành "onchange" ở đoạn này nhé
-'<br><input type="text" placeholder="Ghi chú (VD: bán Hùng 2k)..." value="'+note+'" onchange="activeGame.players['+i+'].note=this.value; saveActiveGameToLocal();" style="font-size:9px; padding:2px 4px; background:transparent; border:1px solid var(--border2); border-radius:4px; color:var(--text3); margin-top:4px; width:90%;">'           + '</td>'
+           + soldText
+           + '<br><button class="rebuy-btn" style="margin-left:0; margin-top:6px; padding:3px 8px; font-size:10px;" onclick="openTransferModal('+i+')">🤝 Sang tay</button>'
+           + '</td>'
            + '<td>'+p.hands+'<button class="rebuy-btn" onclick="rebuy('+i+')">+</button></td>'
            + '<td>'+p.chips.toLocaleString()+'</td>'
            + '<td><button class="del-btn" onclick="delActivePlayer('+i+')">✕</button></td></tr>';
@@ -1109,8 +1176,12 @@ function renderCashout(isUpdate = false) {
   var h = '';
   activeGame.players.forEach(function(p,i){
     var val = p.cashoutTemp !== undefined ? p.cashoutTemp : '';
+    // Hiện thông báo + Chip đã bán bên cạnh ô nhập
+    var soldInfo = p.soldChips ? '<span style="font-size:11px; color:#6dbf80; font-weight:700; margin-left:8px; white-space:nowrap;">+ '+p.soldChips.toLocaleString()+' <span style="font-size:9px; font-weight:normal;">(đã xả)</span></span>' : '';
+    
     h+='<div style="margin-bottom:12px;"><div style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text);">'+p.name+' <span style="font-size:10px;color:var(--text3);font-weight:400;">mua '+p.chips.toLocaleString()+' chip</span></div>'
-      +'<div style="display:flex;align-items:center;gap:8px;"><input class="chip-inp" type="number" id="co_'+i+'" placeholder="Chip còn lại..." min="0" style="flex:1;" value="'+val+'" oninput="updateTempCashout('+i+', this.value)"></div></div>';
+      +'<div style="display:flex;align-items:center;gap:8px;"><input class="chip-inp" type="number" id="co_'+i+'" placeholder="Chip đang cầm..." min="0" style="flex:1;" value="'+val+'" oninput="updateTempCashout('+i+', this.value)">'
+      + soldInfo + '</div></div>';
   });
   el.innerHTML=h;
 }
@@ -1119,10 +1190,15 @@ function calcResult(){
   if(!activeGame.players.length){alert('Chưa có người chơi!');return;}
   lastResults = []; var tb=0;
   activeGame.players.forEach(function(p,i){
-    var co=parseInt((document.getElementById('co_'+i)||{}).value)||0;
-    var diff=Math.round((co-p.chips)/2000*100000);
-    tb+=p.chips;
-    lastResults.push({name:p.name,buyin:p.chips,cashout:co,diff:diff,memberId:p.memberId});
+    // Lấy số chip nhập bằng tay (Chip cầm trên tay)
+    var physicalChips = parseInt((document.getElementById('co_'+i)||{}).value)||0;
+    
+    // Tổng Cashout THỰC TẾ = Chip cầm trên tay + Chip đã xả cho người khác
+    var totalCashout = physicalChips + (p.soldChips || 0);
+    
+    var diff = Math.round((totalCashout - p.chips) / 2000 * 100000);
+    tb += p.chips;
+    lastResults.push({name:p.name, buyin:p.chips, cashout:totalCashout, diff:diff, memberId:p.memberId});
   });
   
   document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
@@ -1434,7 +1510,7 @@ function renderCalendarUI() {
 }
 
 function applyHofFilter(mode, val1) {
-    window.confettiFired = false; // Reset cờ confetti khi đổi bộ lọc
+    window.confettiFired = false; 
     hofFilter.mode = mode;
     var eyebrow = document.getElementById('hofEyebrow');
     
@@ -1563,7 +1639,10 @@ function renderHof(){
   currentStats.forEach(function(r, i){
     var cls=i<3?rc[i]:(r.diff>0?'rank-win':r.diff<0?'rank-loss':'rank-even');
     var badge=i<3?medals[i]:(i+1), barPct=Math.max(8,Math.round(Math.abs(r.diff)/maxAbs*100));
-    var amt=r.diff>0?'+'+fmtAbs(r.diff):r.diff<0?'-'+fmtAbs(Math.abs(r.diff)):'Huề';
+    
+    var amt = r.diff > 0 ? '+' + fmtAbs(r.diff) : r.diff < 0 ? '-' + fmtAbs(Math.abs(r.diff)) : 'Huề';
+    var lossIcon = getLossIcon(r.diff); 
+    var amtHtml = lossIcon + amt; 
     
     // TÍNH TOÁN LÊN XUỐNG HẠNG
     var currentRank = i + 1;
@@ -1574,12 +1653,12 @@ function renderHof(){
         var pRank = prevRankMap[r.name];
         if(pRank === undefined) {
             rankMoveHtml = '<span class="move-new">🆕 MỚI</span>';
-            nameGlowClass = 'name-glow'; // Người mới lọt top cũng sáng
+            nameGlowClass = 'name-glow'; 
         } else {
-            var diffRank = pRank - currentRank; // rank 5 -> rank 3 = 5 - 3 = +2
+            var diffRank = pRank - currentRank; 
             if(diffRank > 0) {
                 rankMoveHtml = '<span class="move-up">▲ ' + diffRank + '</span>';
-                nameGlowClass = 'name-glow'; // CHỈ LÀM SÁNG NẾU THĂNG HẠNG
+                nameGlowClass = 'name-glow'; 
             } else if(diffRank < 0) {
                 rankMoveHtml = '<span class="move-down">▼ ' + Math.abs(diffRank) + '</span>';
             } else {
@@ -1590,11 +1669,10 @@ function renderHof(){
 
     if(i===winCount&&hasLoss&&winCount>0) h+='</div><div class="rank-divider"><span>▼ Thua ▼</span></div><div class="rank-list">';
     
-    // GẮN BADGES (LOGIC MỚI CHO BẤT BẠI, VUA LÌ ĐÒN & JACKPOT)
+    // GẮN BADGES
     var badgesHtml = '';
     var s = streakMap[r.name] || {type: 'none', count: 0, latestDiff: 0};
     
-    // 🎰 JACKPOT (Ăn từ 500k trở lên ở buổi chơi gần nhất)
     if (s.latestDiff >= 500000) {
         badgesHtml += '<span class="h-badge hb-jackpot">🎰 Jackpot</span>';
     }
@@ -1607,7 +1685,6 @@ function renderHof(){
         else if (s.count >= 3) badgesHtml += '<span class="h-badge hb-lidon">🥊 Vua lì đòn</span>';
     }
     
-    // BADGES KHÁC
     if (r.buyin === maxBuyin && r.buyin > 0) badgesHtml += '<span class="h-badge hb-baothu">💣 Báo Thủ</span>';
     if (r.name === biggestLoserName && r.diff < 0) badgesHtml += '<span class="h-badge hb-atm">🏧 Cây ATM</span>';
     if (Math.abs(r.diff) <= 50000 && r.totalSessions > 0 && r.diff !== 0) badgesHtml += '<span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span>';
@@ -1622,7 +1699,7 @@ function renderHof(){
       +'<div class="rank-sub">Mua vào: '+r.buyin.toLocaleString()+' · Bán ra: '+r.cashout.toLocaleString()+'</div>'
       + badgesDiv
       +'</div>'
-      +'<div class="rank-amt">'+amt+'</div>'
+      +'<div class="rank-amt">'+amtHtml+'</div>'
       +'<div class="rank-bar"><div class="rank-bar-fill" data-w="'+barPct+'"></div></div></div>';
   });
   el.innerHTML=h+'</div>';
