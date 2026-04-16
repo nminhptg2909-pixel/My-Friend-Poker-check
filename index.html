@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>♠ LET's GO POKER Tracker</title>
+<title>♠ LET GO POKER Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -375,7 +375,7 @@ table.players tr:last-child td{border-bottom:none;}
 
 <div class="app-header">
   <div class="app-logo">Private Game</div>
-  <div class="app-title">♠ LET's GO POKER</div>
+  <div class="app-title">♠ LET GO POKER</div>
   <div class="app-divider"><span class="app-divider-icon">◆</span></div>
 </div>
 
@@ -458,7 +458,7 @@ table.players tr:last-child td{border-bottom:none;}
     </div>
     <div class="card" id="summaryCard" style="display:none">
       <div class="card-title">Tổng kết ván</div>
-      <div class="pot-info">Tổng pot: <span id="totalPot">0đ</span></div>
+      <div class="pot-info">Tổng pot: <span id="totalPot">0 chip</span></div>
       <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
       <div id="summaryList"></div>
       <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
@@ -522,7 +522,7 @@ table.players tr:last-child td{border-bottom:none;}
       <div class="hof-legend">
         <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
         <div class="legend-grid">
-          <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000đ trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
+          <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
           <div class="legend-item">
             <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
               <span class="h-badge hb-hot">🔥 Win x2</span>
@@ -553,7 +553,7 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
   <div class="kb-body">
     <div style="text-align:center;font-size:11px;color:var(--text3);margin-bottom:15px;border-bottom:1px solid rgba(192,80,80,.2);padding-bottom:10px;">
-      Chỉ hiển thị các buổi chơi có tổng tiền "Thảm sát" trên <b>500.000đ</b>
+      Chỉ hiển thị các buổi chơi có tổng tiền "Thảm sát" trên <b>500.000 chip</b>
     </div>
     <div id="kbList">
       </div>
@@ -827,7 +827,7 @@ var currentTcIdx = null;
 function loadMembers(){try{return JSON.parse(localStorage.getItem('pk_members'))||[];}catch(e){return[];}}
 function saveMembers(m){localStorage.setItem('pk_members',JSON.stringify(m)); updateGlobalDatalist(); }
 function getMembers(){return loadMembers();}
-function fmtAbs(n){return n.toLocaleString('vi-VN')+'đ';}
+function fmtAbs(n){return n.toLocaleString('vi-VN')+' chip';}
 function initials(name){return name.trim().split(' ').map(function(w){return w[0];}).join('').toUpperCase().slice(0,2);}
 
 function loadSavedGames() { return JSON.parse(localStorage.getItem('garini_saved_games')) || []; }
