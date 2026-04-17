@@ -1761,7 +1761,6 @@ function renderHof(){
   }
 }
 
-
 /* ==================== MEMBERS TAB LOGIC ==================== */
 function showMemberListView(){document.getElementById('memberDetailView').style.display='none';document.getElementById('memberListView').style.display='block';}
 
@@ -1798,7 +1797,7 @@ function showMemberDetail(id){
   }).join('');
   var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
     +'<div class="profile-header"><div class="profile-avatar-lg">'+initials(m.name)+'</div>'
-    +'<div><div class="profile-name">'+m.name+'</div><div class="profile-since">Thành viên từ '+since+'</div></div></div>'
+    +'<div><div class="profile-name" style="display:flex;align-items:center;">'+m.name+' <button style="background:rgba(200,168,75,.15);border:1px solid var(--border);border-radius:6px;color:var(--gold);padding:3px 6px;margin-left:8px;cursor:pointer;font-size:10px;font-family:var(--font);font-weight:700;" onclick="renameMember(\''+m.id+'\')">✏️ Sửa</button></div><div class="profile-since">Thành viên từ '+since+'</div></div></div>'
     +'<div class="profile-stats">'
     +'<div class="pstat"><div class="pstat-val">'+hist.length+'</div><div class="pstat-label">Buổi</div></div>'
     +'<div class="pstat"><div class="pstat-val '+diffCls+'">'+diffTxt+'</div><div class="pstat-label">Tổng</div></div>'
@@ -1810,6 +1809,54 @@ function showMemberDetail(id){
   document.getElementById('memberDetailView').innerHTML=html;
   document.getElementById('memberDetailView').style.display='block';
   document.getElementById('memberListView').style.display='none';
+}
+
+function renameMember(id){
+  var members=getMembers(), m=members.find(function(x){return x.id===id;});
+  if(!m)return;
+  var newName=prompt('Nhập tên mới cho hội viên:', m.name);
+  if(newName===null)return;
+  newName=newName.trim();
+  if(!newName){alert('Tên không được để trống!');return;}
+  if(newName.toLowerCase()===m.name.toLowerCase())return;
+  if(members.find(function(x){return x.id!==id && x.name.toLowerCase()===newName.toLowerCase();})){
+    alert('Tên này đã có người dùng rồi!');return;
+  }
+  
+  var oldName = m.name;
+  m.name = newName;
+  saveMembers(members);
+  
+  // Cập nhật tên trong Lịch sử và danh sách Thu/Chi để không bị lỗi đồng bộ
+  var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
+  var updated = false;
+  sessions.forEach(function(s){
+    (s.results||[]).forEach(function(r){
+      if(r.memberId===id || r.name===oldName){ r.name=newName; updated=true; }
+    });
+    if(s.settled && s.settled[oldName]!==undefined){
+      s.settled[newName] = s.settled[oldName];
+      delete s.settled[oldName];
+      updated=true;
+    }
+  });
+  if(updated) localStorage.setItem('pk_sessions', JSON.stringify(sessions));
+  
+  // Cập nhật ngay trong bàn đang chơi nếu người này đang ngồi
+  if(activeGame && activeGame.players){
+    var gameUpdated=false;
+    activeGame.players.forEach(function(p){
+      if(p.memberId===id || p.name===oldName){ p.name=newName; gameUpdated=true; }
+    });
+    if(gameUpdated){
+      saveActiveGameToLocal();
+      if(document.getElementById('tab-game').classList.contains('show')) renderGameTab();
+      if(document.getElementById('tab-result').classList.contains('show')) renderCashout(true);
+    }
+  }
+  
+  showMemberDetail(id);
+  renderMemberList();
 }
 
 function deleteMember(id){
