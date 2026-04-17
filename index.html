@@ -247,6 +247,13 @@ table.players tr:last-child td{border-bottom:none;}
 .hof-stat-val{font-size:16px;font-weight:800;color:var(--gold2);}
 .hof-stat-val.green{color:#6dbf80;}.hof-stat-val.red{color:#d07070;}
 
+/* HOF SUBTABS (Chuyển đổi Win / Loss) */
+.hof-subtabs { display:flex; gap:8px; margin-bottom:15px; }
+.hof-subtab { flex:1; text-align:center; padding:10px 4px; font-size:11px; font-weight:800; cursor:pointer; border-radius:8px; transition:all .2s; text-transform:uppercase; border:1px solid var(--border2); background:var(--bg3); color:var(--text3); }
+.hof-subtab.active { box-shadow:0 0 10px rgba(0,0,0,.5); }
+#hofSubTabWin.active { background:linear-gradient(135deg, rgba(74,140,92,.2), rgba(20,40,25,.8)); color:#7dd890; border-color:rgba(74,140,92,.5); }
+#hofSubTabLoss.active { background:linear-gradient(135deg, rgba(192,80,80,.2), rgba(40,15,15,.8)); color:#ff4d4d; border-color:rgba(192,80,80,.5); }
+
 /* HOF THEMES: XANH & GÁNH XIẾC */
 .theme-section { border-radius: 12px; padding: 14px; border: 1px solid transparent; margin-bottom: 20px; }
 .theme-green {
@@ -506,6 +513,11 @@ table.players tr:last-child td{border-bottom:none;}
         <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Đến ngày</span><input type="date" id="rangeEnd" style="width:100%;font-size:12px;"></div>
       </div>
       <button class="btn-green" style="font-size:11px; padding:9px; margin-top:8px;" onclick="applyHofFilter('range')">Lọc Dữ Liệu</button>
+    </div>
+
+    <div class="hof-subtabs" id="hofSubTabs" style="display:none;">
+      <div class="hof-subtab active" id="hofSubTabWin" onclick="switchHofSubTab('win')">🏡 Hội Tỉ Phú</div>
+      <div class="hof-subtab" id="hofSubTabLoss" onclick="switchHofSubTab('loss')">🎪 Gánh Xiếc</div>
     </div>
 
     <div id="greenTownSection" class="theme-section theme-green" style="display:none;">
@@ -801,6 +813,7 @@ var hofFilter = { mode: 'all', singleDate: null, monthStr: null, rangeStart: nul
 var calCurYear = new Date().getFullYear();
 var calCurMonth = new Date().getMonth();
 var currentTcIdx = null;
+var currentHofSubTab = 'win'; // Biến lưu trạng thái Sub-tab trong mục Fame
 
 // INIT & MIGRATION
 (function(){
@@ -851,6 +864,19 @@ function showTab(t){
   if(t==='result') renderCashout();
   if(t==='hof') { renderCalendarUI(); renderHof(); }
   if(t==='members'){showMemberListView();renderMemberList();}
+}
+
+// HÀM CHUYỂN SUB-TAB TRONG MỤC FAME
+function switchHofSubTab(tabId) {
+    currentHofSubTab = tabId;
+    
+    // Cập nhật trạng thái nút bấm
+    document.getElementById('hofSubTabWin').className = 'hof-subtab' + (tabId === 'win' ? ' active' : '');
+    document.getElementById('hofSubTabLoss').className = 'hof-subtab' + (tabId === 'loss' ? ' active' : '');
+    
+    // Hiển thị section tương ứng
+    document.getElementById('greenTownSection').style.display = (tabId === 'win' ? 'block' : 'none');
+    document.getElementById('circusSection').style.display = (tabId === 'loss' ? 'block' : 'none');
 }
 
 /* ==================== GAME TAB LOGIC ==================== */
@@ -1556,15 +1582,22 @@ function renderHof(){
     }
   });
 
+  var subTabsContainer = document.getElementById('hofSubTabs');
+  var winSection = document.getElementById('greenTownSection');
+  var lossSection = document.getElementById('circusSection');
+  var statsSection = document.getElementById('hofStats');
+  var emptyMsg = document.getElementById('hofEmptyMsg');
+
   if(!validHistories.length){
-      document.getElementById('greenTownSection').style.display='none';
-      document.getElementById('circusSection').style.display='none';
-      document.getElementById('hofStats').style.display='none';
-      document.getElementById('hofEmptyMsg').style.display='block';
+      subTabsContainer.style.display = 'none';
+      winSection.style.display = 'none';
+      lossSection.style.display = 'none';
+      statsSection.style.display = 'none';
+      emptyMsg.style.display = 'block';
       return;
   }
   
-  document.getElementById('hofEmptyMsg').style.display='none';
+  emptyMsg.style.display = 'none';
 
   // 2. Tách Ngày gần nhất để tính Ranking
   var uniqueDates = Array.from(new Set(validHistories.map(function(h){return h.date;})));
@@ -1702,24 +1735,16 @@ function renderHof(){
   
   hWin += '</div>';
   hLoss += '</div>';
+
+  // Hiển thị thanh Sub-tab
+  subTabsContainer.style.display = 'flex';
   
-  // Hiển thị / Ẩn 2 bảng
-  var winSection = document.getElementById('greenTownSection');
-  var lossSection = document.getElementById('circusSection');
+  // Nạp HTML vào 2 danh sách
+  document.getElementById('hofListWin').innerHTML = hasWin ? hWin : '<div class="empty">Chưa có ai lời</div>';
+  document.getElementById('hofListLoss').innerHTML = hasLoss ? hLoss : '<div class="empty">Chưa có ai lỗ</div>';
   
-  if (hasWin) {
-      winSection.style.display = 'block';
-      document.getElementById('hofListWin').innerHTML = hWin;
-  } else {
-      winSection.style.display = 'none';
-  }
-  
-  if (hasLoss) {
-      lossSection.style.display = 'block';
-      document.getElementById('hofListLoss').innerHTML = hLoss;
-  } else {
-      lossSection.style.display = 'none';
-  }
+  // Kích hoạt tab hiện tại để đảm bảo UI không bị lỗi
+  switchHofSubTab(currentHofSubTab);
   
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
   
@@ -1728,7 +1753,7 @@ function renderHof(){
   document.getElementById('hofPlayerCount').textContent=currentStats.length+' người';
   document.getElementById('hofBigWin').textContent=bw.diff>0?'+'+fmtAbs(bw.diff):'—';
   document.getElementById('hofBigLoss').textContent=bl.diff<0?'-'+fmtAbs(Math.abs(bl.diff)):'—';
-  document.getElementById('hofStats').style.display='block';
+  statsSection.style.display='block';
   
   if(bw.diff>0 && !window.confettiFired){ 
       launchConfetti(); 
