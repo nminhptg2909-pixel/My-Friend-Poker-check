@@ -5,6 +5,8 @@
 <title>♠ LET GO POKER Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 <style>
 :root{
   --bg:        #0b0c0f;
@@ -465,6 +467,22 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="card" id="summaryCard" style="display:none">
       <div class="card-title">Tổng kết ván</div>
       <div class="pot-info">Tổng pot: <span id="totalPot">0 chip</span></div>
+      
+      <div style="background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:12px; font-size:12px; margin-bottom:14px; display:flex; flex-direction:column; gap:6px;">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--text3); font-weight:500;">Tổng tiền Dương (+):</span>
+          <span id="sumPositive" style="color:#6dbf80; font-weight:700;">+0 chip</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:var(--text3); font-weight:500;">Tổng tiền Âm (-):</span>
+          <span id="sumNegative" style="color:#d07070; font-weight:700;">-0 chip</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border2); padding-top:6px; margin-top:2px;">
+          <span style="color:var(--gold); font-weight:600;">Chênh lệch:</span>
+          <span id="sumDelta" style="font-weight:800; color:var(--text);">0 chip</span>
+        </div>
+      </div>
+
       <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
       <div id="summaryList"></div>
       <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
@@ -705,7 +723,7 @@ const db = firebase.database();
 const ROOM_REF = 'poker_data_chung'; 
 
 // ==========================================
-// 2. ĐỘNG CƠ ĐỒNG BỘ DỮ LIỆU TỰ ĐỘNG (ĐÃ FIX LỖI GHI ĐÈ TRẮNG)
+// 2. ĐỘNG CƠ ĐỒNG BỘ DỮ LIỆU TỰ ĐỘNG
 // ==========================================
 
 let firebaseReady = false;
@@ -714,7 +732,7 @@ let pushDebounceTimer = null;
 const _originalSetItem = Storage.prototype.setItem;
 const _originalRemoveItem = Storage.prototype.removeItem;
 
-// Hàm đẩy dữ liệu lên mạng (Bản đã bọc thép chống xóa nhầm)
+// Hàm đẩy dữ liệu lên mạng
 function pushDataToFirebase() {
     if (!firebaseReady) return;
     clearTimeout(pushDebounceTimer);
@@ -722,7 +740,6 @@ function pushDataToFirebase() {
         const membersList = JSON.parse(localStorage.getItem('pk_members') || '[]');
         const sessionsList = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
         
-        // 🛑 BỨC TƯỜNG LỬA CHỐNG XÓA DATA: Nếu bộ nhớ máy trống, chặn đẩy lên Firebase
         if (membersList.length === 0 && sessionsList.length === 0) {
             console.warn("⚠️ Bỏ qua Push: Bộ nhớ máy đang trống, chặn lệnh để bảo vệ Firebase!");
             return;
@@ -783,7 +800,7 @@ db.ref(ROOM_REF).once('value', (snapshot) => {
     }
 });
 
-// D. Gài bẫy khi người dùng thao tác -> Kích hoạt đẩy lên mây
+// D. Gài bẫy khi người dùng thao tác
 Storage.prototype.setItem = function(key, value) {
     _originalSetItem.call(this, key, value);
     if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games'].includes(key)) {
@@ -807,7 +824,7 @@ var hofFilter = { mode: 'all', singleDate: null, monthStr: null, rangeStart: nul
 var calCurYear = new Date().getFullYear();
 var calCurMonth = new Date().getMonth();
 var currentTcIdx = null;
-var currentHofSubTab = 'win'; // Biến lưu trạng thái Sub-tab trong mục Fame
+var currentHofSubTab = 'win';
 
 // INIT & MIGRATION
 (function(){
@@ -863,12 +880,8 @@ function showTab(t){
 // HÀM CHUYỂN SUB-TAB TRONG MỤC FAME
 function switchHofSubTab(tabId) {
     currentHofSubTab = tabId;
-    
-    // Cập nhật trạng thái nút bấm
     document.getElementById('hofSubTabWin').className = 'hof-subtab' + (tabId === 'win' ? ' active' : '');
     document.getElementById('hofSubTabLoss').className = 'hof-subtab' + (tabId === 'loss' ? ' active' : '');
-    
-    // Hiển thị section tương ứng
     document.getElementById('greenTownSection').style.display = (tabId === 'win' ? 'block' : 'none');
     document.getElementById('circusSection').style.display = (tabId === 'loss' ? 'block' : 'none');
 }
@@ -1005,7 +1018,6 @@ function saveNewTable() {
     renderGameTab();
 }
 
-// ================= HÀM SANG TAY CHIP (AUTO BUY/SELL) =================
 function openTransferModal(i) {
     document.getElementById('transferSellerIdx').value = i;
     document.getElementById('transferSellerName').innerHTML = 'Người xả chip: <b style="color:var(--gold2); font-size:14px;">' + activeGame.players[i].name + '</b>';
@@ -1013,7 +1025,7 @@ function openTransferModal(i) {
     var select = document.getElementById('transferBuyerSelect');
     var opts = '';
     activeGame.players.forEach(function(p, idx) {
-        if(idx !== i) { // Không cho tự bán cho mình
+        if(idx !== i) { 
             opts += '<option value="'+idx+'">'+p.name+'</option>';
         }
     });
@@ -1036,11 +1048,8 @@ function confirmTransfer() {
     var buyer = activeGame.players[bIdx];
     var chipAmount = hands * 2000;
     
-    // 1. Cập nhật cho thằng Mua (Tăng Hand, Tăng Chip mua vào)
     buyer.hands += hands;
     buyer.chips += chipAmount;
-    
-    // 2. Cập nhật cho thằng Bán (Lưu lại số chip nó đã xả để cuối giờ tự cộng)
     seller.soldChips = (seller.soldChips || 0) + chipAmount;
     
     saveActiveGameToLocal();
@@ -1052,7 +1061,6 @@ function renderActivePlayersTable() {
     var el = document.getElementById('activePlayerList');
     var h = '<table class="players"><tr><th>Tên</th><th>Hand</th><th>Chip</th><th></th></tr>';
     activeGame.players.forEach(function(p, i){
-        // Hiển thị số chip đã bán ngay dưới tên
         var soldText = p.soldChips ? '<br><span style="font-size:10px;color:#6dbf80;">(Đã xả: '+p.soldChips.toLocaleString()+' chip)</span>' : '';
         
         h += '<tr><td class="name-cell">'
@@ -1149,12 +1157,11 @@ function saveEditedActiveTable() {
     closeEditActiveTableModal();
 }
 
-/* ==================== RESULT TAB LOGIC (GẮN REALTIME) ==================== */
+/* ==================== RESULT TAB LOGIC ==================== */
 
-// Bắt sự kiện gõ phím để lưu vào biến tạm và đẩy lên Firebase
 window.updateTempCashout = function(i, val) {
     activeGame.players[i].cashoutTemp = val;
-    saveActiveGameToLocal(); // Trigger Firebase
+    saveActiveGameToLocal(); 
 }
 
 function renderCashout(isUpdate = false) {
@@ -1171,11 +1178,9 @@ function renderCashout(isUpdate = false) {
   
   btn.style.display = 'block';
 
-  // NẾU LÀ UPDATE TỪ MẠNG VỀ: Chỉ cập nhật số, không render lại nguyên khối HTML để tránh mất trỏ chuột khi đang gõ
   if(isUpdate && el.children.length > 0 && el.querySelectorAll('.chip-inp').length === activeGame.players.length) {
       activeGame.players.forEach(function(p,i){
           var inp = document.getElementById('co_'+i);
-          // KHÔNG ghi đè nếu người dùng này đang focus (đang gõ) vào chính ô đó
           if(inp && document.activeElement !== inp) { 
               inp.value = p.cashoutTemp !== undefined ? p.cashoutTemp : '';
           }
@@ -1186,7 +1191,6 @@ function renderCashout(isUpdate = false) {
   var h = '';
   activeGame.players.forEach(function(p,i){
     var val = p.cashoutTemp !== undefined ? p.cashoutTemp : '';
-    // Hiện thông báo + Chip đã bán bên cạnh ô nhập
     var soldInfo = p.soldChips ? '<span style="font-size:11px; color:#6dbf80; font-weight:700; margin-left:8px; white-space:nowrap;">+ '+p.soldChips.toLocaleString()+' <span style="font-size:9px; font-weight:normal;">(đã xả)</span></span>' : '';
     
     h+='<div style="margin-bottom:12px;"><div style="font-size:13px;font-weight:600;margin-bottom:5px;color:var(--text);">'+p.name+' <span style="font-size:10px;color:var(--text3);font-weight:400;">mua '+p.chips.toLocaleString()+' chip</span></div>'
@@ -1199,22 +1203,39 @@ function renderCashout(isUpdate = false) {
 function calcResult(){
   if(!activeGame.players.length){alert('Chưa có người chơi!');return;}
   lastResults = []; var tb=0;
+  var sumPositive = 0;
+  var sumNegative = 0;
+
   activeGame.players.forEach(function(p,i){
-    // Lấy số chip nhập bằng tay (Chip cầm trên tay)
     var physicalChips = parseInt((document.getElementById('co_'+i)||{}).value)||0;
-    
-    // Tổng Cashout THỰC TẾ = Chip cầm trên tay + Chip đã xả cho người khác
     var totalCashout = physicalChips + (p.soldChips || 0);
-    
     var diff = Math.round((totalCashout - p.chips) / 2000 * 100000);
     tb += p.chips;
+    
+    if (diff > 0) sumPositive += diff;
+    if (diff < 0) sumNegative += diff;
+
     lastResults.push({name:p.name, buyin:p.chips, cashout:totalCashout, diff:diff, memberId:p.memberId});
   });
   
+  // Cập nhật số liệu Tổng pot và Tỷ lệ Dương / Âm
   document.getElementById('totalPot').textContent=fmtAbs(Math.round(tb/2000*100000));
+  document.getElementById('sumPositive').textContent = '+' + fmtAbs(sumPositive);
+  document.getElementById('sumNegative').textContent = '-' + fmtAbs(Math.abs(sumNegative));
+  
+  var delta = sumPositive + sumNegative;
+  var deltaEl = document.getElementById('sumDelta');
+  if (delta === 0) {
+    deltaEl.textContent = 'Khớp tuyệt đối (0 chip)';
+    deltaEl.style.color = '#6dbf80';
+  } else {
+    var sign = delta > 0 ? '+' : '';
+    deltaEl.textContent = sign + fmtAbs(delta);
+    deltaEl.style.color = delta > 0 ? '#6dbf80' : '#d07070';
+  }
+
   var dp = activeGame.date.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : activeGame.date;
-  
   var dateEl = document.getElementById('sessionDateDisplay');
   if(dateEl) { dateEl.textContent = displayDate ? '📅 Ngày: ' + displayDate : ''; }
   
@@ -1239,7 +1260,6 @@ function saveSessionToHistory(){
   var members = getMembers();
   var sessions = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
   
-  // 1. Xử lý ngày tháng
   let rawDate = activeGame.date;
   if(!rawDate) {
       let d = new Date();
@@ -1249,7 +1269,6 @@ function saveSessionToHistory(){
   var dp = rawDate.split('-');
   var displayDate = dp.length === 3 ? dp[2]+'/'+dp[1]+'/'+dp[0] : rawDate;
 
-  // 2. Lưu vào Lịch sử từng Hội viên (để hiện bên tab Fame)
   lastResults.forEach(function(r){
     if(!r.memberId) return;
     var m = members.find(function(x){return x.id === r.memberId;});
@@ -1258,7 +1277,6 @@ function saveSessionToHistory(){
     m.history.unshift({date: displayDate, buyin: r.buyin, cashout: r.cashout, diff: r.diff});
   });
 
-  // 3. Lưu vào Danh sách Session tổng (để hiện bên tab K.Quả lịch sử)
   sessions.unshift({
       id: Date.now(), 
       date: displayDate, 
@@ -1269,18 +1287,14 @@ function saveSessionToHistory(){
       })
   });
 
-  // 4. LƯU TẤT CẢ VÀO LOCALSTORAGE (Nó sẽ tự push lên Firebase của ông)
   localStorage.setItem('pk_members', JSON.stringify(members));
   localStorage.setItem('pk_sessions', JSON.stringify(sessions));
   
-  // 5. Reset bàn chơi
   activeGame = {date: '', players: []};
   localStorage.removeItem('garini_active_game');
   lastResults = [];
   
   alert('✅ Đã lưu ván ngày ' + displayDate + ' vào cả Fame và Lịch sử!');
-  
-  // Tự động làm mới UI và chuyển tab
   updateGlobalDatalist();
   renderSessionHistory(); 
   showTab('hof');
@@ -1551,11 +1565,10 @@ function applyHofFilter(mode, val1) {
     renderHof();
 }
 
-/* ==================== HOF AGGREGATION LOGIC (ĐÃ CHIA BẢNG) ==================== */
+/* ==================== HOF AGGREGATION LOGIC ==================== */
 function renderHof(){
   var members=getMembers();
   
-  // 1. Lọc dữ liệu theo Filter hiện tại
   var validHistories = [];
   members.forEach(function(m){
     if(m.history && m.history.length > 0){
@@ -1593,7 +1606,6 @@ function renderHof(){
   
   emptyMsg.style.display = 'none';
 
-  // 2. Tách Ngày gần nhất để tính Ranking
   var uniqueDates = Array.from(new Set(validHistories.map(function(h){return h.date;})));
   uniqueDates.sort(function(a,b){
       var pa=a.split('/'), pb=b.split('/');
@@ -1617,17 +1629,14 @@ function renderHof(){
       return arr;
   }
 
-  // Hiện tại
   var currentStats = aggregateStats(validHistories);
   var totalBuyinFilter = currentStats.reduce(function(s,r){return s+r.buyin;},0);
   
-  // Quá khứ (Loại bỏ ngày gần nhất)
   var prevHistories = validHistories.filter(function(h){ return h.date !== latestDate; });
   var prevStats = aggregateStats(prevHistories);
   var prevRankMap = {};
   prevStats.forEach(function(r, idx){ prevRankMap[r.name] = idx + 1; });
 
-  // Map chuỗi Win/Lose tổng & Jackpot
   var streakMap = {};
   members.forEach(function(m){
       if(m.history && m.history.length > 0) {
@@ -1644,7 +1653,6 @@ function renderHof(){
       }
   });
 
-  // Tìm các kỷ lục cho Badges
   var maxBuyin = Math.max.apply(null, currentStats.map(function(r){return r.buyin;}));
   var maxSessions = Math.max.apply(null, currentStats.map(function(r){return r.totalSessions;}));
   var maxROI = Math.max.apply(null, currentStats.map(function(r){return r.buyin > 0 ? (r.diff / r.buyin) : 0;}));
@@ -1665,7 +1673,6 @@ function renderHof(){
     var lossIcon = getLossIcon(r.diff); 
     var amtHtml = lossIcon + amt; 
     
-    // TÍNH TOÁN LÊN XUỐNG HẠNG
     var currentRank = i + 1;
     var rankMoveHtml = '';
     var nameGlowClass = '';
@@ -1688,7 +1695,6 @@ function renderHof(){
         }
     }
     
-    // GẮN BADGES
     var badgesHtml = '';
     var s = streakMap[r.name] || {type: 'none', count: 0, latestDiff: 0};
     
@@ -1730,14 +1736,11 @@ function renderHof(){
   hWin += '</div>';
   hLoss += '</div>';
 
-  // Hiển thị thanh Sub-tab
   subTabsContainer.style.display = 'flex';
   
-  // Nạp HTML vào 2 danh sách
   document.getElementById('hofListWin').innerHTML = hasWin ? hWin : '<div class="empty">Chưa có ai lời</div>';
   document.getElementById('hofListLoss').innerHTML = hasLoss ? hLoss : '<div class="empty">Chưa có ai lỗ</div>';
   
-  // Kích hoạt tab hiện tại để đảm bảo UI không bị lỗi
   switchHofSubTab(currentHofSubTab);
   
   setTimeout(function(){document.querySelectorAll('.rank-bar-fill').forEach(function(b){b.style.width=b.getAttribute('data-w')+'%';});},80);
@@ -1821,7 +1824,6 @@ function renameMember(id){
   m.name = newName;
   saveMembers(members);
   
-  // Cập nhật tên trong Lịch sử và danh sách Thu/Chi để không bị lỗi đồng bộ
   var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
   var updated = false;
   sessions.forEach(function(s){
@@ -1836,7 +1838,6 @@ function renameMember(id){
   });
   if(updated) localStorage.setItem('pk_sessions', JSON.stringify(sessions));
   
-  // Cập nhật ngay trong bàn đang chơi nếu người này đang ngồi
   if(activeGame && activeGame.players){
     var gameUpdated=false;
     activeGame.players.forEach(function(p){
@@ -1929,13 +1930,11 @@ function launchConfetti(){
   var ps=Array.from({length:90},function(){return{x:Math.random()*cv.width,y:-30,r:Math.random()*4+2,d:Math.random()*2+1,c:cols[Math.floor(Math.random()*cols.length)],ta:0,ts:Math.random()*.1+.04,sq:Math.random()>.5};});
   var a=0,t=0;(function draw(){ctx.clearRect(0,0,cv.width,cv.height);a+=.01;t++;ps.forEach(function(p,i){p.ta+=p.ts;p.y+=p.d+Math.sin(a)*1.2;p.x+=Math.sin(a+i)*.7;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(Math.sin(p.ta)*13*Math.PI/180);ctx.fillStyle=p.c;ctx.globalAlpha=.85;p.sq?ctx.fillRect(-p.r,-p.r*.5,p.r*2,p.r):(ctx.beginPath(),ctx.arc(0,0,p.r,0,Math.PI*2),ctx.fill());ctx.restore();});if(t<200)requestAnimationFrame(draw);else{ctx.clearRect(0,0,cv.width,cv.height);cv.style.display='none';}})();
 }
-  // Thêm hàm getLossIcon
 function getLossIcon(diff) {
   if (diff < 0) {
-    // Trả về icon hề nếu thua, bọc trong span để styling bằng CSS
     return '<span class="loss-icon">🤡</span>';
   }
-  return ''; // Không trả về gì nếu huề hoặc lời
+  return ''; 
 }
 </script>
 </body>
