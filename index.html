@@ -1472,14 +1472,25 @@ function renderThuChiLists() {
     var chiList = [];
     
     sess.results.forEach(function(r) {
-        var net = r.diff - feePerPerson; 
+        var isPayer = (r.name === payer); // Check xem có phải người chi phòng không
+        
+        // Mặc định lấy đúng số tiền kết quả của ván (không đổi)
+        var net = r.diff; 
+        
+        // CHỈ TRỪ tiền phòng nếu người này KHÔNG PHẢI là người chi phòng
+        if (!isPayer && feePerPerson > 0) {
+            net -= feePerPerson;
+        }
+        
         var isDone = !!sess.settled[r.name];
-        var isPayer = (r.name === payer); 
         var item = { name: r.name, net: net, done: isDone, isPayer: isPayer };
         
         if (net < 0) thuList.push(item);
         else if (net > 0) chiList.push(item);
-        else if (net === 0 && feePerPerson > 0) thuList.push(item);
+        else if (net === 0) {
+            // Tiền = 0 thì cứ quăng vô danh sách Chi để nó hiện cái mặt ra cho David nhớ
+            chiList.push(item); 
+        }
     });
     
     thuList.sort((a,b) => a.net - b.net);
@@ -1487,7 +1498,7 @@ function renderThuChiLists() {
     
     var h = '';
     if(fee > 0) {
-        var payerText = payer ? ('<br><span style="color:#6dbf80;font-size:11px;">(<b>' + payer + '</b> đã trả giùm)</span>') : '';
+        var payerText = payer ? ('<br><span style="color:#6dbf80;font-size:11px;">(<b>' + payer + '</b> giữ nguyên vì đã ứng trước)</span>') : '';
         h += '<div style="font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;background:rgba(200,168,75,0.1);padding:6px;border-radius:6px;border:1px solid var(--border2);">Mỗi người gánh khoản thu: <b>' + fmtAbs(feePerPerson) + '</b>' + payerText + '</div>';
     }
     
@@ -1498,7 +1509,7 @@ function renderThuChiLists() {
     h += '</div>';
     
     h += '<div style="margin-bottom:10px;">';
-    h += '<div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--green-lt);padding-bottom:4px;">CẦN TRẢ RA (LỜI - PHÍ)</div>';
+    h += '<div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--green-lt);padding-bottom:4px;">CẦN TRẢ RA (LỜI)</div>';
     if(chiList.length === 0) h += '<div class="empty">Không có ai</div>';
     chiList.forEach(function(item) { h += tcRowHtml(item.name, item.net, item.done, 'chi', item.isPayer); });
     h += '</div>';
