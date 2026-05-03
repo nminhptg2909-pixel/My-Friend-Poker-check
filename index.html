@@ -222,7 +222,7 @@ table.players tr:last-child td{border-bottom:none;}
 .hb-shark { background: rgba(0, 210, 211, 0.15); color: #00d2d3; border: 1px solid rgba(0, 210, 211, 0.3); }
 .hb-thocay { background: rgba(253, 150, 68, 0.15); color: #fd9644; border: 1px solid rgba(253, 150, 68, 0.3); }
 .hb-jackpot { background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.4); text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); } 
-.hb-donkey { background: rgba(149, 165, 166, 0.15); color: #bdc3c7; border: 1px solid rgba(149, 165, 166, 0.4); text-shadow: 0 0 5px rgba(189, 195, 199, 0.3); } /* MỚI THÊM DONKEY */
+.hb-donkey { background: rgba(232, 65, 24, 0.15); color: #e84118; border: 1px dashed rgba(232, 65, 24, 0.5); text-shadow: 0 0 5px rgba(232, 65, 24, 0.3); } /* SINH VIÊN 2-7 */
 
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
 .rank-1 .rank-amt{color:var(--gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
@@ -564,7 +564,7 @@ table.players tr:last-child td{border-bottom:none;}
         <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
         <div class="legend-grid">
           <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
-          <div class="legend-item"><span class="h-badge hb-donkey">🫏 2-7 Vua Lừa</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
+          <div class="legend-item"><span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
           <div class="legend-item">
             <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
               <span class="h-badge hb-hot">🔥 Win x2</span>
@@ -632,10 +632,10 @@ table.players tr:last-child td{border-bottom:none;}
       </div>
     </div>
 
-    <div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px dashed rgba(149, 165, 166, 0.4);margin-bottom:15px;">
+    <div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px dashed rgba(232, 65, 24, 0.4);margin-bottom:15px;">
       <div class="form-row" style="margin-bottom:0;">
         <div style="flex:1;">
-          <span style="font-size:10px;color:#bdc3c7;font-weight:600;display:block;margin-bottom:4px;">🫏 VOTE VUA LỪA (DONKEY 2-7)</span>
+          <span style="font-size:10px;color:#e84118;font-weight:700;display:block;margin-bottom:4px;letter-spacing:0.5px;">🐴🤡 VOTE SINH VIÊN 2-7 (CHƠI NGÁO)</span>
           <select id="tcDonkeyVote" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600; border:1px solid var(--border); border-radius:8px; background:var(--bg4); color:var(--text); font-family:var(--font); outline:none;" onchange="applyRoomFee()">
             <option value="">-- Không vote ai --</option>
           </select>
@@ -1379,7 +1379,7 @@ function saveSessionToHistory(){
       date: displayDate, 
       roomFee: 0,
       settled: {},
-      donkeyPlayer: '', // Khởi tạo trống
+      donkeyPlayer: '', 
       results: lastResults.map(function(r){
           return {name: r.name, diff: r.diff, buyin: r.buyin, cashout: r.cashout, memberId: r.memberId};
       })
@@ -1458,13 +1458,13 @@ function closeThuChiOutside(e) { if(e.target === document.getElementById('thuChi
 function applyRoomFee() {
     var fee = parseInt(document.getElementById('tcRoomFee').value) || 0;
     var payer = document.getElementById('tcRoomFeePayer').value;
-    var donkey = document.getElementById('tcDonkeyVote').value; // Lấy giá trị vote Vua Lừa
+    var donkey = document.getElementById('tcDonkeyVote').value; 
     
     var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
     if(sessions[currentTcIdx]) {
         sessions[currentTcIdx].roomFee = fee;
         sessions[currentTcIdx].roomFeePayer = payer; 
-        sessions[currentTcIdx].donkeyPlayer = donkey; // Lưu vô database của session đó
+        sessions[currentTcIdx].donkeyPlayer = donkey; 
         localStorage.setItem('pk_sessions', JSON.stringify(sessions));
     }
     renderThuChiLists();
@@ -1842,7 +1842,7 @@ function renderHof(){
     var s = streakMap[r.name] || {type: 'none', count: 0, latestDiff: 0};
     
     // Gắn mác Donkey nếu trùng tên người bị vote gần nhất
-    if (r.name === currentDonkey) badgesHtml += '<span class="h-badge hb-donkey">🫏 2-7 Vua Lừa</span>';
+    if (r.name === currentDonkey) badgesHtml += '<span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span>';
     
     if (s.latestDiff >= 500000) badgesHtml += '<span class="h-badge hb-jackpot">🎰 Jackpot</span>';
     if (s.type === 'win') {
