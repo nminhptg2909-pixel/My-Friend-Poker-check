@@ -140,7 +140,7 @@ table.players tr:last-child td{border-bottom:none;}
 #tab-hof{padding:0;}
 .hof-hero{background:linear-gradient(160deg,#080a06 0%,#0f1208 40%,#141a0a 100%);border-radius:var(--radius) var(--radius) 0 0;padding:28px 16px 22px;text-align:center;position:relative;overflow:hidden;border:1px solid var(--border2);border-bottom:none;}
 .hof-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 15%,rgba(200,168,75,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 40% 60%,rgba(200,168,75,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 75%,rgba(255,255,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 25% 85%,rgba(200,168,75,.5) 0%,transparent 100%),radial-gradient(2px 2px at 55% 35%,rgba(200,168,75,.7) 0%,transparent 100%);pointer-events:none;}
-.hof-hero::after{content:'absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
+.hof-hero::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
 .hof-crown{font-size:42px;display:block;margin-bottom:8px;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(200,168,75,.8));animation:crownFloat 3.5s ease-in-out infinite;}
 @keyframes crownFloat{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-6px) rotate(1deg);}}
 .hof-eyebrow{font-size:9px;font-weight:600;letter-spacing:6px;color:rgba(200,168,75,.5);text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1;}
@@ -1441,7 +1441,7 @@ function applyRoomFee() {
     var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
     if(sessions[currentTcIdx]) {
         sessions[currentTcIdx].roomFee = fee;
-        sessions[currentTcIdx].roomFeePayer = payer; // Lưu lại người trả giùm
+        sessions[currentTcIdx].roomFeePayer = payer; 
         localStorage.setItem('pk_sessions', JSON.stringify(sessions));
     }
     renderThuChiLists();
@@ -1472,11 +1472,9 @@ function renderThuChiLists() {
     var chiList = [];
     
     sess.results.forEach(function(r) {
-        // Chỉ chia đều tiền phòng trừ vào TẤT CẢ mọi người
         var net = r.diff - feePerPerson; 
-        
         var isDone = !!sess.settled[r.name];
-        var isPayer = (r.name === payer); // Check xem có phải thằng trả giùm không
+        var isPayer = (r.name === payer); 
         var item = { name: r.name, net: net, done: isDone, isPayer: isPayer };
         
         if (net < 0) thuList.push(item);
@@ -1515,7 +1513,6 @@ function tcRowHtml(name, amt, isDone, type, isPayer) {
     var checkStyle = isDone ? 'background:var(--gold);color:#000;border-color:var(--gold);' : 'background:transparent;border-color:var(--border);';
     var checkIcon = isDone ? '✓' : '';
     
-    // Nếu là người trả giùm thì hiện thêm cái mác màu xanh
     var payerBadge = isPayer ? '<span style="font-size:9px; background:rgba(109,191,128,0.15); color:#6dbf80; padding:2px 6px; border-radius:4px; border:1px solid rgba(109,191,128,0.3); margin-left:6px; font-weight:700;">Người chi phòng</span>' : '';
 
     return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:'+bg+';border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;opacity:'+opacity+';transition:all .2s;" onclick="toggleTcDone(\''+name+'\')">'
