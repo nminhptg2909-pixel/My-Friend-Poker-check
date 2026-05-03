@@ -140,7 +140,7 @@ table.players tr:last-child td{border-bottom:none;}
 #tab-hof{padding:0;}
 .hof-hero{background:linear-gradient(160deg,#080a06 0%,#0f1208 40%,#141a0a 100%);border-radius:var(--radius) var(--radius) 0 0;padding:28px 16px 22px;text-align:center;position:relative;overflow:hidden;border:1px solid var(--border2);border-bottom:none;}
 .hof-hero::before{content:'';position:absolute;inset:0;background-image:radial-gradient(1px 1px at 12% 15%,rgba(200,168,75,.6) 0%,transparent 100%),radial-gradient(1px 1px at 85% 20%,rgba(255,255,255,.3) 0%,transparent 100%),radial-gradient(1px 1px at 40% 60%,rgba(200,168,75,.4) 0%,transparent 100%),radial-gradient(1px 1px at 70% 75%,rgba(255,255,255,.25) 0%,transparent 100%),radial-gradient(1px 1px at 25% 85%,rgba(200,168,75,.5) 0%,transparent 100%),radial-gradient(2px 2px at 55% 35%,rgba(200,168,75,.7) 0%,transparent 100%);pointer-events:none;}
-.hof-hero::after{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
+.hof-hero::after{content:'absolute;top:-60px;left:50%;transform:translateX(-50%);width:300px;height:200px;background:radial-gradient(ellipse,rgba(200,168,75,.12) 0%,transparent 70%);pointer-events:none;}
 .hof-crown{font-size:42px;display:block;margin-bottom:8px;position:relative;z-index:1;filter:drop-shadow(0 0 18px rgba(200,168,75,.8));animation:crownFloat 3.5s ease-in-out infinite;}
 @keyframes crownFloat{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-6px) rotate(1deg);}}
 .hof-eyebrow{font-size:9px;font-weight:600;letter-spacing:6px;color:rgba(200,168,75,.5);text-transform:uppercase;margin-bottom:4px;position:relative;z-index:1;}
@@ -612,12 +612,22 @@ table.players tr:last-child td{border-bottom:none;}
     
     <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Cấn trừ tiền phòng (nếu có) và theo dõi tiến độ nộp/trả tiền.</div>
     
-    <div class="form-row" style="background:var(--bg3);padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:15px;">
-      <div style="flex:1;">
-        <span style="font-size:10px;color:var(--gold);font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Tổng tiền phòng</span>
-        <input type="number" id="tcRoomFee" placeholder="Ví dụ: 150000" style="width:100%;font-size:14px;color:var(--gold2);font-weight:bold;">
+    <div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:15px;">
+      <div class="form-row" style="margin-bottom:10px;">
+        <div style="flex:1;">
+          <span style="font-size:10px;color:var(--gold);font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Tổng tiền phòng</span>
+          <input type="number" id="tcRoomFee" placeholder="Ví dụ: 150000" style="width:100%;font-size:14px;color:var(--gold2);font-weight:bold;">
+        </div>
+        <button class="btn-gold" style="width:auto;margin-top:0;padding:0 15px; align-self: flex-end; height:37px;" onclick="applyRoomFee()">Chia khoản</button>
       </div>
-      <button class="btn-gold" style="width:auto;margin-top:0;padding:0 15px;" onclick="applyRoomFee()">Chia khoản</button>
+      <div class="form-row" style="margin-bottom:0;">
+        <div style="flex:1;">
+          <span style="font-size:10px;color:var(--text3);font-weight:600;display:block;margin-bottom:4px;">NGƯỜI ĐÃ TRẢ TIỀN PHÒNG</span>
+          <select id="tcRoomFeePayer" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600; border:1px solid var(--border); border-radius:8px; background:var(--bg4); color:var(--text); font-family:var(--font); outline:none;">
+            <option value="">-- Không có ai --</option>
+          </select>
+        </div>
+      </div>
     </div>
     
     <div id="tcListsContainer" style="max-height:45vh;overflow-y:auto;padding-right:4px;"></div>
@@ -1406,6 +1416,18 @@ function openThuChiModal(idx) {
     var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
     var sess = sessions[idx];
     document.getElementById('tcRoomFee').value = sess.roomFee || '';
+
+    // Đổ danh sách người chơi vào select dropdown
+    var select = document.getElementById('tcRoomFeePayer');
+    var opts = '<option value="">-- Không có ai --</option>';
+    if(sess.results) {
+        sess.results.forEach(function(r) {
+            opts += '<option value="' + r.name + '">' + r.name + '</option>';
+        });
+    }
+    select.innerHTML = opts;
+    select.value = sess.roomFeePayer || ''; 
+
     renderThuChiLists();
     document.getElementById('thuChiModal').style.display = 'flex';
 }
@@ -1415,9 +1437,11 @@ function closeThuChiOutside(e) { if(e.target === document.getElementById('thuChi
 
 function applyRoomFee() {
     var fee = parseInt(document.getElementById('tcRoomFee').value) || 0;
+    var payer = document.getElementById('tcRoomFeePayer').value;
     var sessions = JSON.parse(localStorage.getItem('pk_sessions')||'[]');
     if(sessions[currentTcIdx]) {
         sessions[currentTcIdx].roomFee = fee;
+        sessions[currentTcIdx].roomFeePayer = payer; // Lưu lại người trả giùm
         localStorage.setItem('pk_sessions', JSON.stringify(sessions));
     }
     renderThuChiLists();
@@ -1439,6 +1463,7 @@ function renderThuChiLists() {
     if(!sess) return;
     
     var fee = sess.roomFee || 0;
+    var payer = sess.roomFeePayer || '';
     var numPlayers = sess.results.length;
     var feePerPerson = numPlayers > 0 ? Math.round(fee / numPlayers) : 0;
     sess.settled = sess.settled || {};
@@ -1447,9 +1472,12 @@ function renderThuChiLists() {
     var chiList = [];
     
     sess.results.forEach(function(r) {
-        var net = r.diff - feePerPerson;
+        // Chỉ chia đều tiền phòng trừ vào TẤT CẢ mọi người
+        var net = r.diff - feePerPerson; 
+        
         var isDone = !!sess.settled[r.name];
-        var item = { name: r.name, net: net, done: isDone };
+        var isPayer = (r.name === payer); // Check xem có phải thằng trả giùm không
+        var item = { name: r.name, net: net, done: isDone, isPayer: isPayer };
         
         if (net < 0) thuList.push(item);
         else if (net > 0) chiList.push(item);
@@ -1461,33 +1489,37 @@ function renderThuChiLists() {
     
     var h = '';
     if(fee > 0) {
-        h += '<div style="font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;background:rgba(200,168,75,0.1);padding:6px;border-radius:6px;border:1px solid var(--border2);">Mỗi người gánh khoản thu: <b>' + fmtAbs(feePerPerson) + '</b></div>';
+        var payerText = payer ? ('<br><span style="color:#6dbf80;font-size:11px;">(<b>' + payer + '</b> đã trả giùm)</span>') : '';
+        h += '<div style="font-size:11px;color:var(--gold);text-align:center;margin-bottom:12px;background:rgba(200,168,75,0.1);padding:6px;border-radius:6px;border:1px solid var(--border2);">Mỗi người gánh khoản thu: <b>' + fmtAbs(feePerPerson) + '</b>' + payerText + '</div>';
     }
     
     h += '<div style="margin-bottom:20px;">';
     h += '<div style="font-size:11px;font-weight:700;color:var(--red);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--red-lt);padding-bottom:4px;">CẦN THU VÀO (LỖ + PHÍ)</div>';
     if(thuList.length === 0) h += '<div class="empty">Không có ai</div>';
-    thuList.forEach(function(item) { h += tcRowHtml(item.name, Math.abs(item.net), item.done, 'thu'); });
+    thuList.forEach(function(item) { h += tcRowHtml(item.name, Math.abs(item.net), item.done, 'thu', item.isPayer); });
     h += '</div>';
     
     h += '<div style="margin-bottom:10px;">';
-    h += '<div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--green-lt);padding-bottom:4px;">CẦN TRẢ RA (LỜI)</div>';
+    h += '<div style="font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid var(--green-lt);padding-bottom:4px;">CẦN TRẢ RA (LỜI - PHÍ)</div>';
     if(chiList.length === 0) h += '<div class="empty">Không có ai</div>';
-    chiList.forEach(function(item) { h += tcRowHtml(item.name, item.net, item.done, 'chi'); });
+    chiList.forEach(function(item) { h += tcRowHtml(item.name, item.net, item.done, 'chi', item.isPayer); });
     h += '</div>';
     
     document.getElementById('tcListsContainer').innerHTML = h;
 }
 
-function tcRowHtml(name, amt, isDone, type) {
+function tcRowHtml(name, amt, isDone, type, isPayer) {
     var color = type === 'thu' ? 'var(--red)' : '#6dbf80';
     var bg = isDone ? 'var(--bg3)' : 'var(--bg2)';
     var opacity = isDone ? '0.45' : '1';
     var checkStyle = isDone ? 'background:var(--gold);color:#000;border-color:var(--gold);' : 'background:transparent;border-color:var(--border);';
     var checkIcon = isDone ? '✓' : '';
     
+    // Nếu là người trả giùm thì hiện thêm cái mác màu xanh
+    var payerBadge = isPayer ? '<span style="font-size:9px; background:rgba(109,191,128,0.15); color:#6dbf80; padding:2px 6px; border-radius:4px; border:1px solid rgba(109,191,128,0.3); margin-left:6px; font-weight:700;">Người chi phòng</span>' : '';
+
     return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 14px;background:'+bg+';border:1px solid var(--border);border-radius:8px;margin-bottom:8px;cursor:pointer;opacity:'+opacity+';transition:all .2s;" onclick="toggleTcDone(\''+name+'\')">'
-         + '<div style="font-weight:700;font-size:14px;">'+name+'</div>'
+         + '<div style="font-weight:700;font-size:14px;display:flex;align-items:center;">'+name+payerBadge+'</div>'
          + '<div style="display:flex;align-items:center;gap:12px;">'
          + '<div style="font-weight:800;color:'+color+';font-size:14px;">'+fmtAbs(amt)+'</div>'
          + '<div style="width:20px;height:20px;border-radius:5px;border:1px solid;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900;'+checkStyle+'">'+checkIcon+'</div>'
