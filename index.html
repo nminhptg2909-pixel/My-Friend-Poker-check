@@ -546,11 +546,13 @@ table.players tr:last-child td{border-bottom:none;}
   font-weight:600;letter-spacing:.5px;
 }
 .history-item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 8px;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:8px;margin-bottom:6px;
+  background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;padding:11px 12px;margin-bottom:6px;
 }
 .history-item:last-child{margin-bottom:0;}
+.history-item-top{
+  display:flex;align-items:center;gap:10px;margin-bottom:8px;
+}
 .history-item-cards{
   display:flex;gap:3px;flex-shrink:0;
 }
@@ -567,12 +569,18 @@ table.players tr:last-child td{border-bottom:none;}
 .mini-card .mc-suit{font-size:11px;}
 .history-item-info{flex:1;min-width:0;}
 .history-item-name{
-  font-size:12px;font-weight:700;color:var(--text);
+  font-size:13px;font-weight:700;color:var(--text);
   margin-bottom:2px;
 }
 .history-item-quere{
   font-size:10px;color:var(--gold2);font-weight:600;
   letter-spacing:.3px;
+}
+.history-item-note{
+  font-size:11px;color:var(--text2);line-height:1.5;
+  padding:8px 10px;background:rgba(0,0,0,.25);
+  border-left:2px solid var(--gold);border-radius:0 6px 6px 0;
+  font-style:italic;
 }
   
 </style>
@@ -2412,13 +2420,13 @@ var FORTUNES = [
   },
   {
     id: 'tamsu',
-    name: 'Quẻ Tâm Sự',
+    name: 'Quẻ Kim Q',
     weight: 9,
     cards: [
       {rank:'K', suit:'♥', color:'red'},
       {rank:'Q', suit:'♠', color:'black'}
     ],
-    message: 'K-Q — quẻ của thằng nhiều chuyện. Hôm nay cứ fold xong là mày sẽ kể chuyện đời. Cả bàn cắm tai nghe sẵn rồi 🎤'
+    message: 'K-Q — quẻ của thằng còn vương vấn người yêu cũ tên Q. Hôm nay mày sẽ vừa fold vừa nhớ em, river ra Q thì khóc giữa bàn. Cả lũ nâng ly chia buồn 🍷💔'
   },
   {
     id: 'ngugat',
@@ -2643,6 +2651,7 @@ function renderFortuneHistory(){
     var itemsHTML = items.map(function(h){
       var fortune = FORTUNES.find(function(f){return f.id === h.fortuneId;});
       var cardsHTML = '';
+      var noteHTML = '';
       if(fortune){
         cardsHTML = fortune.cards.map(function(c){
           return '<div class="mini-card '+c.color+'">'
@@ -2650,13 +2659,17 @@ function renderFortuneHistory(){
             +'<span class="mc-suit">'+c.suit+'</span>'
             +'</div>';
         }).join('');
+        noteHTML = '<div class="history-item-note">'+fortune.message+'</div>';
       }
       return '<div class="history-item">'
+        +'<div class="history-item-top">'
         +'<div class="history-item-cards">'+cardsHTML+'</div>'
         +'<div class="history-item-info">'
         +'<div class="history-item-name">'+h.name+'</div>'
         +'<div class="history-item-quere">'+h.fortuneName+'</div>'
         +'</div>'
+        +'</div>'
+        +noteHTML
         +'</div>';
     }).join('');
     
