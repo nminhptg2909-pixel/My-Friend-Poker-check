@@ -371,6 +371,173 @@ table.players tr:last-child td{border-bottom:none;}
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* ==================== FORTUNE / BÓI QUẺ ==================== */
+.fortune-hero{
+  text-align:center;padding:24px 16px 18px;
+  background:radial-gradient(ellipse at center top, rgba(200,168,75,.12), transparent 70%);
+  border-radius:var(--radius);margin-bottom:14px;border:1px solid var(--border2);
+}
+.fortune-title{font-size:18px;font-weight:800;letter-spacing:3px;color:var(--gold2);margin-bottom:4px;text-transform:uppercase;}
+.fortune-sub{font-size:10px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;}
+
+/* Hũ + bài bay */
+.jar-stage{
+  position:relative;height:200px;margin:10px auto 14px;
+  display:flex;align-items:flex-end;justify-content:center;
+}
+.jar-icon{
+  font-size:90px;line-height:1;
+  filter:drop-shadow(0 0 18px rgba(200,168,75,.5));
+  animation:jarBob 3s ease-in-out infinite;
+  z-index:2;
+}
+@keyframes jarBob{
+  0%,100%{transform:translateY(0) rotate(-2deg);}
+  50%{transform:translateY(-6px) rotate(2deg);}
+}
+.flying-card{
+  position:absolute;font-size:22px;
+  filter:drop-shadow(0 0 6px rgba(200,168,75,.6));
+  opacity:.85;
+  animation:flyAround 6s linear infinite;
+}
+@keyframes flyAround{
+  0%   { transform: translate(0,0) rotate(0deg); }
+  25%  { transform: translate(60px,-40px) rotate(90deg); }
+  50%  { transform: translate(0,-80px) rotate(180deg); }
+  75%  { transform: translate(-60px,-40px) rotate(270deg); }
+  100% { transform: translate(0,0) rotate(360deg); }
+}
+.fc1{left:50%;top:60%;animation-delay:0s;}
+.fc2{left:50%;top:60%;animation-delay:-1.5s;}
+.fc3{left:50%;top:60%;animation-delay:-3s;}
+.fc4{left:50%;top:60%;animation-delay:-4.5s;}
+.fc5{left:50%;top:60%;animation-delay:-2s;animation-duration:7s;}
+
+/* Player picker */
+.fortune-picker-btn{
+  width:100%;padding:13px;font-size:13px;font-weight:700;
+  background:var(--bg3);border:1px dashed var(--border);
+  color:var(--gold2);border-radius:9px;cursor:pointer;
+  font-family:var(--font);letter-spacing:1px;text-transform:uppercase;
+  margin-bottom:10px;transition:all .2s;
+}
+.fortune-picker-btn.selected{border-style:solid;background:linear-gradient(135deg,#1e1a0e,#2a2210);}
+.fortune-picker-btn:active{transform:scale(.99);}
+
+/* Bói button */
+.btn-fortune{
+  width:100%;padding:14px;font-size:14px;font-weight:800;
+  background:linear-gradient(135deg,#7a5c1e,#c8a84b,#7a5c1e);
+  color:#0b0c0f;border:none;border-radius:10px;cursor:pointer;
+  font-family:var(--font);letter-spacing:2px;text-transform:uppercase;
+  box-shadow:0 4px 18px rgba(200,168,75,.35);
+  transition:all .2s;
+}
+.btn-fortune:disabled{
+  background:var(--bg3);color:var(--text3);
+  box-shadow:none;cursor:not-allowed;
+}
+.btn-fortune:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(200,168,75,.45);}
+.btn-fortune:not(:disabled):active{transform:scale(.98);}
+
+/* Modal chọn người */
+.fortune-modal{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);
+  z-index:1000;align-items:center;justify-content:center;padding:20px;
+}
+.fortune-modal.show{display:flex;}
+.fortune-modal-content{
+  background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);
+  padding:18px;max-width:380px;width:100%;max-height:80vh;overflow-y:auto;
+}
+.fortune-modal-title{font-size:11px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;text-align:center;}
+.fortune-member-item{
+  padding:11px 14px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;margin-bottom:6px;cursor:pointer;
+  font-size:13px;font-weight:600;color:var(--text);transition:all .15s;
+}
+.fortune-member-item:hover,.fortune-member-item:active{
+  border-color:var(--gold);background:var(--bg4);color:var(--gold2);
+}
+
+/* Kết quả quẻ */
+.fortune-result{
+  background:linear-gradient(160deg,rgba(200,168,75,.08),rgba(200,168,75,.02));
+  border:1px solid var(--border);border-radius:var(--radius);
+  padding:22px 16px;text-align:center;margin-bottom:12px;
+  animation:resultFadeIn .6s ease-out;
+}
+@keyframes resultFadeIn{
+  from{opacity:0;transform:translateY(15px) scale(.95);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.fortune-result-name{font-size:11px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.fortune-result-name b{color:var(--gold3);font-size:14px;font-weight:800;letter-spacing:1px;}
+.fortune-result-quere{font-size:20px;font-weight:800;color:var(--gold2);margin:10px 0 14px;letter-spacing:2px;}
+
+/* Lá bài poker */
+.card-display{
+  display:flex;justify-content:center;gap:8px;margin:14px 0;flex-wrap:wrap;
+}
+.poker-card{
+  width:62px;height:88px;background:#fff;border-radius:7px;
+  display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:6px 4px;font-weight:800;font-family:'Georgia',serif;
+  box-shadow:0 4px 14px rgba(0,0,0,.5),0 0 0 1px rgba(200,168,75,.4);
+  animation:cardDrop .5s cubic-bezier(.5,1.6,.4,1) backwards;
+}
+.poker-card.red{color:#c0392b;}
+.poker-card.black{color:#222;}
+.poker-card .rank-top{font-size:18px;align-self:flex-start;line-height:1;}
+.poker-card .suit-mid{font-size:28px;line-height:1;}
+.poker-card .rank-bot{font-size:18px;align-self:flex-end;line-height:1;transform:rotate(180deg);}
+.poker-card:nth-child(1){animation-delay:.1s;}
+.poker-card:nth-child(2){animation-delay:.25s;}
+.poker-card:nth-child(3){animation-delay:.4s;}
+.poker-card:nth-child(4){animation-delay:.55s;}
+@keyframes cardDrop{
+  from{opacity:0;transform:translateY(-30px) rotate(-15deg);}
+  to{opacity:1;transform:translateY(0) rotate(0);}
+}
+
+.fortune-message{
+  font-size:14px;color:var(--text);font-weight:600;line-height:1.5;
+  padding:12px;background:var(--bg3);border-radius:8px;
+  border:1px solid var(--border2);margin-top:6px;
+}
+
+/* Shuffle animation */
+.shuffling{
+  position:relative;height:120px;display:flex;align-items:center;justify-content:center;
+}
+.shuffling .poker-card{
+  position:absolute;animation:shuffleCard .6s linear infinite;
+}
+@keyframes shuffleCard{
+  0%{transform:translateX(-30px) rotate(-15deg);}
+  50%{transform:translateX(30px) rotate(15deg);}
+  100%{transform:translateX(-30px) rotate(-15deg);}
+}
+
+/* Locked state */
+.fortune-locked{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:8px;
+  padding:14px;text-align:center;font-size:12px;color:var(--text2);
+  margin-top:10px;
+}
+.fortune-locked b{color:var(--gold2);}
+
+/* History */
+.history-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 4px;border-bottom:1px solid var(--border2);font-size:12px;
+}
+.history-row:last-child{border-bottom:none;}
+.history-name{font-weight:700;color:var(--text);}
+.history-quere{color:var(--gold2);font-weight:600;font-size:11px;}
+.history-date{color:var(--text3);font-size:10px;letter-spacing:.5px;}
   
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -383,7 +550,7 @@ table.players tr:last-child td{border-bottom:none;}
 
 <div class="app-header">
   <div class="app-logo">Private Game</div>
-  <div class="app-title">♠ HỘI CẦU LÔNG</div>
+  <div class="app-title">♠ LET GO POKER</div>
   <div class="app-divider"><span class="app-divider-icon">◆</span></div>
 </div>
 
@@ -391,6 +558,7 @@ table.players tr:last-child td{border-bottom:none;}
   <div class="tab active" onclick="showTab('game')">🎮 Game</div>
   <div class="tab" onclick="showTab('result')">K.Quả</div>
   <div class="tab" onclick="showTab('hof')">🏆 Fame</div>
+  <div class="tab" onclick="showTab('fortune')">🔮 Bói</div>
   <div class="tab" onclick="showTab('members')">Hội viên</div>
 </div>
 
@@ -583,6 +751,44 @@ table.players tr:last-child td{border-bottom:none;}
       </div>
 
     </div>
+  </div>
+</div>
+
+<div class="page" id="tab-fortune">
+  <div class="fortune-hero">
+    <div class="fortune-title">🔮 Bói Quẻ Poker</div>
+    <div class="fortune-sub">Số phận của mày hôm nay</div>
+    <div class="jar-stage">
+      <span class="flying-card fc1">🂡</span>
+      <span class="flying-card fc2">🂮</span>
+      <span class="flying-card fc3">🃁</span>
+      <span class="flying-card fc4">🂵</span>
+      <span class="flying-card fc5">🃝</span>
+      <span class="jar-icon">🏺</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="fortune-picker-btn" id="fortunePickerBtn" onclick="openFortunePicker()">
+      👤 Bạn là ai? — Chọn tên
+    </button>
+    <button class="btn-fortune" id="fortuneDrawBtn" onclick="drawFortune()" disabled>
+      🎴 Bốc Quẻ
+    </button>
+    <div id="fortuneResult"></div>
+    <div id="fortuneLocked"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📜 Lịch sử bói quẻ</div>
+    <div id="fortuneHistoryEl"><div class="empty">Chưa có ai bói cả</div></div>
+  </div>
+</div>
+
+<div class="fortune-modal" id="fortunePickerModal" onclick="closeFortunePickerOutside(event)">
+  <div class="fortune-modal-content">
+    <div class="fortune-modal-title">— Chọn bạn là ai —</div>
+    <div id="fortuneMemberList"></div>
   </div>
 </div>
 
@@ -920,18 +1126,19 @@ function updateGlobalDatalist() {
 }
 
 function showTab(t){
-  ['game','result','hof','members'].forEach(function(id){
+  ['game','result','hof','fortune','members'].forEach(function(id){
     var el = document.getElementById('tab-'+id);
     if(el) el.className='page'+(t===id?' show':'');
   });
   document.querySelectorAll('.tab').forEach(function(el,i){
-    var tabId = ['game','result','hof','members'][i];
+    var tabId = ['game','result','hof','fortune','members'][i];
     el.className='tab'+(tabId===t?' active':'');
   });
   
   if(t==='game') renderGameTab();
   if(t==='result') renderCashout();
   if(t==='hof') { renderCalendarUI(); renderHof(); }
+  if(t==='fortune') renderFortuneTab();
   if(t==='members'){showMemberListView();renderMemberList();}
 }
 
@@ -2082,6 +2289,250 @@ function getLossIcon(diff) {
     return '<span class="loss-icon">🤡</span>';
   }
   return ''; 
+}
+
+/* ==================== FORTUNE / BÓI QUẺ ==================== */
+var FORTUNE_KEY = 'pk_fortune_history';
+var fortuneSelectedMember = null;
+
+// 5 quẻ - weight tổng = 100 (2-7 là 30, còn lại 17-18)
+var FORTUNES = [
+  {
+    id: 'sucvat',
+    name: 'Quẻ Súc Vật',
+    weight: 30,
+    cards: [
+      {rank:'2', suit:'♠', color:'black'},
+      {rank:'7', suit:'♦', color:'red'}
+    ],
+    message: 'Quẻ 2-7 OFFSUIT! Hôm nay mày là súc vật của bàn, fold hết đi cho lành 🤡'
+  },
+  {
+    id: 'aa',
+    name: 'Quẻ Đôi Ách',
+    weight: 18,
+    cards: [
+      {rank:'A', suit:'♠', color:'black'},
+      {rank:'A', suit:'♥', color:'red'}
+    ],
+    message: 'POCKET ROCKETS! Mày là BỐ của bàn này, ai cũng phải gọi mày bằng anh 💎'
+  },
+  {
+    id: 'kk',
+    name: 'Quẻ Đôi Già',
+    weight: 18,
+    cards: [
+      {rank:'K', suit:'♠', color:'black'},
+      {rank:'K', suit:'♣', color:'black'}
+    ],
+    message: 'POCKET KINGS! Hôm nay mày làm Chá Giò — cứ raise là có người call 👑'
+  },
+  {
+    id: '55',
+    name: 'Quẻ Đôi 5',
+    weight: 17,
+    cards: [
+      {rank:'5', suit:'♥', color:'red'},
+      {rank:'5', suit:'♦', color:'red'}
+    ],
+    message: 'POCKET 5s! Hôm nay mày là Xương Đức tái sinh — ALL IN bất chấp 🔥'
+  },
+  {
+    id: 'tuquy',
+    name: 'Quẻ Tứ Quý',
+    weight: 17,
+    cards: [
+      {rank:'A', suit:'♠', color:'black'},
+      {rank:'A', suit:'♥', color:'red'},
+      {rank:'A', suit:'♦', color:'red'},
+      {rank:'A', suit:'♣', color:'black'}
+    ],
+    message: 'TỨ QUÝ ÁCH! Hôm nay bàn là của mày, ai cản đường ăn đập 🌟'
+  }
+];
+
+function getFortuneHistory(){
+  try { return JSON.parse(localStorage.getItem(FORTUNE_KEY)||'[]'); }
+  catch(e){ return []; }
+}
+function saveFortuneHistory(h){
+  localStorage.setItem(FORTUNE_KEY, JSON.stringify(h));
+}
+
+// Ngày theo giờ VN dạng YYYY-MM-DD
+function getTodayKey(){
+  var d = new Date();
+  // Đảm bảo lấy ngày theo timezone local của user
+  var y = d.getFullYear();
+  var m = String(d.getMonth()+1).padStart(2,'0');
+  var dd = String(d.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+
+function getTodayDrawForMember(memberName){
+  var today = getTodayKey();
+  return getFortuneHistory().find(function(h){
+    return h.date === today && h.name === memberName;
+  });
+}
+
+function renderFortuneTab(){
+  // Reset state khi vào tab
+  fortuneSelectedMember = null;
+  document.getElementById('fortunePickerBtn').textContent = '👤 Bạn là ai? — Chọn tên';
+  document.getElementById('fortunePickerBtn').classList.remove('selected');
+  document.getElementById('fortuneDrawBtn').disabled = true;
+  document.getElementById('fortuneResult').innerHTML = '';
+  document.getElementById('fortuneLocked').innerHTML = '';
+  renderFortuneHistory();
+}
+
+function openFortunePicker(){
+  var members = getMembers();
+  var listEl = document.getElementById('fortuneMemberList');
+  if(members.length === 0){
+    listEl.innerHTML = '<div class="empty">Chưa có hội viên nào!<br>Vào tab Hội viên thêm trước đã.</div>';
+  } else {
+    var html = '';
+    members.forEach(function(m){
+      html += '<div class="fortune-member-item" onclick="selectFortuneMember(\''+m.id+'\',\''+m.name.replace(/'/g,"\\'")+'\')">'+m.name+'</div>';
+    });
+    listEl.innerHTML = html;
+  }
+  document.getElementById('fortunePickerModal').classList.add('show');
+}
+
+function closeFortunePicker(){
+  document.getElementById('fortunePickerModal').classList.remove('show');
+}
+function closeFortunePickerOutside(e){
+  if(e.target === document.getElementById('fortunePickerModal')) closeFortunePicker();
+}
+
+function selectFortuneMember(id, name){
+  fortuneSelectedMember = {id: id, name: name};
+  document.getElementById('fortunePickerBtn').textContent = '✓ ' + name;
+  document.getElementById('fortunePickerBtn').classList.add('selected');
+  closeFortunePicker();
+  
+  // Check xem hôm nay đã bói chưa
+  var todayDraw = getTodayDrawForMember(name);
+  if(todayDraw){
+    var fortune = FORTUNES.find(function(f){return f.id === todayDraw.fortuneId;});
+    document.getElementById('fortuneDrawBtn').disabled = true;
+    document.getElementById('fortuneLocked').innerHTML =
+      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói hôm nay rồi.<br>Mai quay lại nhé!</div>';
+    if(fortune) showFortuneResult(fortune, name, false);
+  } else {
+    document.getElementById('fortuneDrawBtn').disabled = false;
+    document.getElementById('fortuneLocked').innerHTML = '';
+    document.getElementById('fortuneResult').innerHTML = '';
+  }
+}
+
+function pickWeightedFortune(){
+  var total = FORTUNES.reduce(function(s,f){return s + f.weight;}, 0);
+  var r = Math.random() * total;
+  var acc = 0;
+  for(var i=0; i<FORTUNES.length; i++){
+    acc += FORTUNES[i].weight;
+    if(r < acc) return FORTUNES[i];
+  }
+  return FORTUNES[0];
+}
+
+function drawFortune(){
+  if(!fortuneSelectedMember) return;
+  var name = fortuneSelectedMember.name;
+  
+  // Double-check khoá theo ngày (phòng spam)
+  if(getTodayDrawForMember(name)){
+    alert(name + ' đã bói hôm nay rồi, mai quay lại nhé!');
+    return;
+  }
+  
+  var btn = document.getElementById('fortuneDrawBtn');
+  btn.disabled = true;
+  btn.textContent = '🎲 Đang xáo bài...';
+  
+  // Animation xáo bài
+  var resultEl = document.getElementById('fortuneResult');
+  resultEl.innerHTML =
+    '<div class="shuffling">'
+    +'<div class="poker-card black"><div class="rank-top">?</div><div class="suit-mid">♠</div><div class="rank-bot">?</div></div>'
+    +'<div class="poker-card red"><div class="rank-top">?</div><div class="suit-mid">♥</div><div class="rank-bot">?</div></div>'
+    +'</div>';
+  
+  setTimeout(function(){
+    var fortune = pickWeightedFortune();
+    
+    // Lưu lịch sử
+    var hist = getFortuneHistory();
+    hist.unshift({
+      date: getTodayKey(),
+      timestamp: Date.now(),
+      memberId: fortuneSelectedMember.id,
+      name: name,
+      fortuneId: fortune.id,
+      fortuneName: fortune.name
+    });
+    // Giới hạn 200 record cho gọn
+    if(hist.length > 200) hist = hist.slice(0, 200);
+    saveFortuneHistory(hist);
+    
+    showFortuneResult(fortune, name, true);
+    btn.textContent = '🎴 Bốc Quẻ';
+    document.getElementById('fortuneLocked').innerHTML =
+      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói hôm nay rồi.<br>Mai quay lại nhé!</div>';
+    renderFortuneHistory();
+    
+    // Quẻ tốt thì bắn confetti
+    if(fortune.id === 'aa' || fortune.id === 'tuquy'){
+      try { launchConfetti(); } catch(e){}
+    }
+  }, 1400);
+}
+
+function showFortuneResult(fortune, name, animated){
+  var cardsHTML = fortune.cards.map(function(c){
+    return '<div class="poker-card '+c.color+'">'
+      +'<div class="rank-top">'+c.rank+'</div>'
+      +'<div class="suit-mid">'+c.suit+'</div>'
+      +'<div class="rank-bot">'+c.rank+'</div>'
+      +'</div>';
+  }).join('');
+  
+  var resultEl = document.getElementById('fortuneResult');
+  resultEl.innerHTML =
+    '<div class="fortune-result"'+(animated?'':' style="animation:none"')+'>'
+    +'<div class="fortune-result-name">Quẻ của <b>'+name+'</b></div>'
+    +'<div class="fortune-result-quere">'+fortune.name+'</div>'
+    +'<div class="card-display">'+cardsHTML+'</div>'
+    +'<div class="fortune-message">'+fortune.message+'</div>'
+    +'</div>';
+}
+
+function renderFortuneHistory(){
+  var hist = getFortuneHistory();
+  var el = document.getElementById('fortuneHistoryEl');
+  if(hist.length === 0){
+    el.innerHTML = '<div class="empty">Chưa có ai bói cả</div>';
+    return;
+  }
+  // Hiện 20 record gần nhất
+  var html = '';
+  hist.slice(0, 20).forEach(function(h){
+    var dateStr = h.date.split('-').reverse().join('/');
+    html +=
+      '<div class="history-row">'
+      +'<div>'
+      +'<div class="history-name">'+h.name+'</div>'
+      +'<div class="history-quere">'+h.fortuneName+'</div>'
+      +'</div>'
+      +'<div class="history-date">'+dateStr+'</div>'
+      +'</div>';
+  });
+  el.innerHTML = html;
 }
 </script>
 </body>
