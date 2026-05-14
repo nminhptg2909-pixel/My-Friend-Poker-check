@@ -583,6 +583,51 @@ table.players tr:last-child td{border-bottom:none;}
   border-left:2px solid var(--gold);border-radius:0 6px 6px 0;
   font-style:italic;
 }
+.history-donate-note{
+  font-size:10px;color:#f5e09a;font-weight:700;
+  padding:6px 10px;margin-top:6px;
+  background:linear-gradient(135deg,rgba(200,168,75,.18),rgba(200,168,75,.08));
+  border:1px dashed var(--gold);border-radius:6px;
+  letter-spacing:.3px;text-align:center;
+}
+
+/* Donate Checkbox */
+.donate-box{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 13px;margin-bottom:10px;
+  background:var(--bg3);border:1px dashed var(--border);
+  border-radius:9px;cursor:pointer;transition:all .2s;
+  user-select:none;
+}
+.donate-box:has(input:checked){
+  background:linear-gradient(135deg,rgba(200,168,75,.15),rgba(200,168,75,.05));
+  border-style:solid;border-color:var(--gold);
+  box-shadow:0 0 12px var(--gold-glow);
+}
+.donate-box input[type=checkbox]{
+  appearance:none;-webkit-appearance:none;
+  width:20px;height:20px;flex-shrink:0;
+  border:2px solid var(--border);border-radius:5px;
+  background:var(--bg2);cursor:pointer;position:relative;
+  transition:all .2s;
+}
+.donate-box input[type=checkbox]:checked{
+  background:linear-gradient(135deg,#c8a84b,#f0d878);
+  border-color:var(--gold);
+}
+.donate-box input[type=checkbox]:checked::after{
+  content:'✓';position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  color:#0b0c0f;font-weight:900;font-size:14px;
+}
+.donate-content{flex:1;min-width:0;}
+.donate-text{
+  font-size:12px;color:var(--text);font-weight:600;
+  line-height:1.4;margin-bottom:2px;
+}
+.donate-box:has(input:checked) .donate-text{color:var(--gold3);}
+.donate-sub{font-size:10px;color:var(--text3);font-style:italic;}
+.donate-box:has(input:checked) .donate-sub{color:var(--gold2);}
   
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -817,6 +862,13 @@ table.players tr:last-child td{border-bottom:none;}
     <button class="fortune-picker-btn" id="fortunePickerBtn" onclick="openFortunePicker()">
       👤 Bạn là ai? — Chọn tên
     </button>
+    <label class="donate-box" id="donateBox">
+      <input type="checkbox" id="donateCheckbox" onchange="toggleDonate()">
+      <div class="donate-content">
+        <div class="donate-text">💰 Donate cho Doctor Minh <b>100 chip</b> để bói ra quẻ tốt?</div>
+        <div class="donate-sub">Lấy rẻ thôi hehehe 🤑</div>
+      </div>
+    </label>
     <button class="btn-fortune" id="fortuneDrawBtn" onclick="drawFortune()" disabled>
       🎴 Bốc Quẻ
     </button>
@@ -2533,6 +2585,7 @@ function renderFortuneTab(){
   document.getElementById('fortuneDrawBtn').disabled = true;
   document.getElementById('fortuneResult').innerHTML = '';
   document.getElementById('fortuneLocked').innerHTML = '';
+  resetDonateCheckbox();
   renderFortuneHistory();
 }
 
@@ -2606,6 +2659,43 @@ function pickWeightedFortune(){
   return FORTUNES[0];
 }
 
+// Tính weight có ưu đãi khi donate
+// Súc Vật giảm mạnh (14→5), Tứ Quý tăng nhẹ (8→10), AA tăng vừa (9→12)
+// Các quẻ trung bình cũng được boost nhẹ (KK, 55, Bao Bữa, Cá Gô +1)
+function pickWeightedFortuneWithDonate(){
+  var bonuses = {
+    'sucvat': -9,
+    'aa': 3,
+    'kk': 1,
+    '55': 1,
+    'tuquy': 2,
+    'baobua': 1,
+    'cago': 1
+  };
+  var adjusted = FORTUNES.map(function(f){
+    var bonus = bonuses[f.id] || 0;
+    return {fortune: f, weight: f.weight + bonus};
+  });
+  var total = adjusted.reduce(function(s,x){return s + x.weight;}, 0);
+  var r = Math.random() * total;
+  var acc = 0;
+  for(var i=0; i<adjusted.length; i++){
+    acc += adjusted[i].weight;
+    if(r < acc) return adjusted[i].fortune;
+  }
+  return adjusted[0].fortune;
+}
+
+function toggleDonate(){
+  // Không cần làm gì - CSS :has() tự xử lý hiển thị
+  // Hàm chỉ tồn tại để Safari cũ không bị warning, và để dễ debug
+}
+
+function resetDonateCheckbox(){
+  var cb = document.getElementById('donateCheckbox');
+  if(cb) cb.checked = false;
+}
+
 function drawFortune(){
   if(!fortuneSelectedMember) return;
   var name = fortuneSelectedMember.name;
@@ -2629,8 +2719,11 @@ function drawFortune(){
     +'<div class="poker-card red"><div class="rank-top">?</div><div class="suit-mid">♥</div><div class="rank-bot">?</div></div>'
     +'</div>';
   
+  // Lấy trạng thái donate trước khi xáo (để user không tick rồi tự bỏ tick giữa chừng)
+  var hasDonated = !!document.getElementById('donateCheckbox').checked;
+  
   setTimeout(function(){
-    var fortune = pickWeightedFortune();
+    var fortune = hasDonated ? pickWeightedFortuneWithDonate() : pickWeightedFortune();
     
     // Lưu lịch sử
     var hist = getFortuneHistory();
@@ -2640,13 +2733,15 @@ function drawFortune(){
       memberId: fortuneSelectedMember.id,
       name: name,
       fortuneId: fortune.id,
-      fortuneName: fortune.name
+      fortuneName: fortune.name,
+      donated: hasDonated
     });
     // Giới hạn 200 record cho gọn
     if(hist.length > 200) hist = hist.slice(0, 200);
     saveFortuneHistory(hist);
     
     showFortuneResult(fortune, name, true);
+    resetDonateCheckbox(); // Mỗi lần phải tick lại
     
     // Update UI dựa trên số lần còn lại
     var newDrawCount = currentDraws.length + 1;
@@ -2719,6 +2814,7 @@ function renderFortuneHistory(){
     var fortune = FORTUNES.find(function(f){return f.id === h.fortuneId;});
     var cardsHTML = '';
     var noteHTML = '';
+    var donateHTML = '';
     if(fortune){
       cardsHTML = fortune.cards.map(function(c){
         return '<div class="mini-card '+c.color+'">'
@@ -2727,6 +2823,9 @@ function renderFortuneHistory(){
           +'</div>';
       }).join('');
       noteHTML = '<div class="history-item-note">'+fortune.message+'</div>';
+    }
+    if(h.donated){
+      donateHTML = '<div class="history-donate-note">💸 Đã nạp 100 chip cho Doctor Minh để cải thiện vận 🤑</div>';
     }
     return '<div class="history-item">'
       +'<div class="history-item-top">'
@@ -2737,6 +2836,7 @@ function renderFortuneHistory(){
       +'</div>'
       +'</div>'
       +noteHTML
+      +donateHTML
       +'</div>';
   }).join('');
   
