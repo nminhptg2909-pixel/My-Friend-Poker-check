@@ -2421,7 +2421,7 @@ var FORTUNES = [
   {
     id: 'sucvat',
     name: 'Quẻ Súc Vật',
-    weight: 14,
+    weight: 13,
     cards: [
       {rank:'2', suit:'♠', color:'black'},
       {rank:'7', suit:'♦', color:'red'}
@@ -2446,7 +2446,7 @@ var FORTUNES = [
       {rank:'K', suit:'♠', color:'black'},
       {rank:'K', suit:'♣', color:'black'}
     ],
-    message: 'POCKET KINGS! Hôm nay mày là Chá Giò chiên giòn — cứ raise là có thằng ngu call. Cảm ơn các con donor 👑'
+    message: 'POCKET KINGS! Hôm nay mày làm ông vua trộm cướp, cướp sạch Ensure của mấy thằng già 👑🍼'
   },
   {
     id: '55',
@@ -2529,6 +2529,19 @@ var FORTUNES = [
       {rank:'4', suit:'♥', color:'red'}
     ],
     message: '8-4 SUITED HEARTS — hand huyền thoại đã đập tan giấc mơ của Doctor Hùng. Hôm nay mày cứ ALL IN với hand này, river chắc chắn ra thùng. Hùng ơi, AA của mày giờ chỉ là kỷ niệm 🥲 lol Hùng cay é é é 💔🃏'
+  },
+  {
+    id: 'royalflush',
+    name: 'Quẻ Thùng Phá Sảnh',
+    weight: 1,
+    cards: [
+      {rank:'10', suit:'♥', color:'red'},
+      {rank:'J', suit:'♥', color:'red'},
+      {rank:'Q', suit:'♥', color:'red'},
+      {rank:'K', suit:'♥', color:'red'},
+      {rank:'A', suit:'♥', color:'red'}
+    ],
+    message: 'ROYAL FLUSH! Hôm nay bạn sẽ nắc hết toàn bộ bàn chơi bằng 69 tư thế, ai bluff, ai all in mày nắc hết 🌹👑'
   }
 ];
 
@@ -2660,8 +2673,9 @@ function pickWeightedFortune(){
 }
 
 // Tính weight có ưu đãi khi donate
-// Súc Vật giảm mạnh (14→5), Tứ Quý tăng nhẹ (8→10), AA tăng vừa (9→12)
+// Súc Vật giảm mạnh (13→4), Tứ Quý tăng nhẹ (8→10), AA tăng vừa (9→12)
 // Các quẻ trung bình cũng được boost nhẹ (KK, 55, Bao Bữa, Cá Gô +1)
+// Royal Flush hiếm nhưng donate xong vẫn boost nhẹ (1→2)
 function pickWeightedFortuneWithDonate(){
   var bonuses = {
     'sucvat': -9,
@@ -2670,7 +2684,8 @@ function pickWeightedFortuneWithDonate(){
     '55': 1,
     'tuquy': 2,
     'baobua': 1,
-    'cago': 1
+    'cago': 1,
+    'royalflush': 1
   };
   var adjusted = FORTUNES.map(function(f){
     var bonus = bonuses[f.id] || 0;
@@ -2761,7 +2776,7 @@ function drawFortune(){
     renderFortuneHistory();
     
     // Quẻ tốt thì bắn confetti
-    if(fortune.id === 'aa' || fortune.id === 'tuquy'){
+    if(fortune.id === 'aa' || fortune.id === 'tuquy' || fortune.id === 'royalflush'){
       try { launchConfetti(); } catch(e){}
     }
   }, 1400);
