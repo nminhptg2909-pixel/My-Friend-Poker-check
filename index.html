@@ -1022,6 +1022,7 @@ function pushDataToFirebase() {
             sessions: sessionsList,
             activeGame: JSON.parse(localStorage.getItem('garini_active_game') || 'null'),
             savedGames: JSON.parse(localStorage.getItem('garini_saved_games') || '[]'),
+            fortuneHistory: JSON.parse(localStorage.getItem('pk_fortune_history') || '[]'),
             timestamp: Date.now()
         };
         db.ref(ROOM_REF).set(data).catch(function(err) {
@@ -1039,6 +1040,7 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
         if(data.members) _originalSetItem.call(localStorage, 'pk_members', JSON.stringify(data.members));
         if(data.sessions) _originalSetItem.call(localStorage, 'pk_sessions', JSON.stringify(data.sessions));
         if(data.savedGames) _originalSetItem.call(localStorage, 'garini_saved_games', JSON.stringify(data.savedGames));
+        if(data.fortuneHistory) _originalSetItem.call(localStorage, 'pk_fortune_history', JSON.stringify(data.fortuneHistory));
         
         if(data.activeGame) {
             _originalSetItem.call(localStorage, 'garini_active_game', JSON.stringify(data.activeGame));
@@ -1055,6 +1057,7 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
             else renderSessionHistory();
         }
         if(document.getElementById('tab-hof').classList.contains('show')) renderHof();
+        if(document.getElementById('tab-fortune').classList.contains('show')) renderFortuneHistory();
         if(document.getElementById('tab-members').classList.contains('show')) {
             if(document.getElementById('memberListView').style.display !== 'none') renderMemberList();
         }
@@ -1072,7 +1075,7 @@ db.ref(ROOM_REF).once('value', (snapshot) => {
 
 Storage.prototype.setItem = function(key, value) {
     _originalSetItem.call(this, key, value);
-    if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games'].includes(key)) {
+    if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games', 'pk_fortune_history'].includes(key)) {
         pushDataToFirebase();
     }
 };
@@ -2231,6 +2234,7 @@ function getAllData(){
     pk_sessions: JSON.parse(localStorage.getItem('pk_sessions')||'[]'),
     garini_saved_games: JSON.parse(localStorage.getItem('garini_saved_games')||'[]'),
     garini_active_game: JSON.parse(localStorage.getItem('garini_active_game')||'null'),
+    pk_fortune_history: JSON.parse(localStorage.getItem('pk_fortune_history')||'[]'),
     exported_at: new Date().toLocaleString('vi-VN')
   };
 }
@@ -2271,6 +2275,7 @@ function doImport(){
     if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
     if(data.garini_saved_games) localStorage.setItem('garini_saved_games', JSON.stringify(data.garini_saved_games));
     if(data.garini_active_game) localStorage.setItem('garini_active_game', JSON.stringify(data.garini_active_game));
+    if(data.pk_fortune_history) localStorage.setItem('pk_fortune_history', JSON.stringify(data.pk_fortune_history));
     closeImportModal(); updateGlobalDatalist(); renderMemberList(); loadActiveGameFromLocal();
     alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
   } catch(e) { alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.'); }
