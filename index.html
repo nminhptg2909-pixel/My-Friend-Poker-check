@@ -576,6 +576,7 @@ table.players tr:last-child td{border-bottom:none;}
   font-size:10px;color:var(--gold2);font-weight:600;
   letter-spacing:.3px;
 }
+.history-item-day{color:var(--text3);font-weight:500;}
 .history-item-note{
   font-size:11px;color:var(--text2);line-height:1.5;
   padding:8px 10px;background:rgba(0,0,0,.25);
@@ -2342,6 +2343,7 @@ function getLossIcon(diff) {
 
 /* ==================== FORTUNE / BÓI QUẺ ==================== */
 var FORTUNE_KEY = 'pk_fortune_history';
+var FORTUNE_DAILY_LIMIT = 3;
 var fortuneSelectedMember = null;
 
 // 10 quẻ - weight tổng = 100
@@ -2468,9 +2470,9 @@ function getTodayKey(){
   return y+'-'+m+'-'+dd;
 }
 
-function getTodayDrawForMember(memberName){
+function getTodayDrawsForMember(memberName){
   var today = getTodayKey();
-  return getFortuneHistory().find(function(h){
+  return getFortuneHistory().filter(function(h){
     return h.date === today && h.name === memberName;
   });
 }
@@ -2514,18 +2516,34 @@ function selectFortuneMember(id, name){
   document.getElementById('fortunePickerBtn').classList.add('selected');
   closeFortunePicker();
   
-  // Check xem hôm nay đã bói chưa
-  var todayDraw = getTodayDrawForMember(name);
-  if(todayDraw){
-    var fortune = FORTUNES.find(function(f){return f.id === todayDraw.fortuneId;});
+  var todayDraws = getTodayDrawsForMember(name);
+  var drawCount = todayDraws.length;
+  var remaining = FORTUNE_DAILY_LIMIT - drawCount;
+  
+  document.getElementById('fortuneResult').innerHTML = '';
+  
+  if(remaining <= 0){
+    // Hết lượt - hiện quẻ mới nhất hôm nay
     document.getElementById('fortuneDrawBtn').disabled = true;
     document.getElementById('fortuneLocked').innerHTML =
-      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói hôm nay rồi.<br>Mai quay lại nhé!</div>';
+      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói '+FORTUNE_DAILY_LIMIT+'/'+FORTUNE_DAILY_LIMIT+' lần hôm nay.<br>Mai quay lại nhé!</div>';
+    var latest = todayDraws[0]; // mới nhất ở đầu (do unshift)
+    var fortune = FORTUNES.find(function(f){return f.id === latest.fortuneId;});
     if(fortune) showFortuneResult(fortune, name, false);
   } else {
+    // Còn lượt
     document.getElementById('fortuneDrawBtn').disabled = false;
+    var btnLabel = drawCount === 0
+      ? '🎴 Bốc Quẻ ('+FORTUNE_DAILY_LIMIT+' lần hôm nay)'
+      : '🎴 Bốc tiếp ('+remaining+'/'+FORTUNE_DAILY_LIMIT+' lần còn lại)';
+    document.getElementById('fortuneDrawBtn').textContent = btnLabel;
     document.getElementById('fortuneLocked').innerHTML = '';
-    document.getElementById('fortuneResult').innerHTML = '';
+    // Nếu đã bói rồi thì hiện quẻ gần nhất để xem lại
+    if(drawCount > 0){
+      var latest = todayDraws[0];
+      var fortune = FORTUNES.find(function(f){return f.id === latest.fortuneId;});
+      if(fortune) showFortuneResult(fortune, name, false);
+    }
   }
 }
 
@@ -2544,9 +2562,10 @@ function drawFortune(){
   if(!fortuneSelectedMember) return;
   var name = fortuneSelectedMember.name;
   
-  // Double-check khoá theo ngày (phòng spam)
-  if(getTodayDrawForMember(name)){
-    alert(name + ' đã bói hôm nay rồi, mai quay lại nhé!');
+  // Check limit (phòng spam)
+  var currentDraws = getTodayDrawsForMember(name);
+  if(currentDraws.length >= FORTUNE_DAILY_LIMIT){
+    alert(name + ' đã bói đủ '+FORTUNE_DAILY_LIMIT+' lần hôm nay, mai quay lại nhé!');
     return;
   }
   
@@ -2580,9 +2599,22 @@ function drawFortune(){
     saveFortuneHistory(hist);
     
     showFortuneResult(fortune, name, true);
-    btn.textContent = '🎴 Bốc Quẻ';
-    document.getElementById('fortuneLocked').innerHTML =
-      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói hôm nay rồi.<br>Mai quay lại nhé!</div>';
+    
+    // Update UI dựa trên số lần còn lại
+    var newDrawCount = currentDraws.length + 1;
+    var remaining = FORTUNE_DAILY_LIMIT - newDrawCount;
+    
+    if(remaining <= 0){
+      btn.disabled = true;
+      btn.textContent = '🎴 Bốc Quẻ';
+      document.getElementById('fortuneLocked').innerHTML =
+        '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói '+FORTUNE_DAILY_LIMIT+'/'+FORTUNE_DAILY_LIMIT+' lần hôm nay.<br>Mai quay lại nhé!</div>';
+    } else {
+      btn.disabled = false;
+      btn.textContent = '🎴 Bốc tiếp ('+remaining+'/'+FORTUNE_DAILY_LIMIT+' lần còn lại)';
+      document.getElementById('fortuneLocked').innerHTML = '';
+    }
+    
     renderFortuneHistory();
     
     // Quẻ tốt thì bắn confetti
@@ -2619,18 +2651,6 @@ function renderFortuneHistory(){
     return;
   }
   
-  // Nhóm theo ngày, giữ thứ tự (ngày mới nhất trên cùng)
-  var groups = {};
-  var dayOrder = [];
-  hist.forEach(function(h){
-    if(!groups[h.date]){
-      groups[h.date] = [];
-      dayOrder.push(h.date);
-    }
-    groups[h.date].push(h);
-  });
-  
-  // Hôm nay/Hôm qua cho thân thiện
   var todayKey = getTodayKey();
   var yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
@@ -2644,42 +2664,31 @@ function renderFortuneHistory(){
     return d.split('-').reverse().join('/');
   }
   
-  // Giới hạn 10 ngày gần nhất cho gọn
-  var html = '';
-  dayOrder.slice(0, 10).forEach(function(day){
-    var items = groups[day];
-    var itemsHTML = items.map(function(h){
-      var fortune = FORTUNES.find(function(f){return f.id === h.fortuneId;});
-      var cardsHTML = '';
-      var noteHTML = '';
-      if(fortune){
-        cardsHTML = fortune.cards.map(function(c){
-          return '<div class="mini-card '+c.color+'">'
-            +'<span class="mc-rank">'+c.rank+'</span>'
-            +'<span class="mc-suit">'+c.suit+'</span>'
-            +'</div>';
-        }).join('');
-        noteHTML = '<div class="history-item-note">'+fortune.message+'</div>';
-      }
-      return '<div class="history-item">'
-        +'<div class="history-item-top">'
-        +'<div class="history-item-cards">'+cardsHTML+'</div>'
-        +'<div class="history-item-info">'
-        +'<div class="history-item-name">'+h.name+'</div>'
-        +'<div class="history-item-quere">'+h.fortuneName+'</div>'
-        +'</div>'
-        +'</div>'
-        +noteHTML
-        +'</div>';
-    }).join('');
-    
-    html += '<div class="history-day-group">'
-      +'<div class="history-day-header">'+formatDay(day)
-      +'<span class="day-count">'+items.length+' quẻ</span>'
+  // Hiển thị 30 record gần nhất, flat list
+  var html = hist.slice(0, 30).map(function(h){
+    var fortune = FORTUNES.find(function(f){return f.id === h.fortuneId;});
+    var cardsHTML = '';
+    var noteHTML = '';
+    if(fortune){
+      cardsHTML = fortune.cards.map(function(c){
+        return '<div class="mini-card '+c.color+'">'
+          +'<span class="mc-rank">'+c.rank+'</span>'
+          +'<span class="mc-suit">'+c.suit+'</span>'
+          +'</div>';
+      }).join('');
+      noteHTML = '<div class="history-item-note">'+fortune.message+'</div>';
+    }
+    return '<div class="history-item">'
+      +'<div class="history-item-top">'
+      +'<div class="history-item-cards">'+cardsHTML+'</div>'
+      +'<div class="history-item-info">'
+      +'<div class="history-item-name">'+h.name+'</div>'
+      +'<div class="history-item-quere">'+h.fortuneName+' · <span class="history-item-day">'+formatDay(h.date)+'</span></div>'
       +'</div>'
-      +itemsHTML
+      +'</div>'
+      +noteHTML
       +'</div>';
-  });
+  }).join('');
   
   el.innerHTML = html;
 }
