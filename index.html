@@ -1087,6 +1087,16 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
         if(data.savedGames) _originalSetItem.call(localStorage, 'garini_saved_games', JSON.stringify(data.savedGames));
         if(data.fortuneHistory) _originalSetItem.call(localStorage, 'pk_fortune_history', JSON.stringify(data.fortuneHistory));
         
+        // Sau khi sync fortune từ cloud → kiểm tra có record cũ qua ngày không
+        // Nếu có → xoá và push lại để cả team đồng bộ
+        if(data.fortuneHistory && typeof cleanupOldFortunes === 'function'){
+          var cleaned = cleanupOldFortunes();
+          if(cleaned){
+            // Push state mới lên Firebase (qua setItem chính thức để trigger sync)
+            localStorage.setItem('pk_fortune_history', localStorage.getItem('pk_fortune_history'));
+          }
+        }
+        
         if(data.activeGame) {
             _originalSetItem.call(localStorage, 'garini_active_game', JSON.stringify(data.activeGame));
             activeGame = data.activeGame;
@@ -1155,6 +1165,14 @@ var currentHofSubTab = 'win';
   updateGlobalDatalist();
   loadActiveGameFromLocal();
 })();
+
+// Cleanup lịch sử bói qua ngày khi load app
+// (chạy sau khi Firebase đã sync xong)
+setTimeout(function(){
+  try {
+    if(typeof cleanupOldFortunes === 'function') cleanupOldFortunes();
+  } catch(e){}
+}, 1500);
 
 function loadMembers(){try{return JSON.parse(localStorage.getItem('pk_members'))||[];}catch(e){return[];}}
 function saveMembers(m){localStorage.setItem('pk_members',JSON.stringify(m)); updateGlobalDatalist(); }
@@ -2460,14 +2478,31 @@ function saveFortuneHistory(h){
   localStorage.setItem(FORTUNE_KEY, JSON.stringify(h));
 }
 
-// Ngày theo giờ VN dạng YYYY-MM-DD
+// Ngày theo giờ VN (UTC+7) dạng YYYY-MM-DD
+// Khoá cứng timezone VN để cả team reset cùng lúc lúc 0h VN,
+// bất kể thiết bị đang ở múi giờ nào
 function getTodayKey(){
-  var d = new Date();
-  // Đảm bảo lấy ngày theo timezone local của user
-  var y = d.getFullYear();
-  var m = String(d.getMonth()+1).padStart(2,'0');
-  var dd = String(d.getDate()).padStart(2,'0');
+  // Lấy thời gian hiện tại theo UTC, cộng 7 tiếng → giờ VN
+  var now = new Date();
+  var vnTime = new Date(now.getTime() + (now.getTimezoneOffset() + 7*60) * 60000);
+  var y = vnTime.getFullYear();
+  var m = String(vnTime.getMonth()+1).padStart(2,'0');
+  var dd = String(vnTime.getDate()).padStart(2,'0');
   return y+'-'+m+'-'+dd;
+}
+
+// Dọn lịch sử bói qua ngày: chỉ giữ lại record của hôm nay
+// Trả về true nếu có dọn dẹp (để biết khi nào cần re-render)
+function cleanupOldFortunes(){
+  var hist = getFortuneHistory();
+  if(hist.length === 0) return false;
+  var today = getTodayKey();
+  var fresh = hist.filter(function(h){ return h.date === today; });
+  if(fresh.length !== hist.length){
+    saveFortuneHistory(fresh);
+    return true;
+  }
+  return false;
 }
 
 function getTodayDrawsForMember(memberName){
@@ -2478,6 +2513,9 @@ function getTodayDrawsForMember(memberName){
 }
 
 function renderFortuneTab(){
+  // Dọn lịch sử cũ trước (nếu qua ngày)
+  cleanupOldFortunes();
+  
   // Reset state khi vào tab
   fortuneSelectedMember = null;
   document.getElementById('fortunePickerBtn').textContent = '👤 Bạn là ai? — Chọn tên';
@@ -2526,7 +2564,7 @@ function selectFortuneMember(id, name){
     // Hết lượt - hiện quẻ mới nhất hôm nay
     document.getElementById('fortuneDrawBtn').disabled = true;
     document.getElementById('fortuneLocked').innerHTML =
-      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói '+FORTUNE_DAILY_LIMIT+'/'+FORTUNE_DAILY_LIMIT+' lần hôm nay.<br>Mai quay lại nhé!</div>';
+      '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói '+FORTUNE_DAILY_LIMIT+'/'+FORTUNE_DAILY_LIMIT+' lần hôm nay.<br>Reset lúc 0h đêm 🌙</div>';
     var latest = todayDraws[0]; // mới nhất ở đầu (do unshift)
     var fortune = FORTUNES.find(function(f){return f.id === latest.fortuneId;});
     if(fortune) showFortuneResult(fortune, name, false);
@@ -2608,7 +2646,7 @@ function drawFortune(){
       btn.disabled = true;
       btn.textContent = '🎴 Bốc Quẻ';
       document.getElementById('fortuneLocked').innerHTML =
-        '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói '+FORTUNE_DAILY_LIMIT+'/'+FORTUNE_DAILY_LIMIT+' lần hôm nay.<br>Mai quay lại nhé!</div>';
+        '<div class="fortune-locked">⏳ <b>'+name+'</b> đã bói '+FORTUNE_DAILY_LIMIT+'/'+FORTUNE_DAILY_LIMIT+' lần hôm nay.<br>Reset lúc 0h đêm 🌙</div>';
     } else {
       btn.disabled = false;
       btn.textContent = '🎴 Bốc tiếp ('+remaining+'/'+FORTUNE_DAILY_LIMIT+' lần còn lại)';
@@ -2652,11 +2690,13 @@ function renderFortuneHistory(){
   }
   
   var todayKey = getTodayKey();
-  var yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  var yKey = yesterday.getFullYear()+'-'+
-             String(yesterday.getMonth()+1).padStart(2,'0')+'-'+
-             String(yesterday.getDate()).padStart(2,'0');
+  // Hôm qua theo giờ VN (lấy today VN rồi trừ 1 ngày)
+  var todayParts = todayKey.split('-');
+  var yesterdayDate = new Date(parseInt(todayParts[0]), parseInt(todayParts[1])-1, parseInt(todayParts[2]));
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  var yKey = yesterdayDate.getFullYear()+'-'+
+             String(yesterdayDate.getMonth()+1).padStart(2,'0')+'-'+
+             String(yesterdayDate.getDate()).padStart(2,'0');
   
   function formatDay(d){
     if(d === todayKey) return 'Hôm nay';
