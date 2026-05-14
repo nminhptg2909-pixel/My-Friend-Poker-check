@@ -530,14 +530,50 @@ table.players tr:last-child td{border-bottom:none;}
 .fortune-locked b{color:var(--gold2);}
 
 /* History */
-.history-row{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:9px 4px;border-bottom:1px solid var(--border2);font-size:12px;
+.history-day-group{margin-bottom:14px;}
+.history-day-group:last-child{margin-bottom:0;}
+.history-day-header{
+  display:flex;align-items:center;gap:8px;
+  font-size:10px;font-weight:700;color:var(--gold);
+  letter-spacing:2px;text-transform:uppercase;
+  padding:6px 0 8px;margin-bottom:6px;
+  border-bottom:1px solid var(--border2);
 }
-.history-row:last-child{border-bottom:none;}
-.history-name{font-weight:700;color:var(--text);}
-.history-quere{color:var(--gold2);font-weight:600;font-size:11px;}
-.history-date{color:var(--text3);font-size:10px;letter-spacing:.5px;}
+.history-day-header::before{content:'📅';font-size:12px;}
+.history-day-header .day-count{
+  margin-left:auto;font-size:9px;color:var(--text3);
+  background:var(--bg3);padding:2px 7px;border-radius:10px;
+  font-weight:600;letter-spacing:.5px;
+}
+.history-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 8px;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:8px;margin-bottom:6px;
+}
+.history-item:last-child{margin-bottom:0;}
+.history-item-cards{
+  display:flex;gap:3px;flex-shrink:0;
+}
+.mini-card{
+  width:24px;height:34px;background:#fff;border-radius:3px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-weight:800;font-family:'Georgia',serif;
+  box-shadow:0 1px 4px rgba(0,0,0,.4);
+  line-height:1;
+}
+.mini-card.red{color:#c0392b;}
+.mini-card.black{color:#222;}
+.mini-card .mc-rank{font-size:10px;}
+.mini-card .mc-suit{font-size:11px;}
+.history-item-info{flex:1;min-width:0;}
+.history-item-name{
+  font-size:12px;font-weight:700;color:var(--text);
+  margin-bottom:2px;
+}
+.history-item-quere{
+  font-size:10px;color:var(--gold2);font-weight:600;
+  letter-spacing:.3px;
+}
   
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -2300,59 +2336,109 @@ function getLossIcon(diff) {
 var FORTUNE_KEY = 'pk_fortune_history';
 var fortuneSelectedMember = null;
 
-// 5 quẻ - weight tổng = 100 (2-7 là 30, còn lại 17-18)
+// 10 quẻ - weight tổng = 100
 var FORTUNES = [
   {
     id: 'sucvat',
     name: 'Quẻ Súc Vật',
-    weight: 30,
+    weight: 22,
     cards: [
       {rank:'2', suit:'♠', color:'black'},
       {rank:'7', suit:'♦', color:'red'}
     ],
-    message: 'Quẻ 2-7 OFFSUIT! Hôm nay mày là súc vật của bàn, fold hết đi cho lành 🤡'
+    message: '2-7 OFFSUIT — hand rác nhất poker. Hôm nay mày là súc vật chính thức của bàn. Đeo dây vô để bàn dắt cho lẹ 🐕'
   },
   {
     id: 'aa',
     name: 'Quẻ Đôi Ách',
-    weight: 18,
+    weight: 9,
     cards: [
       {rank:'A', suit:'♠', color:'black'},
       {rank:'A', suit:'♥', color:'red'}
     ],
-    message: 'POCKET ROCKETS! Mày là BỐ của bàn này, ai cũng phải gọi mày bằng anh 💎'
+    message: 'POCKET ROCKETS! Mày là BỐ của bàn này. Cả lũ phải gọi mày bằng anh, gọi sai thì all-in nhịn ăn 7 ngày 💎'
   },
   {
     id: 'kk',
     name: 'Quẻ Đôi Già',
-    weight: 18,
+    weight: 9,
     cards: [
       {rank:'K', suit:'♠', color:'black'},
       {rank:'K', suit:'♣', color:'black'}
     ],
-    message: 'POCKET KINGS! Hôm nay mày làm Chá Giò — cứ raise là có người call 👑'
+    message: 'POCKET KINGS! Hôm nay mày là Chá Giò chiên giòn — cứ raise là có thằng ngu call. Cảm ơn các con donor 👑'
   },
   {
     id: '55',
     name: 'Quẻ Đôi 5',
-    weight: 17,
+    weight: 9,
     cards: [
       {rank:'5', suit:'♥', color:'red'},
       {rank:'5', suit:'♦', color:'red'}
     ],
-    message: 'POCKET 5s! Hôm nay mày là Xương Đức tái sinh — ALL IN bất chấp 🔥'
+    message: 'POCKET 5s! Hôm nay mày là Xương Đức tái sinh. ALL IN preflop, ALL IN flop, ALL IN cả lúc đi vệ sinh 🔥'
   },
   {
     id: 'tuquy',
     name: 'Quẻ Tứ Quý',
-    weight: 17,
+    weight: 8,
     cards: [
       {rank:'A', suit:'♠', color:'black'},
       {rank:'A', suit:'♥', color:'red'},
       {rank:'A', suit:'♦', color:'red'},
       {rank:'A', suit:'♣', color:'black'}
     ],
-    message: 'TỨ QUÝ ÁCH! Hôm nay bàn là của mày, ai cản đường ăn đập 🌟'
+    message: 'TỨ QUÝ ÁCH! Bàn này từ giờ tới sáng là của mày. Đứa nào cản đường tao cho lên thớt luôn không thương tiếc 🌟'
+  },
+  {
+    id: 'baobua',
+    name: 'Quẻ Bao Bữa',
+    weight: 9,
+    cards: [
+      {rank:'A', suit:'♠', color:'black'},
+      {rank:'K', suit:'♦', color:'red'}
+    ],
+    message: 'BIG SLICK A-K! Hôm nay mày sẽ thắng to nhất bàn → tự động bao lẩu cả lũ. Quẻ đã phán, cãi là xui 7 đời 🍲'
+  },
+  {
+    id: 'cago',
+    name: 'Quẻ Cá Gô',
+    weight: 9,
+    cards: [
+      {rank:'J', suit:'♠', color:'black'},
+      {rank:'4', suit:'♥', color:'red'}
+    ],
+    message: 'J-4 OFFSUIT — hand của lũ cá. Hôm nay mày là con cá béo nhất hồ, cả bàn đang mài lưỡi câu. Mở ví ra cho tiện 🐟'
+  },
+  {
+    id: 'tamsu',
+    name: 'Quẻ Tâm Sự',
+    weight: 9,
+    cards: [
+      {rank:'K', suit:'♥', color:'red'},
+      {rank:'Q', suit:'♠', color:'black'}
+    ],
+    message: 'K-Q — quẻ của thằng nhiều chuyện. Hôm nay cứ fold xong là mày sẽ kể chuyện đời. Cả bàn cắm tai nghe sẵn rồi 🎤'
+  },
+  {
+    id: 'ngugat',
+    name: 'Quẻ Ngủ Gật',
+    weight: 8,
+    cards: [
+      {rank:'10', suit:'♣', color:'black'},
+      {rank:'10', suit:'♥', color:'red'}
+    ],
+    message: 'POCKET 10s. 3h sáng mày sẽ gục trên bàn, miệng há ra, nước dãi rớt vào pot. Đẹp không tả nổi luôn 😴'
+  },
+  {
+    id: 'slowroll',
+    name: 'Quẻ Slow Roll',
+    weight: 8,
+    cards: [
+      {rank:'A', suit:'♣', color:'black'},
+      {rank:'K', suit:'♣', color:'black'}
+    ],
+    message: 'A-K SUITED! Hôm nay mày sẽ slow roll thằng đối diện cho nó tilt. Cả bàn sẽ nguyền mày 7 đời nhưng mặc kệ đi anh em 🐍'
   }
 ];
 
@@ -2524,19 +2610,64 @@ function renderFortuneHistory(){
     el.innerHTML = '<div class="empty">Chưa có ai bói cả</div>';
     return;
   }
-  // Hiện 20 record gần nhất
+  
+  // Nhóm theo ngày, giữ thứ tự (ngày mới nhất trên cùng)
+  var groups = {};
+  var dayOrder = [];
+  hist.forEach(function(h){
+    if(!groups[h.date]){
+      groups[h.date] = [];
+      dayOrder.push(h.date);
+    }
+    groups[h.date].push(h);
+  });
+  
+  // Hôm nay/Hôm qua cho thân thiện
+  var todayKey = getTodayKey();
+  var yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  var yKey = yesterday.getFullYear()+'-'+
+             String(yesterday.getMonth()+1).padStart(2,'0')+'-'+
+             String(yesterday.getDate()).padStart(2,'0');
+  
+  function formatDay(d){
+    if(d === todayKey) return 'Hôm nay';
+    if(d === yKey) return 'Hôm qua';
+    return d.split('-').reverse().join('/');
+  }
+  
+  // Giới hạn 10 ngày gần nhất cho gọn
   var html = '';
-  hist.slice(0, 20).forEach(function(h){
-    var dateStr = h.date.split('-').reverse().join('/');
-    html +=
-      '<div class="history-row">'
-      +'<div>'
-      +'<div class="history-name">'+h.name+'</div>'
-      +'<div class="history-quere">'+h.fortuneName+'</div>'
+  dayOrder.slice(0, 10).forEach(function(day){
+    var items = groups[day];
+    var itemsHTML = items.map(function(h){
+      var fortune = FORTUNES.find(function(f){return f.id === h.fortuneId;});
+      var cardsHTML = '';
+      if(fortune){
+        cardsHTML = fortune.cards.map(function(c){
+          return '<div class="mini-card '+c.color+'">'
+            +'<span class="mc-rank">'+c.rank+'</span>'
+            +'<span class="mc-suit">'+c.suit+'</span>'
+            +'</div>';
+        }).join('');
+      }
+      return '<div class="history-item">'
+        +'<div class="history-item-cards">'+cardsHTML+'</div>'
+        +'<div class="history-item-info">'
+        +'<div class="history-item-name">'+h.name+'</div>'
+        +'<div class="history-item-quere">'+h.fortuneName+'</div>'
+        +'</div>'
+        +'</div>';
+    }).join('');
+    
+    html += '<div class="history-day-group">'
+      +'<div class="history-day-header">'+formatDay(day)
+      +'<span class="day-count">'+items.length+' quẻ</span>'
       +'</div>'
-      +'<div class="history-date">'+dateStr+'</div>'
+      +itemsHTML
       +'</div>';
   });
+  
   el.innerHTML = html;
 }
 </script>
