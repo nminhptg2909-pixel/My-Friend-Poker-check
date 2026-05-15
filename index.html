@@ -293,6 +293,27 @@ table.players tr:last-child td{border-bottom:none;}
   z-index: 2;
 }
 
+/* Badge DEALER cho Doctor Hùng - ngầu vừa đủ, không lấn DEV */
+.hb-dealer {
+  background: linear-gradient(135deg, rgba(40,90,60,0.4), rgba(20,50,35,0.6));
+  color: #7dd890;
+  border: 1px solid rgba(125, 216, 144, 0.4);
+  text-shadow: 0 0 4px rgba(125, 216, 144, 0.4);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* Khung Dealer cho Doctor Hùng - nhẹ nhàng hơn khung DEV */
+.rank-card.dealer-card {
+  background: linear-gradient(135deg, rgba(40,90,60,0.06), rgba(20,50,35,0.08)) !important;
+  border: 1px solid rgba(125, 216, 144, 0.25) !important;
+  box-shadow: 0 0 8px rgba(125, 216, 144, 0.1) !important;
+}
+.rank-card.dealer-card .rank-name {
+  text-shadow: 0 0 6px rgba(125, 216, 144, 0.3);
+  color: #b8e6c1;
+}
+
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
 .rank-1 .rank-amt{color:var(--gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
 .rank-2 .rank-amt{color:#9aaabb;}
@@ -925,6 +946,7 @@ table.players tr:last-child td{border-bottom:none;}
           <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
           <div class="legend-item"><span class="h-badge hb-donatemost">🌹 Được Cưng</span> <span>Người <strong>được donate nhiều nhất</strong> trong hội. Ai cũng yêu, ai cũng nạp chip 💸</span></div>
           <div class="legend-item"><span class="h-badge hb-dev">⚡ DEV</span> <span>Người sáng tạo & phát triển sòng này — <strong>Doctor Minh</strong>. Khung riêng, không đụng hàng 🛠️</span></div>
+          <div class="legend-item"><span class="h-badge hb-dealer">🎴 DEALER</span> <span>Người chia bài cho cả hội — <strong>Doctor Hùng</strong>. Tay nghề thì tốt, thi thoảng chia lỗi 🤷</span></div>
           <div class="legend-item"><span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
           <div class="legend-item">
             <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
@@ -2294,8 +2316,10 @@ function renderHof(){
     // Check Doctor Minh - badge DEV
     var nameLower = (r.name || '').toLowerCase().trim();
     var isDev = (nameLower === 'doctor minh' || nameLower === 'dr minh' || nameLower === 'dr. minh');
+    var isDealer = (nameLower === 'doctor hùng' || nameLower === 'doctor hung' || nameLower === 'dr hùng' || nameLower === 'dr hung' || nameLower === 'dr. hùng' || nameLower === 'dr. hung');
     
     if (isDev) badgesHtml += '<span class="h-badge hb-dev">⚡ DEV / FOUNDER</span>';
+    if (isDealer) badgesHtml += '<span class="h-badge hb-dealer">🎴 DEALER</span>';
     
     // Badge người được donate nhiều nhất (loại trừ trường hợp Doctor Minh tự donate cho mình)
     if (r.name === mostDonatedName && maxDonateCount > 0) {
@@ -2322,7 +2346,7 @@ function renderHof(){
     
     var badgesDiv = badgesHtml ? '<div class="hof-badges">' + badgesHtml + '</div>' : '';
 
-    var devClass = isDev ? ' dev-card' : '';
+    var devClass = isDev ? ' dev-card' : (isDealer ? ' dealer-card' : '');
     var devRibbon = isDev ? '<div class="dev-ribbon">DEV</div>' : '';
     
     var cardHtml = '<div class="rank-card '+cls+devClass+'">'+devRibbon+(i===0?'<div class="rank-sparkle">✨</div>':'')
