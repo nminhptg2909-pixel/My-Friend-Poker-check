@@ -628,6 +628,33 @@ table.players tr:last-child td{border-bottom:none;}
 .donate-box:has(input:checked) .donate-text{color:var(--gold3);}
 .donate-sub{font-size:10px;color:var(--text3);font-style:italic;}
 .donate-box:has(input:checked) .donate-sub{color:var(--gold2);}
+
+/* Donate History List trong tab K.Quả */
+.donate-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 12px;background:var(--bg3);
+  border:1px solid var(--border2);border-radius:8px;
+  margin-bottom:6px;
+}
+.donate-row:last-child{margin-bottom:0;}
+.donate-row-icon{
+  font-size:18px;flex-shrink:0;
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,rgba(200,168,75,.18),rgba(200,168,75,.05));
+  border:1px solid var(--border);border-radius:50%;
+}
+.donate-row-info{flex:1;min-width:0;}
+.donate-row-from{
+  font-size:12px;font-weight:700;color:var(--text);
+  margin-bottom:2px;
+}
+.donate-row-from b{color:var(--gold2);}
+.donate-row-meta{font-size:10px;color:var(--text3);letter-spacing:.3px;}
+.donate-row-amount{
+  font-size:13px;font-weight:800;color:var(--gold2);
+  letter-spacing:.5px;flex-shrink:0;
+}
   
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -743,6 +770,11 @@ table.players tr:last-child td{border-bottom:none;}
       <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
       <div id="summaryList"></div>
       <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
+    </div>
+
+    <div class="card">
+      <div class="card-title">💰 Lịch sử Donate</div>
+      <div id="donateHistoryList"><div class="empty">Chưa có ai donate cả</div></div>
     </div>
   </div>
   <div id="sessionHistoryView" style="display:none">
@@ -1160,7 +1192,10 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
         updateGlobalDatalist();
         if(document.getElementById('tab-game').classList.contains('show')) renderGameTab();
         if(document.getElementById('tab-result').classList.contains('show')) {
-            if(document.getElementById('resultMainView').style.display !== 'none') renderCashout(true);
+            if(document.getElementById('resultMainView').style.display !== 'none') {
+                renderCashout(true);
+                if(typeof renderDonateHistory === 'function') renderDonateHistory();
+            }
             else renderSessionHistory();
         }
         if(document.getElementById('tab-hof').classList.contains('show')) renderHof();
@@ -1254,7 +1289,7 @@ function showTab(t){
   });
   
   if(t==='game') renderGameTab();
-  if(t==='result') renderCashout();
+  if(t==='result') { renderCashout(); renderDonateHistory(); }
   if(t==='hof') { renderCalendarUI(); renderHof(); }
   if(t==='fortune') renderFortuneTab();
   if(t==='members'){showMemberListView();renderMemberList();}
@@ -2711,10 +2746,13 @@ function resetDonateCheckbox(){
   if(cb) cb.checked = false;
 }
 
-// Donate 100 chip: trừ người donate -100, cộng cho Doctor Minh +100 vào HoF
+// Donate 100 chip = 5.000đ thật (1 chip = 50đ)
+// HoF dùng đơn vị VND nhưng hiển thị label "chip" cho đỡ bài bạc
+// Trừ người donate -5000, cộng cho Doctor Minh +5000 vào HoF
 // Trả về object {success: bool, message: string}
 function processDonation(donorMemberId, donorName){
   var members = getMembers();
+  var DONATE_VALUE = 5000; // 100 chip × 50đ = 5.000đ
   
   // Tìm Doctor Minh (case-insensitive, match "doctor minh" hoặc "dr minh")
   var minh = members.find(function(m){
@@ -2733,27 +2771,27 @@ function processDonation(donorMemberId, donorName){
                 String(vn.getMonth()+1).padStart(2,'0')+'/'+
                 vn.getFullYear();
   
-  // Cộng cho Doctor Minh +100
+  // Cộng cho Doctor Minh +5000
   if(!minh.history) minh.history = [];
   minh.history.unshift({
     date: dateStr,
     buyin: 0,
-    cashout: 100,
-    diff: 100,
+    cashout: DONATE_VALUE,
+    diff: DONATE_VALUE,
     isDonation: true,
     donationFrom: donorName
   });
   
-  // Trừ người donate -100 (nếu khác Doctor Minh)
+  // Trừ người donate -5000 (nếu khác Doctor Minh)
   if(donorMemberId !== minh.id){
     var donor = members.find(function(m){return m.id === donorMemberId;});
     if(donor){
       if(!donor.history) donor.history = [];
       donor.history.unshift({
         date: dateStr,
-        buyin: 100,
+        buyin: DONATE_VALUE,
         cashout: 0,
-        diff: -100,
+        diff: -DONATE_VALUE,
         isDonation: true,
         donationTo: minh.name
       });
@@ -2861,8 +2899,56 @@ function showFortuneResult(fortune, name, animated){
     +'</div>';
 }
 
-function renderFortuneHistory(){
+// Render lịch sử donate trong tab K.Quả
+// Lấy từ pk_fortune_history (mỗi record có donated=true là 1 donate)
+function renderDonateHistory(){
+  var el = document.getElementById('donateHistoryList');
+  if(!el) return;
+  
   var hist = getFortuneHistory();
+  var donates = hist.filter(function(h){return h.donated && h.donateSuccess !== false;});
+  
+  if(donates.length === 0){
+    el.innerHTML = '<div class="empty">Chưa có ai donate cả</div>';
+    return;
+  }
+  
+  var todayKey = getTodayKey();
+  var todayParts = todayKey.split('-');
+  var yesterdayDate = new Date(parseInt(todayParts[0]), parseInt(todayParts[1])-1, parseInt(todayParts[2]));
+  yesterdayDate.setDate(yesterdayDate.getDate() - 1);
+  var yKey = yesterdayDate.getFullYear()+'-'+
+             String(yesterdayDate.getMonth()+1).padStart(2,'0')+'-'+
+             String(yesterdayDate.getDate()).padStart(2,'0');
+  
+  function formatDay(d){
+    if(d === todayKey) return 'Hôm nay';
+    if(d === yKey) return 'Hôm qua';
+    return d.split('-').reverse().join('/');
+  }
+  
+  // Tính tổng + render
+  var total = donates.length * 100;
+  var summary = '<div style="font-size:11px;color:var(--gold);text-align:center;padding:8px;margin-bottom:10px;background:linear-gradient(135deg,rgba(200,168,75,.1),rgba(200,168,75,.02));border:1px dashed var(--gold);border-radius:8px;letter-spacing:.5px;">'
+    +'🤑 Tổng cộng <b style="color:var(--gold3);font-size:13px;">'+donates.length+'</b> lượt donate · <b style="color:var(--gold3);font-size:13px;">'+total+' chip</b> đã chuyển cho Doctor Minh'
+    +'</div>';
+  
+  // Hiển thị 30 record gần nhất
+  var html = summary + donates.slice(0, 30).map(function(h){
+    return '<div class="donate-row">'
+      +'<div class="donate-row-icon">💸</div>'
+      +'<div class="donate-row-info">'
+      +'<div class="donate-row-from"><b>'+h.name+'</b> → Doctor Minh</div>'
+      +'<div class="donate-row-meta">'+formatDay(h.date)+' · để bói ra quẻ tốt</div>'
+      +'</div>'
+      +'<div class="donate-row-amount">100 chip</div>'
+      +'</div>';
+  }).join('');
+  
+  el.innerHTML = html;
+}
+
+function renderFortuneHistory(){  var hist = getFortuneHistory();
   var el = document.getElementById('fortuneHistoryEl');
   if(hist.length === 0){
     el.innerHTML = '<div class="empty">Chưa có ai bói cả</div>';
