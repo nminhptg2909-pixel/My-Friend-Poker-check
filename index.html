@@ -224,6 +224,75 @@ table.players tr:last-child td{border-bottom:none;}
 .hb-jackpot { background: rgba(255, 215, 0, 0.15); color: #ffd700; border: 1px solid rgba(255, 215, 0, 0.4); text-shadow: 0 0 5px rgba(255, 215, 0, 0.3); } 
 .hb-donkey { background: rgba(232, 65, 24, 0.15); color: #e84118; border: 1px dashed rgba(232, 65, 24, 0.5); text-shadow: 0 0 5px rgba(232, 65, 24, 0.3); } /* SINH VIÊN 2-7 */
 
+/* Badge Người được donate nhiều nhất */
+.hb-donatemost { background: linear-gradient(135deg, rgba(255,182,193,0.15), rgba(200,168,75,0.15)); color: #ffb6c1; border: 1px solid rgba(255,182,193,0.5); text-shadow: 0 0 5px rgba(255,182,193,0.4); animation: donateBadgePulse 2s ease-in-out infinite; }
+@keyframes donateBadgePulse {
+  0%,100% { box-shadow: 0 0 0 rgba(255,182,193,0); }
+  50% { box-shadow: 0 0 8px rgba(255,182,193,0.5); }
+}
+
+/* Badge DEV cho Doctor Minh - khung đặc biệt */
+.hb-dev {
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.5);
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 12px rgba(0, 255, 255, 0.4);
+  font-weight: 800;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  animation: devGlow 3s ease-in-out infinite;
+}
+@keyframes devGlow {
+  0%, 100% { box-shadow: 0 0 5px rgba(0,255,255,0.3), inset 0 0 5px rgba(0,255,255,0.1); }
+  50% { box-shadow: 0 0 12px rgba(0,255,255,0.6), inset 0 0 8px rgba(0,255,255,0.2); }
+}
+
+/* Khung đặc biệt cho card của Doctor Minh */
+.rank-card.dev-card {
+  background: linear-gradient(135deg, rgba(0,255,255,0.04), rgba(102,51,153,0.06), rgba(0,255,255,0.04)) !important;
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.15), inset 0 0 10px rgba(102, 51, 153, 0.05) !important;
+  position: relative;
+  overflow: hidden;
+}
+.rank-card.dev-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,255,255,0.08), transparent);
+  animation: devShimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes devShimmer {
+  0%, 100% { left: -100%; }
+  50% { left: 100%; }
+}
+.rank-card.dev-card .rank-name {
+  background: linear-gradient(135deg, #00ffff, #c8a84b, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: none;
+  filter: drop-shadow(0 0 6px rgba(0,255,255,0.4));
+}
+.dev-ribbon {
+  position: absolute;
+  top: 8px;
+  right: -28px;
+  background: linear-gradient(135deg, #00ffff, #66ccff);
+  color: #0b0c0f;
+  font-size: 8px;
+  font-weight: 900;
+  padding: 2px 30px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transform: rotate(35deg);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  z-index: 2;
+}
+
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
 .rank-1 .rank-amt{color:var(--gold2);font-size:19px;text-shadow:0 0 10px rgba(200,168,75,.4);}
 .rank-2 .rank-amt{color:#9aaabb;}
@@ -854,6 +923,8 @@ table.players tr:last-child td{border-bottom:none;}
         <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
         <div class="legend-grid">
           <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
+          <div class="legend-item"><span class="h-badge hb-donatemost">🌹 Được Cưng</span> <span>Người <strong>được donate nhiều nhất</strong> trong hội. Ai cũng yêu, ai cũng nạp chip 💸</span></div>
+          <div class="legend-item"><span class="h-badge hb-dev">⚡ DEV</span> <span>Người sáng tạo & phát triển sòng này — <strong>Doctor Minh</strong>. Khung riêng, không đụng hàng 🛠️</span></div>
           <div class="legend-item"><span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
           <div class="legend-item">
             <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
@@ -2135,6 +2206,25 @@ function renderHof(){
   var currentStats = aggregateStats(validHistories);
   var totalBuyinFilter = currentStats.reduce(function(s,r){return s+r.buyin;},0);
   
+  // ĐẾM SỐ LẦN ĐƯỢC DONATE cho mỗi người (chỉ session có isDonation=true && cashout>0 nghĩa là "nhận")
+  var donateReceivedMap = {};
+  members.forEach(function(m){
+    var count = 0;
+    (m.history || []).forEach(function(h){
+      if(h.isDonation && h.cashout > 0 && h.buyin === 0) count++;
+    });
+    if(count > 0) donateReceivedMap[m.name] = count;
+  });
+  // Tìm người được donate nhiều nhất
+  var mostDonatedName = null;
+  var maxDonateCount = 0;
+  Object.keys(donateReceivedMap).forEach(function(name){
+    if(donateReceivedMap[name] > maxDonateCount){
+      maxDonateCount = donateReceivedMap[name];
+      mostDonatedName = name;
+    }
+  });
+  
   var prevHistories = validHistories.filter(function(h){ return h.date !== latestDate; });
   var prevStats = aggregateStats(prevHistories);
   var prevRankMap = {};
@@ -2201,6 +2291,17 @@ function renderHof(){
     var badgesHtml = '';
     var s = streakMap[r.name] || {type: 'none', count: 0, latestDiff: 0};
     
+    // Check Doctor Minh - badge DEV
+    var nameLower = (r.name || '').toLowerCase().trim();
+    var isDev = (nameLower === 'doctor minh' || nameLower === 'dr minh' || nameLower === 'dr. minh');
+    
+    if (isDev) badgesHtml += '<span class="h-badge hb-dev">⚡ DEV / FOUNDER</span>';
+    
+    // Badge người được donate nhiều nhất (loại trừ trường hợp Doctor Minh tự donate cho mình)
+    if (r.name === mostDonatedName && maxDonateCount > 0) {
+      badgesHtml += '<span class="h-badge hb-donatemost">🌹 Được Cưng Nhất ('+maxDonateCount+' donate)</span>';
+    }
+    
     // Gắn mác Donkey nếu trùng tên người bị vote gần nhất
     if (r.name === currentDonkey) badgesHtml += '<span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span>';
     
@@ -2221,7 +2322,10 @@ function renderHof(){
     
     var badgesDiv = badgesHtml ? '<div class="hof-badges">' + badgesHtml + '</div>' : '';
 
-    var cardHtml = '<div class="rank-card '+cls+'">'+(i===0?'<div class="rank-sparkle">✨</div>':'')
+    var devClass = isDev ? ' dev-card' : '';
+    var devRibbon = isDev ? '<div class="dev-ribbon">DEV</div>' : '';
+    
+    var cardHtml = '<div class="rank-card '+cls+devClass+'">'+devRibbon+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
       +'<div class="rank-info"><div class="rank-name '+nameGlowClass+'">'+r.name+' ' + rankMoveHtml + '</div>'
       +'<div class="rank-sub">Mua vào: '+r.buyin.toLocaleString()+' · Bán ra: '+r.cashout.toLocaleString()+'</div>'
