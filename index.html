@@ -2711,6 +2711,59 @@ function resetDonateCheckbox(){
   if(cb) cb.checked = false;
 }
 
+// Donate 100 chip: trừ người donate -100, cộng cho Doctor Minh +100 vào HoF
+// Trả về object {success: bool, message: string}
+function processDonation(donorMemberId, donorName){
+  var members = getMembers();
+  
+  // Tìm Doctor Minh (case-insensitive, match "doctor minh" hoặc "dr minh")
+  var minh = members.find(function(m){
+    var n = (m.name || '').toLowerCase().trim();
+    return n === 'doctor minh' || n === 'dr minh' || n === 'dr. minh';
+  });
+  
+  if(!minh){
+    return {success: false, message: 'Không tìm thấy Doctor Minh trong danh sách hội viên — donate vô hiệu (vẫn được tỷ lệ ưu đãi)'};
+  }
+  
+  // Date format: dd/mm/yyyy theo giờ VN
+  var now = new Date();
+  var vn = new Date(now.getTime() + (now.getTimezoneOffset() + 7*60) * 60000);
+  var dateStr = String(vn.getDate()).padStart(2,'0')+'/'+
+                String(vn.getMonth()+1).padStart(2,'0')+'/'+
+                vn.getFullYear();
+  
+  // Cộng cho Doctor Minh +100
+  if(!minh.history) minh.history = [];
+  minh.history.unshift({
+    date: dateStr,
+    buyin: 0,
+    cashout: 100,
+    diff: 100,
+    isDonation: true,
+    donationFrom: donorName
+  });
+  
+  // Trừ người donate -100 (nếu khác Doctor Minh)
+  if(donorMemberId !== minh.id){
+    var donor = members.find(function(m){return m.id === donorMemberId;});
+    if(donor){
+      if(!donor.history) donor.history = [];
+      donor.history.unshift({
+        date: dateStr,
+        buyin: 100,
+        cashout: 0,
+        diff: -100,
+        isDonation: true,
+        donationTo: minh.name
+      });
+    }
+  }
+  
+  saveMembers(members);
+  return {success: true, message: 'Đã chuyển 100 chip cho '+minh.name};
+}
+
 function drawFortune(){
   if(!fortuneSelectedMember) return;
   var name = fortuneSelectedMember.name;
@@ -2740,6 +2793,12 @@ function drawFortune(){
   setTimeout(function(){
     var fortune = hasDonated ? pickWeightedFortuneWithDonate() : pickWeightedFortune();
     
+    // Xử lý chuyển chip 100 cho Doctor Minh nếu có donate
+    var donateResult = null;
+    if(hasDonated){
+      donateResult = processDonation(fortuneSelectedMember.id, name);
+    }
+    
     // Lưu lịch sử
     var hist = getFortuneHistory();
     hist.unshift({
@@ -2749,7 +2808,8 @@ function drawFortune(){
       name: name,
       fortuneId: fortune.id,
       fortuneName: fortune.name,
-      donated: hasDonated
+      donated: hasDonated,
+      donateSuccess: donateResult ? donateResult.success : null
     });
     // Giới hạn 200 record cho gọn
     if(hist.length > 200) hist = hist.slice(0, 200);
@@ -2840,7 +2900,11 @@ function renderFortuneHistory(){
       noteHTML = '<div class="history-item-note">'+fortune.message+'</div>';
     }
     if(h.donated){
-      donateHTML = '<div class="history-donate-note">💸 Đã nạp 100 chip cho Doctor Minh để cải thiện vận 🤑</div>';
+      if(h.donateSuccess === false){
+        donateHTML = '<div class="history-donate-note" style="color:#d07070;border-color:#7a4040;background:rgba(120,40,40,.1);">⚠️ Đã tick donate nhưng không tìm thấy Doctor Minh — chip không được chuyển</div>';
+      } else {
+        donateHTML = '<div class="history-donate-note">💸 Đã chuyển 100 chip cho Doctor Minh để cải thiện vận 🤑</div>';
+      }
     }
     return '<div class="history-item">'
       +'<div class="history-item-top">'
