@@ -944,7 +944,7 @@ table.players tr:last-child td{border-bottom:none;}
         <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
         <div class="legend-grid">
           <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
-          <div class="legend-item"><span class="h-badge hb-donatemost">🌹 Được Cưng</span> <span>Người <strong>được donate nhiều nhất</strong> trong hội. Ai cũng yêu, ai cũng nạp chip 💸</span></div>
+          <div class="legend-item"><span class="h-badge hb-donatemost">🌹 Được Donate</span> <span>Người <strong>được donate nhiều nhất</strong> trong hội 💸</span></div>
           <div class="legend-item"><span class="h-badge hb-dev">⚡ DEV</span> <span>Người sáng tạo & phát triển sòng này — <strong>Doctor Minh</strong>. Khung riêng, không đụng hàng 🛠️</span></div>
           <div class="legend-item"><span class="h-badge hb-dealer">🎴 DEALER</span> <span>Người chia bài cho cả hội — <strong>Doctor Hùng</strong>. Tay nghề thì tốt, thi thoảng chia lỗi 🤷</span></div>
           <div class="legend-item"><span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
@@ -2323,7 +2323,7 @@ function renderHof(){
     
     // Badge người được donate nhiều nhất (loại trừ trường hợp Doctor Minh tự donate cho mình)
     if (r.name === mostDonatedName && maxDonateCount > 0) {
-      badgesHtml += '<span class="h-badge hb-donatemost">🌹 Được Cưng Nhất ('+maxDonateCount+' donate)</span>';
+      badgesHtml += '<span class="h-badge hb-donatemost">🌹 Được Donate ('+maxDonateCount+')</span>';
     }
     
     // Gắn mác Donkey nếu trùng tên người bị vote gần nhất
