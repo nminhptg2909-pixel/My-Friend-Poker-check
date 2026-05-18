@@ -303,69 +303,87 @@ table.players tr:last-child td{border-bottom:none;}
   letter-spacing: 0.5px;
 }
 
-/* Khung Dealer cho Doctor Hùng - nhẹ nhàng hơn khung DEV nhưng vẫn có hiệu ứng */
+/* Khung Dealer cho Doctor Hùng - tím neon pulse */
 .rank-card.dealer-card {
-  background: linear-gradient(135deg, rgba(40,90,60,0.08), rgba(20,50,35,0.12)) !important;
-  border: 1px solid rgba(125, 216, 144, 0.4) !important;
-  box-shadow: 0 0 12px rgba(125, 216, 144, 0.2) !important;
+  background: linear-gradient(135deg, rgba(140,70,200,0.08), rgba(80,30,140,0.12)) !important;
+  border: 1px solid rgba(180, 120, 255, 0.45) !important;
+  box-shadow: 0 0 14px rgba(180, 120, 255, 0.3) !important;
   position: relative;
-  overflow: hidden;
-  animation: dealerGlow 3.5s ease-in-out infinite;
+  overflow: visible;
+  animation: dealerGlow 3s ease-in-out infinite;
 }
 @keyframes dealerGlow {
-  0%, 100% { box-shadow: 0 0 8px rgba(125, 216, 144, 0.15); }
-  50% { box-shadow: 0 0 16px rgba(125, 216, 144, 0.35); }
+  0%, 100% { box-shadow: 0 0 10px rgba(180, 120, 255, 0.25), 0 0 20px rgba(140, 70, 200, 0.1); }
+  50% { box-shadow: 0 0 22px rgba(180, 120, 255, 0.55), 0 0 35px rgba(140, 70, 200, 0.3); }
 }
 .rank-card.dealer-card .rank-name {
-  text-shadow: 0 0 8px rgba(125, 216, 144, 0.5);
-  color: #b8e6c1;
+  text-shadow: 0 0 10px rgba(200, 140, 255, 0.7), 0 0 16px rgba(180, 120, 255, 0.4);
+  color: #d4b8ff;
 }
 
-/* Ribbon xéo "DEALER" - tông xanh, kém ngầu hơn DEV */
+/* Ribbon xéo "DEALER" - tông tím neon */
 .dealer-ribbon {
   position: absolute;
   top: 8px;
   right: -28px;
-  background: linear-gradient(135deg, #4a8a5c, #7dd890);
-  color: #0b0c0f;
+  background: linear-gradient(135deg, #6a3aa0, #b478ff);
+  color: #fff;
   font-size: 8px;
   font-weight: 900;
   padding: 2px 30px;
   letter-spacing: 2px;
   text-transform: uppercase;
   transform: rotate(35deg);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  z-index: 2;
+  box-shadow: 0 2px 8px rgba(140, 70, 200, 0.5), 0 0 12px rgba(180, 120, 255, 0.4);
+  z-index: 4;
+  text-shadow: 0 0 4px rgba(180, 120, 255, 0.8);
 }
 
-/* Bài bay xung quanh card Dealer */
+/* 2 lá bài bay xuyên khung - bài thật có màu, 28px */
 .dealer-card .flying-mini-card {
   position: absolute;
-  font-size: 14px;
-  opacity: 0.4;
+  width: 22px;
+  height: 30px;
+  background: #fff;
+  border-radius: 3px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-family: 'Georgia', serif;
+  font-size: 11px;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6), 0 0 12px rgba(180, 120, 255, 0.6);
   pointer-events: none;
-  filter: drop-shadow(0 0 4px rgba(125,216,144,0.5));
-  z-index: 1;
+  z-index: 3;
+  top: 50%;
+  margin-top: -15px;
 }
-.dealer-card .fmc1 { top: 8px; left: 12%; animation: dealerCardFloat1 5s ease-in-out infinite; }
-.dealer-card .fmc2 { bottom: 8px; left: 30%; animation: dealerCardFloat2 6s ease-in-out infinite; }
-.dealer-card .fmc3 { top: 10px; right: 35%; animation: dealerCardFloat3 5.5s ease-in-out infinite; }
-.dealer-card .fmc4 { bottom: 10px; right: 18%; animation: dealerCardFloat4 6.5s ease-in-out infinite; }
-@keyframes dealerCardFloat1 {
-  0%,100% { transform: translate(0,0) rotate(-10deg); opacity: 0.3; }
-  50% { transform: translate(8px,-6px) rotate(10deg); opacity: 0.6; }
+.dealer-card .flying-mini-card.red { color: #c0392b; }
+.dealer-card .flying-mini-card.black { color: #222; }
+.dealer-card .flying-mini-card .fmc-rank { font-size: 11px; }
+.dealer-card .flying-mini-card .fmc-suit { font-size: 13px; }
+
+/* Lá 1: trái → phải → trái */
+.dealer-card .fmc-left {
+  animation: dealerCardLR 4s ease-in-out infinite;
 }
-@keyframes dealerCardFloat2 {
-  0%,100% { transform: translate(0,0) rotate(8deg); opacity: 0.4; }
-  50% { transform: translate(-6px,4px) rotate(-12deg); opacity: 0.55; }
+@keyframes dealerCardLR {
+  0% { left: -30px; transform: rotate(-15deg); }
+  50% { left: calc(100% + 8px); transform: rotate(15deg); }
+  100% { left: -30px; transform: rotate(-15deg); }
 }
-@keyframes dealerCardFloat3 {
-  0%,100% { transform: translate(0,0) rotate(15deg); opacity: 0.3; }
-  50% { transform: translate(-8px,5px) rotate(-8deg); opacity: 0.5; }
+
+/* Lá 2: phải → trái → phải (ngược chiều, lệch pha) */
+.dealer-card .fmc-right {
+  animation: dealerCardRL 4s ease-in-out infinite;
+  animation-delay: -2s;
 }
-@keyframes dealerCardFloat4 {
-  0%,100% { transform: translate(0,0) rotate(-15deg); opacity: 0.4; }
-  50% { transform: translate(5px,-7px) rotate(12deg); opacity: 0.6; }
+@keyframes dealerCardRL {
+  0% { right: -30px; transform: rotate(15deg); }
+  50% { right: calc(100% + 8px); transform: rotate(-15deg); }
+  100% { right: -30px; transform: rotate(15deg); }
 }
 
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
@@ -2404,10 +2422,12 @@ function renderHof(){
     var devRibbon = isDev ? '<div class="dev-ribbon">DEV</div>' : '';
     var dealerRibbon = isDealer ? '<div class="dealer-ribbon">DEALER</div>' : '';
     var dealerCards = isDealer ? 
-      '<span class="flying-mini-card fmc1">🂡</span>'
-      +'<span class="flying-mini-card fmc2">🂮</span>'
-      +'<span class="flying-mini-card fmc3">🃁</span>'
-      +'<span class="flying-mini-card fmc4">🂵</span>' : '';
+      '<div class="flying-mini-card red fmc-left">'
+        +'<span class="fmc-rank">A</span><span class="fmc-suit">♥</span>'
+      +'</div>'
+      +'<div class="flying-mini-card black fmc-right">'
+        +'<span class="fmc-rank">K</span><span class="fmc-suit">♠</span>'
+      +'</div>' : '';
     
     var cardHtml = '<div class="rank-card '+cls+devClass+'">'+devRibbon+dealerRibbon+dealerCards+(i===0?'<div class="rank-sparkle">✨</div>':'')
       +'<div class="medal">'+badge+'</div>'
