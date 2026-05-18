@@ -366,28 +366,40 @@ table.players tr:last-child td{border-bottom:none;}
 .dealer-card .flying-mini-card .fmc-rank { font-size: 7px; }
 .dealer-card .flying-mini-card .fmc-suit { font-size: 8px; }
 
-/* Lá 1: quay quanh card theo elip rộng (clockwise) */
+/* Lá 1: quay quanh card theo elip rộng (clockwise) - có 3D depth */
 .dealer-card .fmc-left {
-  animation: dealerOrbit1 8s linear infinite;
+  animation: dealerOrbit1 8s linear infinite, dealerDepth1 8s linear infinite;
 }
 @keyframes dealerOrbit1 {
-  0%   { transform: translate(-140px, 0)   rotate(0deg); }
-  25%  { transform: translate(0, -28px)    rotate(90deg); }
-  50%  { transform: translate(140px, 0)    rotate(180deg); }
-  75%  { transform: translate(0, 28px)     rotate(270deg); }
-  100% { transform: translate(-140px, 0)   rotate(360deg); }
+  0%   { transform: translate(-140px, 0)   rotate(0deg)   scale(1); }
+  25%  { transform: translate(0, -28px)    rotate(90deg)  scale(1.15); }
+  50%  { transform: translate(140px, 0)    rotate(180deg) scale(1); }
+  75%  { transform: translate(0, 28px)     rotate(270deg) scale(0.7); }
+  100% { transform: translate(-140px, 0)   rotate(360deg) scale(1); }
+}
+/* Nửa trên: phía trước (z cao). Nửa dưới: phía sau (z âm, mờ đi) */
+@keyframes dealerDepth1 {
+  0%, 49.9%   { z-index: 5; opacity: 1; filter: brightness(1); }
+  50%, 99.9%  { z-index: 0; opacity: 0.55; filter: brightness(0.6) blur(0.5px); }
+  100%        { z-index: 5; opacity: 1; filter: brightness(1); }
 }
 
-/* Lá 2: quay ngược chiều, lệch pha 180° */
+/* Lá 2: quay ngược chiều, lệch pha 180° - cũng có 3D depth */
 .dealer-card .fmc-right {
-  animation: dealerOrbit2 8s linear infinite;
+  animation: dealerOrbit2 8s linear infinite, dealerDepth2 8s linear infinite;
 }
 @keyframes dealerOrbit2 {
-  0%   { transform: translate(140px, 0)    rotate(0deg); }
-  25%  { transform: translate(0, 28px)     rotate(-90deg); }
-  50%  { transform: translate(-140px, 0)   rotate(-180deg); }
-  75%  { transform: translate(0, -28px)    rotate(-270deg); }
-  100% { transform: translate(140px, 0)    rotate(-360deg); }
+  0%   { transform: translate(140px, 0)    rotate(0deg)    scale(1); }
+  25%  { transform: translate(0, 28px)     rotate(-90deg)  scale(0.7); }
+  50%  { transform: translate(-140px, 0)   rotate(-180deg) scale(1); }
+  75%  { transform: translate(0, -28px)    rotate(-270deg) scale(1.15); }
+  100% { transform: translate(140px, 0)    rotate(-360deg) scale(1); }
+}
+/* Ngược pha với lá 1: nửa dưới phía sau, nửa trên phía trước */
+@keyframes dealerDepth2 {
+  0%, 24.9%   { z-index: 5; opacity: 1; filter: brightness(1); }
+  25%, 74.9%  { z-index: 0; opacity: 0.55; filter: brightness(0.6) blur(0.5px); }
+  75%, 100%   { z-index: 5; opacity: 1; filter: brightness(1); }
 }
 
 .rank-amt{font-weight:800;font-size:16px;white-space:nowrap;text-align:right;}
