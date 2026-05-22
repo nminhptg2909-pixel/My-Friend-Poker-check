@@ -833,6 +833,830 @@ table.players tr:last-child td{border-bottom:none;}
   font-size:13px;font-weight:800;color:var(--gold2);
   letter-spacing:.5px;flex-shrink:0;
 }
+
+/* ================ TOURNAMENT TAB ================ */
+
+/* ========== TAB BUTTON (full-width, row 2) ========== */
+.tab-tour-wrap{
+  margin-bottom:16px;
+}
+.tab-tour{
+  position:relative;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  padding:11px 12px;
+  font-size:11px;font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  font-family:var(--font);
+  color:var(--gold3);
+  background:
+    linear-gradient(135deg,#1a1408 0%,#2e2410 25%,#3a2c14 50%,#2e2410 75%,#1a1408 100%);
+  background-size:200% 100%;
+  border:1.5px solid var(--gold);
+  border-radius:var(--radius);
+  cursor:pointer;
+  overflow:hidden;
+  box-shadow:
+    0 0 0 1px rgba(245,224,154,.08),
+    0 2px 10px rgba(0,0,0,.5),
+    0 0 18px rgba(200,168,75,.18),
+    inset 0 1px 0 rgba(245,224,154,.15);
+  animation:tabTourShimmer 4s linear infinite;
+}
+.tab-tour::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,transparent 0%,rgba(245,224,154,.18) 50%,transparent 100%);
+  transform:translateX(-100%);
+  animation:tabTourSweep 3.5s ease-in-out infinite;
+  pointer-events:none;
+}
+.tab-tour::after{
+  content:'';position:absolute;
+  top:50%;left:50%;
+  width:0;height:0;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(245,224,154,.35) 0%,transparent 70%);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  transition:width .3s,height .3s;
+}
+.tab-tour:active::after{
+  width:300px;height:300px;
+}
+.tab-tour.active{
+  border-color:var(--gold3);
+  box-shadow:
+    0 0 0 1px rgba(245,224,154,.18),
+    0 2px 14px rgba(0,0,0,.6),
+    0 0 28px rgba(245,224,154,.4),
+    inset 0 1px 0 rgba(245,224,154,.25);
+  color:#fff;
+}
+.tab-tour-icon{
+  font-size:14px;
+  filter:drop-shadow(0 0 4px rgba(245,224,154,.6));
+  animation:tabTourBob 2.2s ease-in-out infinite;
+}
+.tab-tour-icon:last-child{animation-delay:.5s;}
+.tab-tour-text{
+  background:linear-gradient(90deg,#c8a84b 0%,#f5e09a 50%,#c8a84b 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:tabTourTextShine 3s linear infinite;
+  text-shadow:0 0 18px rgba(245,224,154,.3);
+}
+@keyframes tabTourShimmer{
+  0%{background-position:0% 50%;}
+  100%{background-position:200% 50%;}
+}
+@keyframes tabTourSweep{
+  0%{transform:translateX(-100%);}
+  50%,100%{transform:translateX(200%);}
+}
+@keyframes tabTourBob{
+  0%,100%{transform:translateY(0) rotate(-3deg);}
+  50%{transform:translateY(-2px) rotate(3deg);}
+}
+@keyframes tabTourTextShine{
+  0%{background-position:200% 50%;}
+  100%{background-position:-100% 50%;}
+}
+
+/* ========== TOURNAMENT CARDS (deluxe) ========== */
+#tab-tour .card{
+  background:linear-gradient(135deg,#0e1014 0%,#15171f 50%,#0e1014 100%);
+  border:1px solid var(--border);
+  box-shadow:
+    0 0 0 1px rgba(245,224,154,.04),
+    0 4px 20px rgba(0,0,0,.5),
+    0 0 24px rgba(200,168,75,.06);
+}
+#tab-tour .card::before{
+  background:linear-gradient(90deg,transparent,var(--gold2),transparent);
+  opacity:.5;
+  animation:tourCardTop 4s linear infinite;
+}
+@keyframes tourCardTop{
+  0%{background-position:-200% 0;}
+  100%{background-position:200% 0;}
+}
+
+/* ========== EMPTY STATE (hero) ========== */
+.tour-hero{
+  text-align:center;
+  padding:30px 0 24px;
+  position:relative;
+}
+.tour-hero-cup{
+  font-size:64px;
+  display:inline-block;
+  filter:drop-shadow(0 0 16px rgba(245,224,154,.5)) drop-shadow(0 0 32px rgba(200,168,75,.3));
+  animation:tourCupFloat 3s ease-in-out infinite;
+}
+.tour-hero-cup-rays{
+  position:absolute;
+  top:30px;left:50%;
+  width:160px;height:160px;
+  transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(245,224,154,.18) 0%,transparent 60%);
+  pointer-events:none;
+  animation:tourRayPulse 2.5s ease-in-out infinite;
+}
+.tour-hero-title{
+  margin-top:14px;
+  font-size:18px;
+  font-weight:800;
+  letter-spacing:5px;
+  background:linear-gradient(90deg,#c8a84b 0%,#f5e09a 50%,#c8a84b 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:tabTourTextShine 3s linear infinite;
+}
+.tour-hero-sub{
+  margin-top:8px;
+  font-size:11px;
+  color:var(--text2);
+  letter-spacing:1.5px;
+  line-height:1.6;
+}
+.tour-hero-divider{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin:18px 0 6px;
+}
+.tour-hero-divider span{font-size:10px;color:var(--gold);opacity:.6;}
+.tour-hero-divider::before,
+.tour-hero-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:.4;max-width:80px;
+}
+@keyframes tourCupFloat{
+  0%,100%{transform:translateY(0) rotate(-2deg);}
+  50%{transform:translateY(-6px) rotate(2deg);}
+}
+@keyframes tourRayPulse{
+  0%,100%{opacity:.5;transform:translateX(-50%) scale(1);}
+  50%{opacity:.9;transform:translateX(-50%) scale(1.15);}
+}
+
+/* Big primary button cho tour */
+.tour-btn-primary{
+  width:100%;
+  padding:14px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:#0b0c0f;
+  background:linear-gradient(135deg,#7a5c1e 0%,#c8a84b 30%,#f5e09a 50%,#c8a84b 70%,#7a5c1e 100%);
+  background-size:200% 100%;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:var(--font);
+  margin-top:8px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 4px 16px rgba(200,168,75,.35),
+    0 0 24px rgba(245,224,154,.2),
+    inset 0 1px 0 rgba(255,255,255,.3);
+  animation:tourBtnShine 3.5s linear infinite;
+  transition:transform .15s;
+}
+.tour-btn-primary:active{transform:scale(.98);}
+.tour-btn-primary:disabled{
+  background:linear-gradient(135deg,#3a3a3a,#555);
+  color:#888;
+  cursor:not-allowed;
+  animation:none;
+  box-shadow:none;
+}
+@keyframes tourBtnShine{
+  0%{background-position:200% 50%;}
+  100%{background-position:-100% 50%;}
+}
+
+/* ========== INFO BAR ========== */
+.tour-info-bar{
+  background:linear-gradient(135deg,#1e1a0e 0%,#2a2210 50%,#1e1a0e 100%);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:11px 13px;
+  margin-bottom:12px;
+  font-size:11px;
+  color:var(--text2);
+  line-height:1.7;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 14px rgba(200,168,75,.08),inset 0 1px 0 rgba(245,224,154,.08);
+}
+.tour-info-bar::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold2),transparent);
+  opacity:.5;
+}
+.tour-info-bar b{color:var(--gold3);text-shadow:0 0 8px rgba(245,224,154,.4);}
+
+/* ========== COUNTER (đẹp hơn nhiều) ========== */
+.tour-counter{
+  text-align:center;
+  padding:18px 12px;
+  margin-bottom:14px;
+  background:radial-gradient(ellipse at center,#1e1a0e 0%,#0b0c0f 80%);
+  border:1px solid var(--border);
+  border-radius:10px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 24px rgba(200,168,75,.08),inset 0 0 24px rgba(0,0,0,.5);
+}
+.tour-counter::before{
+  content:'';position:absolute;inset:0;
+  background:
+    repeating-linear-gradient(45deg,rgba(200,168,75,.03) 0px,transparent 1px,transparent 12px,rgba(200,168,75,.03) 13px);
+  pointer-events:none;
+}
+.tour-counter-num{
+  position:relative;
+  display:block;
+  font-size:36px;
+  font-weight:900;
+  background:linear-gradient(180deg,#f5e09a 0%,#c8a84b 50%,#7a5c1e 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  letter-spacing:4px;
+  text-shadow:0 0 24px rgba(245,224,154,.4);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.6));
+}
+.tour-counter-num.full{
+  animation:tourCounterFull 1.2s ease-in-out infinite;
+}
+.tour-counter-label{
+  position:relative;
+  display:block;
+  margin-top:4px;
+  font-size:10px;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-transform:uppercase;
+  opacity:.8;
+}
+@keyframes tourCounterFull{
+  0%,100%{filter:drop-shadow(0 0 8px rgba(245,224,154,.5));}
+  50%{filter:drop-shadow(0 0 18px rgba(245,224,154,.9));}
+}
+
+/* ========== REGISTRATION ITEMS ========== */
+.tour-reg-item{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 13px;
+  background:linear-gradient(135deg,#181a20 0%,#1e2028 100%);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  margin-bottom:6px;
+  cursor:pointer;
+  transition:all .2s ease;
+  position:relative;
+  overflow:hidden;
+}
+.tour-reg-item:active{transform:scale(.98);}
+.tour-reg-item.selected{
+  background:linear-gradient(135deg,#2a2210 0%,#3a2c14 50%,#2a2210 100%);
+  border-color:var(--gold);
+  box-shadow:
+    0 0 14px rgba(200,168,75,.25),
+    inset 0 1px 0 rgba(245,224,154,.15);
+}
+.tour-reg-item.selected::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold3),var(--gold));
+  box-shadow:0 0 8px var(--gold2);
+}
+.tour-reg-checkbox{
+  width:22px;height:22px;
+  border-radius:5px;
+  border:1.5px solid var(--text3);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  font-size:13px;
+  color:transparent;
+  transition:all .2s;
+}
+.tour-reg-item.selected .tour-reg-checkbox{
+  background:linear-gradient(135deg,#f5e09a,#c8a84b);
+  border-color:var(--gold3);
+  color:#0b0c0f;
+  font-weight:900;
+  box-shadow:0 0 10px rgba(245,224,154,.5);
+}
+.tour-reg-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
+.tour-reg-item.selected .tour-reg-name{color:var(--gold3);}
+
+/* ========== DRAW ANIMATION (epic) ========== */
+.tour-draw-stage{
+  min-height:320px;
+  padding:20px 0;
+  text-align:center;
+  position:relative;
+}
+.tour-draw-stage::before{
+  content:'';position:absolute;
+  top:30%;left:50%;
+  width:80%;height:200px;
+  transform:translateX(-50%);
+  background:radial-gradient(ellipse,rgba(200,168,75,.15) 0%,transparent 70%);
+  pointer-events:none;
+  animation:tourDrawGlow 2s ease-in-out infinite;
+}
+@keyframes tourDrawGlow{
+  0%,100%{opacity:.6;}
+  50%{opacity:1;}
+}
+.tour-draw-message{
+  font-size:13px;
+  letter-spacing:3px;
+  font-weight:800;
+  text-transform:uppercase;
+  background:linear-gradient(90deg,#c8a84b,#f5e09a,#c8a84b);
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  margin-bottom:24px;
+  animation:tabTourTextShine 2s linear infinite;
+  position:relative;
+}
+
+/* Flying playing card (đẹp như casino thật) */
+.tour-flying-card{
+  display:inline-block;
+  width:60px;height:84px;
+  margin:5px;
+  position:relative;
+  border-radius:7px;
+  animation:tourCardFlipIn .55s cubic-bezier(.34,1.56,.64,1) both;
+  transform-style:preserve-3d;
+}
+.tour-flying-card .card-inner{
+  position:absolute;inset:0;
+  border-radius:7px;
+  background:linear-gradient(135deg,#fffaee 0%,#f5e09a 30%,#fffaee 60%,#f5e09a 100%);
+  border:2px solid #c8a84b;
+  box-shadow:
+    0 6px 18px rgba(0,0,0,.6),
+    0 0 22px rgba(245,224,154,.4),
+    inset 0 1px 0 rgba(255,255,255,.6),
+    inset 0 -1px 0 rgba(122,92,30,.4);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:4px;
+  overflow:hidden;
+}
+.tour-flying-card .card-inner::before,
+.tour-flying-card .card-inner::after{
+  content:'♠';
+  position:absolute;
+  color:#0b0c0f;
+  opacity:.6;
+  font-size:10px;
+}
+.tour-flying-card .card-inner::before{top:3px;left:4px;}
+.tour-flying-card .card-inner::after{bottom:3px;right:4px;transform:rotate(180deg);}
+.tour-flying-card .card-name{
+  font-size:9px;font-weight:800;
+  color:#0b0c0f;text-align:center;
+  line-height:1.15;
+  letter-spacing:.3px;
+  word-break:break-word;
+  z-index:2;position:relative;
+}
+.tour-flying-card .card-meta{
+  margin-top:3px;
+  font-size:7px;
+  color:#7a5c1e;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.tour-flying-card::after{
+  content:'';position:absolute;
+  inset:-4px;
+  border-radius:10px;
+  background:radial-gradient(circle,rgba(245,224,154,.6) 0%,transparent 70%);
+  z-index:-1;
+  animation:tourCardSparkle 1.5s ease-out;
+  pointer-events:none;
+}
+@keyframes tourCardFlipIn{
+  0%{transform:scale(0) rotate(-180deg);opacity:0;}
+  60%{transform:scale(1.15) rotate(8deg);opacity:1;}
+  100%{transform:scale(1) rotate(0);opacity:1;}
+}
+@keyframes tourCardSparkle{
+  0%{opacity:1;transform:scale(.8);}
+  100%{opacity:0;transform:scale(1.3);}
+}
+
+/* ========== TABLE CARDS (poker felt) ========== */
+.tour-table-card{
+  background:
+    radial-gradient(ellipse at center,rgba(74,140,92,.12) 0%,transparent 70%),
+    linear-gradient(135deg,#0e1014 0%,#181a20 50%,#0e1014 100%);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:14px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:
+    0 4px 16px rgba(0,0,0,.5),
+    0 0 24px rgba(200,168,75,.08),
+    inset 0 1px 0 rgba(245,224,154,.08);
+}
+.tour-table-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold2),transparent);
+  opacity:.6;
+}
+.tour-table-card::after{
+  content:'';position:absolute;
+  top:50%;left:50%;
+  width:120%;height:120%;
+  background:radial-gradient(ellipse,rgba(74,140,92,.06) 0%,transparent 50%);
+  transform:translate(-50%,-50%);
+  pointer-events:none;
+  z-index:0;
+}
+.tour-table-card>*{position:relative;z-index:1;}
+
+.tour-table-card.final{
+  border:1.5px solid var(--gold2);
+  box-shadow:
+    0 4px 20px rgba(0,0,0,.6),
+    0 0 32px rgba(245,224,154,.3),
+    inset 0 1px 0 rgba(245,224,154,.2);
+  animation:tourFinalPulse 3s ease-in-out infinite;
+}
+.tour-table-card.final::before{
+  background:linear-gradient(90deg,transparent,var(--gold3),transparent);
+  opacity:1;
+  animation:tourFinalTopShine 2.5s linear infinite;
+  background-size:200% 100%;
+}
+@keyframes tourFinalPulse{
+  0%,100%{box-shadow:0 4px 20px rgba(0,0,0,.6),0 0 32px rgba(245,224,154,.25),inset 0 1px 0 rgba(245,224,154,.2);}
+  50%{box-shadow:0 4px 24px rgba(0,0,0,.7),0 0 44px rgba(245,224,154,.5),inset 0 1px 0 rgba(245,224,154,.3);}
+}
+@keyframes tourFinalTopShine{
+  0%{background-position:200% 0;}
+  100%{background-position:-200% 0;}
+}
+
+.tour-table-header{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:12px;padding-bottom:10px;
+  border-bottom:1px solid var(--border2);
+}
+.tour-table-name{
+  font-size:14px;font-weight:800;
+  letter-spacing:2px;
+  background:linear-gradient(90deg,var(--gold),var(--gold3),var(--gold));
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:tabTourTextShine 3.5s linear infinite;
+}
+.tour-table-card.final .tour-table-name{
+  font-size:15px;
+  letter-spacing:2.5px;
+}
+.tour-table-status{
+  font-size:9px;
+  padding:4px 9px;
+  border-radius:5px;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  font-weight:800;
+}
+.tour-table-status.live{
+  background:linear-gradient(135deg,rgba(192,80,80,.2),rgba(192,80,80,.08));
+  color:#ff8080;
+  border:1px solid rgba(192,80,80,.5);
+  animation:tourStatusBlink 1.5s ease-in-out infinite;
+}
+.tour-table-status.done{
+  background:linear-gradient(135deg,rgba(74,140,92,.25),rgba(74,140,92,.1));
+  color:#7dd49a;
+  border:1px solid rgba(74,140,92,.5);
+  box-shadow:0 0 10px rgba(74,140,92,.2);
+}
+@keyframes tourStatusBlink{
+  0%,100%{box-shadow:0 0 0 rgba(192,80,80,0);}
+  50%{box-shadow:0 0 12px rgba(192,80,80,.5);}
+}
+
+/* ========== SEATS ========== */
+.tour-seat{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 11px;
+  margin-bottom:6px;
+  background:linear-gradient(135deg,#0b0c0f 0%,#15171f 100%);
+  border:1px solid var(--border2);
+  border-radius:7px;
+  position:relative;
+  transition:all .25s;
+  overflow:hidden;
+}
+.tour-seat::before{
+  content:'';position:absolute;
+  left:-1px;top:50%;
+  width:3px;height:0;
+  background:linear-gradient(180deg,var(--gold3),var(--gold));
+  transform:translateY(-50%);
+  border-radius:0 3px 3px 0;
+  transition:height .3s;
+}
+.tour-seat.out{
+  opacity:.35;
+  background:linear-gradient(135deg,#0b0c0f,#181a20);
+}
+.tour-seat.out .tour-seat-name{
+  text-decoration:line-through;
+  color:var(--text3);
+}
+
+.tour-seat.top1{
+  background:linear-gradient(135deg,#2a2210 0%,#3a2c14 50%,#2a2210 100%);
+  border-color:var(--gold2);
+  box-shadow:0 0 16px rgba(245,224,154,.35),inset 0 1px 0 rgba(245,224,154,.15);
+}
+.tour-seat.top1::before{height:80%;box-shadow:0 0 10px var(--gold2);}
+.tour-seat.top2{
+  background:linear-gradient(135deg,#1a1a22 0%,#252530 100%);
+  border-color:rgba(180,180,200,.6);
+  box-shadow:0 0 10px rgba(180,180,200,.2);
+}
+.tour-seat.top2::before{height:80%;background:linear-gradient(180deg,#e0e0e8,#b4b4c8);box-shadow:0 0 8px rgba(200,200,220,.5);}
+.tour-seat.top3{
+  background:linear-gradient(135deg,#1d130a 0%,#2a1d12 100%);
+  border-color:rgba(200,140,80,.6);
+  box-shadow:0 0 10px rgba(200,140,80,.2);
+}
+.tour-seat.top3::before{height:80%;background:linear-gradient(180deg,#e8a877,#c88c50);box-shadow:0 0 8px rgba(200,140,80,.5);}
+
+.tour-seat-num{
+  width:26px;height:26px;
+  border-radius:50%;
+  background:var(--bg4);
+  border:1px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:800;
+  color:var(--text3);
+  flex-shrink:0;
+  letter-spacing:.5px;
+}
+.tour-seat.top1 .tour-seat-num{
+  background:linear-gradient(135deg,#f5e09a,#c8a84b);
+  color:#0b0c0f;border-color:var(--gold3);
+  box-shadow:0 0 12px rgba(245,224,154,.6);
+}
+.tour-seat.top2 .tour-seat-num{
+  background:linear-gradient(135deg,#e0e0e8,#b4b4c8);
+  color:#0b0c0f;border-color:#d0d0d8;
+  box-shadow:0 0 10px rgba(200,200,220,.5);
+}
+.tour-seat.top3 .tour-seat-num{
+  background:linear-gradient(135deg,#e8a877,#c88c50);
+  color:#0b0c0f;border-color:#e8a877;
+  box-shadow:0 0 10px rgba(200,140,80,.5);
+}
+.tour-seat-name{flex:1;font-size:12px;font-weight:600;color:var(--text);}
+.tour-seat.top1 .tour-seat-name{color:var(--gold3);font-weight:700;}
+.tour-rank-select{
+  background:var(--bg4);
+  border:1px solid var(--border);
+  color:var(--gold2);
+  font-size:10px;
+  padding:4px 6px;
+  border-radius:5px;
+  font-family:var(--font);
+  font-weight:700;
+  letter-spacing:.5px;
+  cursor:pointer;
+}
+.tour-rank-select:focus{outline:none;border-color:var(--gold2);box-shadow:0 0 8px var(--gold-glow);}
+
+/* ========== PRIZE RESULT (epic) ========== */
+.tour-prize-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;
+  background:linear-gradient(135deg,#0e1014 0%,#181a20 100%);
+  border:1px solid var(--border);
+  border-radius:10px;
+  margin-bottom:10px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 2px 12px rgba(0,0,0,.5);
+}
+.tour-prize-row.gold{
+  background:linear-gradient(135deg,#2a2210 0%,#3a2c14 50%,#2a2210 100%);
+  border:1.5px solid var(--gold2);
+  box-shadow:
+    0 4px 24px rgba(0,0,0,.6),
+    0 0 32px rgba(245,224,154,.35),
+    inset 0 1px 0 rgba(245,224,154,.2);
+  animation:tourGoldRowPulse 2.5s ease-in-out infinite;
+}
+.tour-prize-row.gold::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold3),transparent);
+  background-size:200% 100%;
+  animation:tourFinalTopShine 2.5s linear infinite;
+}
+.tour-prize-row.silver{
+  background:linear-gradient(135deg,#1a1a22 0%,#252530 100%);
+  border:1.5px solid rgba(200,200,220,.4);
+  box-shadow:0 4px 20px rgba(0,0,0,.5),0 0 22px rgba(200,200,220,.15);
+}
+.tour-prize-row.bronze{
+  background:linear-gradient(135deg,#1d130a 0%,#2a1d12 100%);
+  border:1.5px solid rgba(200,140,80,.4);
+  box-shadow:0 4px 20px rgba(0,0,0,.5),0 0 22px rgba(200,140,80,.15);
+}
+@keyframes tourGoldRowPulse{
+  0%,100%{box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 32px rgba(245,224,154,.3),inset 0 1px 0 rgba(245,224,154,.2);}
+  50%{box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 44px rgba(245,224,154,.5),inset 0 1px 0 rgba(245,224,154,.3);}
+}
+.tour-prize-medal{
+  font-size:36px;flex-shrink:0;
+  filter:drop-shadow(0 0 8px rgba(245,224,154,.5));
+  animation:tourMedalBob 2.2s ease-in-out infinite;
+}
+.tour-prize-row.gold .tour-prize-medal{
+  filter:drop-shadow(0 0 12px rgba(245,224,154,.8)) drop-shadow(0 0 24px rgba(245,224,154,.4));
+  animation:tourGoldMedal 2s ease-in-out infinite;
+}
+@keyframes tourMedalBob{
+  0%,100%{transform:translateY(0) rotate(-3deg);}
+  50%{transform:translateY(-3px) rotate(3deg);}
+}
+@keyframes tourGoldMedal{
+  0%,100%{transform:translateY(0) rotate(-5deg) scale(1);}
+  50%{transform:translateY(-4px) rotate(5deg) scale(1.08);}
+}
+.tour-prize-info{flex:1;}
+.tour-prize-name{
+  font-size:15px;font-weight:800;
+  color:var(--gold2);margin-bottom:3px;
+  letter-spacing:.5px;
+}
+.tour-prize-row.gold .tour-prize-name{
+  font-size:17px;
+  background:linear-gradient(90deg,#c8a84b,#f5e09a,#c8a84b);
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:tabTourTextShine 3s linear infinite;
+  text-shadow:0 0 12px rgba(245,224,154,.3);
+}
+.tour-prize-amount{
+  font-size:10px;color:var(--text2);
+  letter-spacing:1px;text-transform:uppercase;
+}
+.tour-prize-vnd{
+  font-size:16px;font-weight:900;
+  color:#7dd49a;
+  white-space:nowrap;
+  text-shadow:0 0 12px rgba(125,212,154,.4);
+  letter-spacing:.5px;
+}
+.tour-prize-row.gold .tour-prize-vnd{
+  font-size:18px;
+  color:#9ff0b8;
+  text-shadow:0 0 16px rgba(125,212,154,.6);
+}
+
+/* Rays behind champion */
+.tour-champion-rays{
+  position:relative;
+  text-align:center;
+  margin-bottom:20px;
+  padding:14px 0 8px;
+}
+.tour-champion-rays::before{
+  content:'';position:absolute;
+  top:50%;left:50%;
+  width:240px;height:240px;
+  transform:translate(-50%,-50%);
+  background:
+    conic-gradient(from 0deg,
+      transparent 0deg,rgba(245,224,154,.25) 15deg,transparent 30deg,
+      transparent 60deg,rgba(245,224,154,.25) 75deg,transparent 90deg,
+      transparent 120deg,rgba(245,224,154,.25) 135deg,transparent 150deg,
+      transparent 180deg,rgba(245,224,154,.25) 195deg,transparent 210deg,
+      transparent 240deg,rgba(245,224,154,.25) 255deg,transparent 270deg,
+      transparent 300deg,rgba(245,224,154,.25) 315deg,transparent 330deg);
+  pointer-events:none;
+  animation:tourRaysSpin 12s linear infinite;
+  opacity:.7;
+}
+.tour-champion-rays::after{
+  content:'';position:absolute;
+  top:50%;left:50%;
+  width:140px;height:140px;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle,rgba(245,224,154,.3) 0%,transparent 70%);
+  pointer-events:none;
+  animation:tourRayPulse 2s ease-in-out infinite;
+}
+.tour-champion-title{
+  position:relative;
+  font-size:11px;
+  letter-spacing:6px;
+  font-weight:800;
+  text-transform:uppercase;
+  color:var(--gold);
+  opacity:.85;
+  margin-bottom:8px;
+}
+.tour-champion-name{
+  position:relative;
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:2px;
+  background:linear-gradient(180deg,#fffaee 0%,#f5e09a 40%,#c8a84b 70%,#7a5c1e 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 32px rgba(245,224,154,.4);
+  filter:drop-shadow(0 2px 4px rgba(0,0,0,.7));
+}
+@keyframes tourRaysSpin{
+  0%{transform:translate(-50%,-50%) rotate(0deg);}
+  100%{transform:translate(-50%,-50%) rotate(360deg);}
+}
+
+/* ========== HISTORY ITEMS ========== */
+.tour-history-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 14px;
+  background:linear-gradient(135deg,#0e1014 0%,#181a20 100%);
+  border:1px solid var(--border2);
+  border-radius:9px;
+  margin-bottom:8px;
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.tour-history-item:active{transform:scale(.98);}
+.tour-history-item:hover{
+  border-color:var(--border);
+  box-shadow:0 0 16px rgba(200,168,75,.12);
+}
+.tour-history-item::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--gold2),var(--gold));
+  box-shadow:0 0 6px var(--gold-glow);
+}
+.tour-history-name{
+  font-size:13px;font-weight:800;
+  color:var(--gold2);
+  letter-spacing:.5px;
+}
+.tour-history-meta{
+  font-size:10px;color:var(--text3);
+  margin-top:3px;letter-spacing:.5px;
+}
+.tour-history-winner{
+  font-size:10px;
+  color:#9ff0b8;
+  font-weight:700;
+  text-align:right;
+  letter-spacing:.5px;
+  line-height:1.5;
+}
+
+/* Tournament inputs */
+#tab-tour input[type="text"],
+#tab-tour input[type="number"]{
+  background:var(--bg3);
+  border:1px solid var(--border);
+  color:var(--text);
+  font-family:var(--font);
+}
+#tab-tour input:focus{
+  border-color:var(--gold2);
+  background:var(--bg4);
+  box-shadow:0 0 12px var(--gold-glow);
+  outline:none;
+}
   
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
@@ -855,6 +1679,13 @@ table.players tr:last-child td{border-bottom:none;}
   <div class="tab" onclick="showTab('hof')">🏆 Fame</div>
   <div class="tab" onclick="showTab('fortune')">🔮 Bói</div>
   <div class="tab" onclick="showTab('members')">Hội viên</div>
+</div>
+<div class="tab-tour-wrap">
+  <div class="tab-tour" onclick="showTab('tour')">
+    <span class="tab-tour-icon">🏆</span>
+    <span class="tab-tour-text">TOURNAMENT MODE</span>
+    <span class="tab-tour-icon">🏆</span>
+  </div>
 </div>
 
 <div class="page show" id="tab-game">
@@ -963,6 +1794,115 @@ table.players tr:last-child td{border-bottom:none;}
     </div>
   </div>
 </div>
+
+<!-- ============== TOURNAMENT TAB ============== -->
+<div class="page" id="tab-tour">
+
+  <!-- EMPTY STATE: chưa có giải đang chạy -->
+  <div class="card" id="tour-empty" style="display:none;">
+    <div class="tour-hero">
+      <div class="tour-hero-cup-rays"></div>
+      <span class="tour-hero-cup">🏆</span>
+      <div class="tour-hero-title">TOURNAMENT</div>
+      <div class="tour-hero-sub">Vòng bảng → Final · 12 người · Top 3 ăn giải</div>
+      <div class="tour-hero-divider"><span>◆ ◆ ◆</span></div>
+    </div>
+    <button class="tour-btn-primary" onclick="tourShowSetup()">+ TẠO GIẢI MỚI</button>
+    <button class="btn-green" id="tour-history-btn" onclick="tourShowHistory()" style="margin-top:8px;">📜 Lịch Sử Giải</button>
+  </div>
+
+  <!-- SETUP: nhập thông tin giải -->
+  <div class="card" id="tour-setup" style="display:none;">
+    <div class="card-title">⚙️ Thiết lập giải đấu</div>
+    
+    <div class="form-row" style="margin-bottom:12px;">
+      <label style="min-width:80px;color:var(--gold);font-size:11px;">Tên giải:</label>
+      <input type="text" id="tourName" placeholder="VD: Cup Cầu Lông T11" style="flex:1;">
+    </div>
+    
+    <div class="form-row" style="margin-bottom:12px;">
+      <label style="min-width:80px;color:var(--gold);font-size:11px;">Ngày:</label>
+      <input type="text" id="tourDate" placeholder="dd/mm/yyyy" style="flex:1;">
+    </div>
+    
+    <div class="form-row" style="margin-bottom:12px;">
+      <label style="min-width:80px;color:var(--gold);font-size:11px;">Buy-in:</label>
+      <input type="number" id="tourBuyin" placeholder="200000" min="0" style="flex:1;">
+      <span style="color:var(--text3);font-size:11px;">VND</span>
+    </div>
+    
+    <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
+      📋 <b style="color:var(--gold2);">Luật giải:</b><br>
+      • 12 người chia 2 bàn (random)<br>
+      • Top 3 mỗi bàn → 6 người vào Final<br>
+      • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3
+    </div>
+    
+    <button class="tour-btn-primary" onclick="tourCreateAndOpenReg()">› TIẾP TỤC</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy</button>
+  </div>
+
+  <!-- REGISTRATION: đăng ký người chơi -->
+  <div class="card" id="tour-reg" style="display:none;">
+    <div class="card-title" id="tour-reg-title">📝 Đăng ký giải</div>
+    
+    <div class="tour-info-bar" id="tour-reg-info"></div>
+    
+    <div class="tour-counter" id="tour-reg-counter">
+      <span class="tour-counter-num" id="tour-reg-num-wrap"><span id="tour-reg-count">0</span> / 12</span>
+      <span class="tour-counter-label">người đã đăng ký</span>
+    </div>
+    
+    <div id="tour-reg-list"></div>
+    
+    <button class="tour-btn-primary" id="tour-draw-btn" onclick="tourDoTheDraw()" disabled>🎲 BỐC THĂM CHIA BÀN</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy giải</button>
+  </div>
+
+  <!-- DRAW ANIMATION -->
+  <div class="card" id="tour-draw" style="display:none;">
+    <div class="card-title">🎲 Đang bốc thăm...</div>
+    <div id="tour-draw-stage"></div>
+  </div>
+
+  <!-- VÒNG LOẠI -->
+  <div class="card" id="tour-rounds" style="display:none;">
+    <div class="card-title" id="tour-rounds-title">🃏 Vòng Loại</div>
+    <div class="tour-info-bar" id="tour-rounds-info"></div>
+    
+    <div id="tour-tables"></div>
+    
+    <button class="tour-btn-primary" id="tour-go-final" onclick="tourGoToFinal()" disabled style="margin-top:12px;">› VÀO VÒNG FINAL</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+  </div>
+
+  <!-- FINAL -->
+  <div class="card" id="tour-final" style="display:none;">
+    <div class="card-title">👑 Final Table</div>
+    <div class="tour-info-bar" id="tour-final-info"></div>
+    
+    <div id="tour-final-content"></div>
+    
+    <button class="tour-btn-primary" id="tour-finish-btn" onclick="tourFinish()" disabled style="margin-top:12px;">🏆 CHỐT KẾT QUẢ</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+  </div>
+
+  <!-- RESULT -->
+  <div class="card" id="tour-result" style="display:none;">
+    <div class="card-title">🏆 Kết Quả Giải</div>
+    <div id="tour-result-content"></div>
+    <button class="tour-btn-primary" onclick="tourBackToMain()" style="margin-top:12px;">› VỀ TRANG CHÍNH</button>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="card" id="tour-history" style="display:none;">
+    <div class="card-title">📜 Lịch Sử Các Giải</div>
+    <div id="tour-history-list"></div>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:12px;">← Quay lại</button>
+  </div>
+
+</div>
+<!-- ============== END TOURNAMENT TAB ============== -->
 
 <div class="page" id="tab-hof">
   <div class="hof-hero">
@@ -1333,6 +2273,8 @@ function pushDataToFirebase() {
             activeGame: JSON.parse(localStorage.getItem('garini_active_game') || 'null'),
             savedGames: JSON.parse(localStorage.getItem('garini_saved_games') || '[]'),
             fortuneHistory: JSON.parse(localStorage.getItem('pk_fortune_history') || '[]'),
+            activeTournament: JSON.parse(localStorage.getItem('pk_active_tour') || 'null'),
+            tournaments: JSON.parse(localStorage.getItem('pk_tournaments') || '[]'),
             timestamp: Date.now()
         };
         db.ref(ROOM_REF).set(data).catch(function(err) {
@@ -1369,6 +2311,14 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
             _originalRemoveItem.call(localStorage, 'garini_active_game');
             activeGame = { date: '', players: [] };
         }
+        
+        // Tournament sync
+        if(data.activeTournament) {
+            _originalSetItem.call(localStorage, 'pk_active_tour', JSON.stringify(data.activeTournament));
+        } else {
+            _originalRemoveItem.call(localStorage, 'pk_active_tour');
+        }
+        if(data.tournaments) _originalSetItem.call(localStorage, 'pk_tournaments', JSON.stringify(data.tournaments));
 
         updateGlobalDatalist();
         if(document.getElementById('tab-game').classList.contains('show')) renderGameTab();
@@ -1378,6 +2328,9 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
                 if(typeof renderDonateHistory === 'function') renderDonateHistory();
             }
             else renderSessionHistory();
+        }
+        if(document.getElementById('tab-tour') && document.getElementById('tab-tour').classList.contains('show')) {
+            if(typeof renderTourTab === 'function') renderTourTab();
         }
         if(document.getElementById('tab-hof').classList.contains('show')) renderHof();
         if(document.getElementById('tab-fortune').classList.contains('show')) renderFortuneHistory();
@@ -1398,13 +2351,13 @@ db.ref(ROOM_REF).once('value', (snapshot) => {
 
 Storage.prototype.setItem = function(key, value) {
     _originalSetItem.call(this, key, value);
-    if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games', 'pk_fortune_history'].includes(key)) {
+    if(['pk_members', 'pk_sessions', 'garini_active_game', 'garini_saved_games', 'pk_fortune_history', 'pk_active_tour', 'pk_tournaments'].includes(key)) {
         pushDataToFirebase();
     }
 };
 Storage.prototype.removeItem = function(key) {
     _originalRemoveItem.call(this, key);
-    if(['garini_active_game'].includes(key)) {
+    if(['garini_active_game', 'pk_active_tour'].includes(key)) {
         pushDataToFirebase();
     }
 };
@@ -1460,17 +2413,23 @@ function updateGlobalDatalist() {
 }
 
 function showTab(t){
-  ['game','result','hof','fortune','members'].forEach(function(id){
+  ['game','result','tour','hof','fortune','members'].forEach(function(id){
     var el = document.getElementById('tab-'+id);
     if(el) el.className='page'+(t===id?' show':'');
   });
-  document.querySelectorAll('.tab').forEach(function(el,i){
-    var tabId = ['game','result','hof','fortune','members'][i];
+  // 5 tab thường trên row 1
+  var topTabIds = ['game','result','hof','fortune','members'];
+  document.querySelectorAll('.tabs .tab').forEach(function(el,i){
+    var tabId = topTabIds[i];
     el.className='tab'+(tabId===t?' active':'');
   });
+  // Tab Tournament riêng
+  var tourTab = document.querySelector('.tab-tour');
+  if(tourTab) tourTab.className = 'tab-tour' + (t==='tour' ? ' active' : '');
   
   if(t==='game') renderGameTab();
   if(t==='result') { renderCashout(); renderDonateHistory(); }
+  if(t==='tour') renderTourTab();
   if(t==='hof') { renderCalendarUI(); renderHof(); }
   if(t==='fortune') renderFortuneTab();
   if(t==='members'){showMemberListView();renderMemberList();}
@@ -3240,6 +4199,568 @@ function renderFortuneHistory(){  var hist = getFortuneHistory();
   }).join('');
   
   el.innerHTML = html;
+}
+
+/* ============================================================
+   TOURNAMENT LOGIC
+   Data shape:
+   pk_active_tour = {
+     id, name, date, buyin, createdAt,
+     phase: 'reg' | 'rounds' | 'final' | 'done',
+     participants: [{ id, name }],
+     tables: [{ name, seats:[{ name, memberId, out, rank }] }],
+     finalists: [{ name, memberId, fromTable, fromRank, finalRank }],
+     winners: [{ name, memberId, place, prize }]
+   }
+   pk_tournaments = array of completed tournaments
+   ============================================================ */
+
+function tourLoadActive(){
+  try { return JSON.parse(localStorage.getItem('pk_active_tour') || 'null'); }
+  catch(e){ return null; }
+}
+function tourSaveActive(t){
+  if(t === null) localStorage.removeItem('pk_active_tour');
+  else localStorage.setItem('pk_active_tour', JSON.stringify(t));
+}
+function tourLoadHistory(){
+  try { return JSON.parse(localStorage.getItem('pk_tournaments') || '[]'); }
+  catch(e){ return []; }
+}
+function tourSaveHistory(arr){
+  localStorage.setItem('pk_tournaments', JSON.stringify(arr));
+}
+
+function tourFormatVnd(n){
+  if(!n) return '0đ';
+  return n.toLocaleString('vi-VN') + 'đ';
+}
+
+function tourTodayStr(){
+  var d = new Date();
+  var dd = String(d.getDate()).padStart(2,'0');
+  var mm = String(d.getMonth()+1).padStart(2,'0');
+  return dd + '/' + mm + '/' + d.getFullYear();
+}
+
+function tourHideAllPanels(){
+  ['tour-empty','tour-setup','tour-reg','tour-draw','tour-rounds','tour-final','tour-result','tour-history']
+    .forEach(function(id){
+      var el = document.getElementById(id);
+      if(el) el.style.display = 'none';
+    });
+}
+
+/* ============= MAIN RENDER ============= */
+function renderTourTab(){
+  tourHideAllPanels();
+  var active = tourLoadActive();
+  if(!active){
+    document.getElementById('tour-empty').style.display = '';
+    return;
+  }
+  if(active.phase === 'reg') tourRenderReg();
+  else if(active.phase === 'rounds') tourRenderRounds();
+  else if(active.phase === 'final') tourRenderFinal();
+  else if(active.phase === 'done') tourRenderResult();
+}
+
+function tourBackToMain(){
+  var active = tourLoadActive();
+  if(active && active.phase === 'reg'){
+    if(confirm('Hủy giải đấu này?')){
+      tourSaveActive(null);
+      renderTourTab();
+    } else {
+      tourRenderReg();
+    }
+    return;
+  }
+  tourHideAllPanels();
+  document.getElementById('tour-empty').style.display = '';
+}
+
+/* ============= SETUP ============= */
+function tourShowSetup(){
+  tourHideAllPanels();
+  document.getElementById('tour-setup').style.display = '';
+  var dateInput = document.getElementById('tourDate');
+  if(!dateInput.value) dateInput.value = tourTodayStr();
+}
+
+function tourCreateAndOpenReg(){
+  var name = document.getElementById('tourName').value.trim();
+  var date = document.getElementById('tourDate').value.trim();
+  var buyin = parseInt(document.getElementById('tourBuyin').value) || 0;
+  
+  if(!name){ alert('Nhập tên giải đi má'); return; }
+  if(!date){ alert('Nhập ngày'); return; }
+  if(buyin <= 0){ alert('Buy-in phải lớn hơn 0'); return; }
+  
+  var members = getMembers();
+  if(members.length < 12){
+    if(!confirm('Hội chỉ có ' + members.length + ' thành viên, cần ít nhất 12 người. Vẫn tạo giải?')) return;
+  }
+  
+  var tour = {
+    id: 'T' + Date.now(),
+    name: name,
+    date: date,
+    buyin: buyin,
+    createdAt: Date.now(),
+    phase: 'reg',
+    participants: [],
+    tables: null,
+    finalists: null,
+    winners: null
+  };
+  tourSaveActive(tour);
+  tourRenderReg();
+}
+
+/* ============= REGISTRATION ============= */
+function tourRenderReg(){
+  tourHideAllPanels();
+  document.getElementById('tour-reg').style.display = '';
+  
+  var t = tourLoadActive();
+  if(!t) return;
+  
+  document.getElementById('tour-reg-title').textContent = '📝 ' + t.name;
+  document.getElementById('tour-reg-info').innerHTML = 
+    '📅 ' + t.date + ' · 💰 Buy-in <b>' + tourFormatVnd(t.buyin) + '</b> · Prize pool: <b>' + tourFormatVnd(t.buyin * 12) + '</b> (đủ 12 người)';
+  
+  var members = getMembers();
+  var selectedIds = t.participants.map(function(p){ return p.id; });
+  
+  var html = '';
+  if(members.length === 0){
+    html = '<div class="empty" style="padding:20px 0;">Chưa có hội viên nào.</div>';
+  } else {
+    members = members.slice().sort(function(a,b){
+      var aSel = selectedIds.indexOf(a.id) >= 0 ? 0 : 1;
+      var bSel = selectedIds.indexOf(b.id) >= 0 ? 0 : 1;
+      if(aSel !== bSel) return aSel - bSel;
+      return a.name.localeCompare(b.name);
+    });
+    members.forEach(function(m){
+      var isSel = selectedIds.indexOf(m.id) >= 0;
+      html += '<div class="tour-reg-item' + (isSel ? ' selected' : '') + '" onclick="tourToggleReg(\''+m.id+'\')">'
+            + '<div class="tour-reg-checkbox">✓</div>'
+            + '<div class="tour-reg-name">' + m.name + '</div>'
+            + '</div>';
+    });
+  }
+  document.getElementById('tour-reg-list').innerHTML = html;
+  
+  var count = t.participants.length;
+  document.getElementById('tour-reg-count').textContent = count;
+  
+  var numWrap = document.getElementById('tour-reg-num-wrap');
+  if(numWrap){
+    numWrap.className = 'tour-counter-num' + (count === 12 ? ' full' : '');
+  }
+  
+  var drawBtn = document.getElementById('tour-draw-btn');
+  if(count === 12){
+    drawBtn.disabled = false;
+    drawBtn.textContent = '🎲 BỐC THĂM CHIA BÀN';
+  } else if(count < 12){
+    drawBtn.disabled = true;
+    drawBtn.textContent = '🎲 Cần thêm ' + (12 - count) + ' người';
+  } else {
+    drawBtn.disabled = true;
+    drawBtn.textContent = '⚠️ Quá ' + (count - 12) + ' người';
+  }
+}
+
+function tourToggleReg(memberId){
+  var t = tourLoadActive();
+  if(!t || t.phase !== 'reg') return;
+  
+  var members = getMembers();
+  var m = members.find(function(x){ return x.id === memberId; });
+  if(!m) return;
+  
+  var idx = t.participants.findIndex(function(p){ return p.id === memberId; });
+  if(idx >= 0){
+    t.participants.splice(idx, 1);
+  } else {
+    if(t.participants.length >= 12){
+      alert('Đủ 12 người rồi. Bỏ chọn người khác nếu muốn đổi.');
+      return;
+    }
+    t.participants.push({ id: m.id, name: m.name });
+  }
+  tourSaveActive(t);
+  tourRenderReg();
+}
+
+/* ============= DRAW ANIMATION ============= */
+function tourShuffle(arr){
+  var a = arr.slice();
+  for(var i = a.length - 1; i > 0; i--){
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+  }
+  return a;
+}
+
+function tourDoTheDraw(){
+  var t = tourLoadActive();
+  if(!t || t.participants.length !== 12) return;
+  
+  var shuffled = tourShuffle(t.participants);
+  var tableA = shuffled.slice(0,6).map(function(p){
+    return { name: p.name, memberId: p.id, out: false, rank: null };
+  });
+  var tableB = shuffled.slice(6,12).map(function(p){
+    return { name: p.name, memberId: p.id, out: false, rank: null };
+  });
+  
+  t.tables = [
+    { name: 'Bàn A', seats: tableA },
+    { name: 'Bàn B', seats: tableB }
+  ];
+  
+  tourHideAllPanels();
+  document.getElementById('tour-draw').style.display = '';
+  var stage = document.getElementById('tour-draw-stage');
+  stage.innerHTML = '<div class="tour-draw-message">🎴 Đang bốc thăm chia bàn...</div>'
+    + '<div id="tour-draw-flow" style="display:flex;flex-wrap:wrap;justify-content:center;"></div>';
+  
+  var flow = document.getElementById('tour-draw-flow');
+  var allSeats = [];
+  t.tables.forEach(function(table, ti){
+    table.seats.forEach(function(seat, si){
+      allSeats.push({ tableIdx: ti, seatIdx: si, name: seat.name });
+    });
+  });
+  
+  var step = 0;
+  function nextCard(){
+    if(step >= allSeats.length){
+      t.phase = 'rounds';
+      tourSaveActive(t);
+      setTimeout(function(){ tourRenderRounds(); }, 1400);
+      return;
+    }
+    var s = allSeats[step];
+    var card = document.createElement('div');
+    card.className = 'tour-flying-card';
+    var tableLabel = t.tables[s.tableIdx].name;
+    card.innerHTML = 
+      '<div class="card-inner">'
+      + '<div class="card-name">' + s.name + '</div>'
+      + '<div class="card-meta">' + tableLabel + ' · G' + (s.seatIdx+1) + '</div>'
+      + '</div>';
+    flow.appendChild(card);
+    step++;
+    setTimeout(nextCard, 240);
+  }
+  nextCard();
+}
+
+/* ============= ROUNDS (vòng loại) ============= */
+function tourRenderRounds(){
+  tourHideAllPanels();
+  document.getElementById('tour-rounds').style.display = '';
+  
+  var t = tourLoadActive();
+  if(!t || !t.tables) return;
+  
+  document.getElementById('tour-rounds-title').textContent = '🃏 ' + t.name + ' · Vòng Loại';
+  document.getElementById('tour-rounds-info').innerHTML = 
+    '📅 ' + t.date + ' · Top 3 mỗi bàn → 6 người vào Final. Chọn rank 1/2/3 cho người vào tiếp; OUT cho người bị loại.';
+  
+  var tablesEl = document.getElementById('tour-tables');
+  var html = '';
+  t.tables.forEach(function(table, ti){
+    var top3Count = table.seats.filter(function(s){ return s.rank >= 1 && s.rank <= 3; }).length;
+    var isDone = top3Count === 3;
+    
+    html += '<div class="tour-table-card">';
+    html += '<div class="tour-table-header">';
+    html += '<div class="tour-table-name">' + table.name + '</div>';
+    html += '<div class="tour-table-status ' + (isDone ? 'done' : 'live') + '">' + (isDone ? '✓ Xong' : 'Đang chơi') + '</div>';
+    html += '</div>';
+    
+    table.seats.forEach(function(seat, si){
+      var cls = 'tour-seat';
+      if(seat.out) cls += ' out';
+      if(seat.rank === 1) cls += ' top1';
+      else if(seat.rank === 2) cls += ' top2';
+      else if(seat.rank === 3) cls += ' top3';
+      
+      html += '<div class="' + cls + '">';
+      html += '<div class="tour-seat-num">G'+(si+1)+'</div>';
+      html += '<div class="tour-seat-name">' + seat.name + '</div>';
+      html += '<select class="tour-rank-select" onchange="tourSetRank('+ti+','+si+',this.value)">';
+      html += '<option value="">—</option>';
+      [1,2,3].forEach(function(r){
+        var taken = table.seats.some(function(s,idx){ return idx !== si && s.rank === r; });
+        var disabled = taken ? ' disabled' : '';
+        var sel = seat.rank === r ? ' selected' : '';
+        html += '<option value="'+r+'"'+disabled+sel+'>TOP '+r+'</option>';
+      });
+      html += '<option value="out"' + (seat.out ? ' selected' : '') + '>OUT</option>';
+      html += '</select>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  tablesEl.innerHTML = html;
+  
+  var bothDone = t.tables.every(function(table){
+    return table.seats.filter(function(s){ return s.rank >= 1 && s.rank <= 3; }).length === 3;
+  });
+  document.getElementById('tour-go-final').disabled = !bothDone;
+}
+
+function tourSetRank(tableIdx, seatIdx, val){
+  var t = tourLoadActive();
+  if(!t || !t.tables) return;
+  var seat = t.tables[tableIdx].seats[seatIdx];
+  if(val === ''){
+    seat.rank = null; seat.out = false;
+  } else if(val === 'out'){
+    seat.rank = null; seat.out = true;
+  } else {
+    seat.rank = parseInt(val); seat.out = false;
+  }
+  tourSaveActive(t);
+  tourRenderRounds();
+}
+
+function tourGoToFinal(){
+  var t = tourLoadActive();
+  if(!t || !t.tables) return;
+  
+  var finalists = [];
+  t.tables.forEach(function(table){
+    [1,2,3].forEach(function(r){
+      var seat = table.seats.find(function(s){ return s.rank === r; });
+      if(seat){
+        finalists.push({
+          name: seat.name,
+          memberId: seat.memberId,
+          fromTable: table.name,
+          fromRank: r,
+          finalRank: null
+        });
+      }
+    });
+  });
+  
+  if(finalists.length !== 6){
+    alert('Chưa đủ 6 finalists. Kiểm tra lại rank các bàn.');
+    return;
+  }
+  
+  t.finalists = tourShuffle(finalists);
+  t.phase = 'final';
+  tourSaveActive(t);
+  tourRenderFinal();
+}
+
+/* ============= FINAL ============= */
+function tourRenderFinal(){
+  tourHideAllPanels();
+  document.getElementById('tour-final').style.display = '';
+  
+  var t = tourLoadActive();
+  if(!t || !t.finalists) return;
+  
+  var prizePool = t.buyin * t.participants.length;
+  document.getElementById('tour-final-info').innerHTML =
+    '💰 Prize pool: <b>' + tourFormatVnd(prizePool) + '</b> · Chia <b>50% / 30% / 20%</b><br>'
+    + '🎯 Chọn rank 1/2/3 cho top 3 final.';
+  
+  var html = '<div class="tour-table-card final">';
+  html += '<div class="tour-table-header">';
+  html += '<div class="tour-table-name">👑 FINAL TABLE</div>';
+  var done = t.finalists.filter(function(f){ return f.finalRank >= 1 && f.finalRank <= 3; }).length === 3;
+  html += '<div class="tour-table-status ' + (done ? 'done' : 'live') + '">' + (done ? '✓ Sẵn sàng' : 'Đang chơi') + '</div>';
+  html += '</div>';
+  
+  t.finalists.forEach(function(f, fi){
+    var cls = 'tour-seat';
+    if(f.finalRank === 1) cls += ' top1';
+    else if(f.finalRank === 2) cls += ' top2';
+    else if(f.finalRank === 3) cls += ' top3';
+    
+    html += '<div class="' + cls + '">';
+    html += '<div class="tour-seat-num">G'+(fi+1)+'</div>';
+    html += '<div class="tour-seat-name">' + f.name + ' <span style="font-size:9px;color:var(--text3);font-weight:400;">('+f.fromTable+' #'+f.fromRank+')</span></div>';
+    html += '<select class="tour-rank-select" onchange="tourSetFinalRank('+fi+',this.value)">';
+    html += '<option value="">—</option>';
+    [1,2,3].forEach(function(r){
+      var taken = t.finalists.some(function(x,idx){ return idx !== fi && x.finalRank === r; });
+      var disabled = taken ? ' disabled' : '';
+      var sel = f.finalRank === r ? ' selected' : '';
+      var label = r === 1 ? '🥇 1' : (r === 2 ? '🥈 2' : '🥉 3');
+      html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+    });
+    html += '</select>';
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  document.getElementById('tour-final-content').innerHTML = html;
+  document.getElementById('tour-finish-btn').disabled = !done;
+}
+
+function tourSetFinalRank(idx, val){
+  var t = tourLoadActive();
+  if(!t || !t.finalists) return;
+  t.finalists[idx].finalRank = val === '' ? null : parseInt(val);
+  tourSaveActive(t);
+  tourRenderFinal();
+}
+
+function tourFinish(){
+  var t = tourLoadActive();
+  if(!t || !t.finalists) return;
+  
+  var prizePool = t.buyin * t.participants.length;
+  var pcts = [0.5, 0.3, 0.2];
+  
+  var winners = [];
+  [1,2,3].forEach(function(r){
+    var f = t.finalists.find(function(x){ return x.finalRank === r; });
+    if(f){
+      winners.push({
+        name: f.name,
+        memberId: f.memberId,
+        place: r,
+        prize: Math.round(prizePool * pcts[r-1])
+      });
+    }
+  });
+  
+  if(winners.length !== 3){ alert('Chưa đủ 3 finalists.'); return; }
+  
+  t.winners = winners;
+  t.phase = 'done';
+  t.finishedAt = Date.now();
+  tourSaveActive(t);
+  
+  var history = tourLoadHistory();
+  history.unshift(JSON.parse(JSON.stringify(t)));
+  tourSaveHistory(history);
+  
+  tourRenderResult();
+  
+  setTimeout(function(){
+    if(typeof startConfetti === 'function') startConfetti();
+  }, 200);
+}
+
+/* ============= RESULT ============= */
+function tourRenderResult(){
+  tourHideAllPanels();
+  document.getElementById('tour-result').style.display = '';
+  
+  var t = tourLoadActive();
+  if(!t || !t.winners) return;
+  
+  var prizePool = t.buyin * t.participants.length;
+  var champion = t.winners.find(function(w){ return w.place === 1; });
+  
+  var html = '';
+  
+  // Champion hero
+  if(champion){
+    html += '<div class="tour-champion-rays">';
+    html += '<div class="tour-champion-title">🏆 NHÀ VÔ ĐỊCH 🏆</div>';
+    html += '<div class="tour-champion-name">' + champion.name + '</div>';
+    html += '</div>';
+  }
+  
+  // Info bar
+  html += '<div class="tour-info-bar" style="margin-bottom:14px;">';
+  html += '<b style="font-size:13px;">🏆 ' + t.name + '</b><br>';
+  html += '📅 ' + t.date + ' · 👥 ' + t.participants.length + ' người · 💰 Pool: <b>' + tourFormatVnd(prizePool) + '</b>';
+  html += '</div>';
+  
+  var medals = ['🥇','🥈','🥉'];
+  var placeClass = ['gold','silver','bronze'];
+  var pcts = [50,30,20];
+  t.winners.forEach(function(w){
+    var cls = 'tour-prize-row ' + placeClass[w.place-1];
+    html += '<div class="' + cls + '">';
+    html += '<div class="tour-prize-medal">' + medals[w.place-1] + '</div>';
+    html += '<div class="tour-prize-info">';
+    html += '<div class="tour-prize-name">' + w.name + '</div>';
+    html += '<div class="tour-prize-amount">Hạng '+w.place+' · ' + pcts[w.place-1] + '% prize pool</div>';
+    html += '</div>';
+    html += '<div class="tour-prize-vnd">+' + tourFormatVnd(w.prize) + '</div>';
+    html += '</div>';
+  });
+  
+  var loserNames = t.participants.filter(function(p){
+    return !t.winners.some(function(w){ return w.memberId === p.id; });
+  }).map(function(p){ return p.name; });
+  
+  if(loserNames.length){
+    html += '<div style="margin-top:16px;padding:12px;background:linear-gradient(135deg,#1a1014,#0e1014);border:1px solid rgba(192,80,80,.3);border-radius:9px;">';
+    html += '<div style="font-size:10px;color:#ff8080;letter-spacing:2px;font-weight:800;margin-bottom:8px;text-align:center;">😢 RA VỀ TAY KHÔNG</div>';
+    html += '<div style="font-size:11px;color:var(--text2);line-height:1.7;text-align:center;">' + loserNames.join(' · ') + '</div>';
+    html += '<div style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">Mỗi người mất <b style="color:#ff9090;">' + tourFormatVnd(t.buyin) + '</b></div>';
+    html += '</div>';
+  }
+  
+  html += '<button class="btn-green" style="margin-top:16px;" onclick="tourArchiveAndReset()">📦 Đóng giải</button>';
+  
+  document.getElementById('tour-result-content').innerHTML = html;
+}
+
+function tourArchiveAndReset(){
+  if(!confirm('Đóng giải đấu này? (Đã lưu vào lịch sử)')) return;
+  tourSaveActive(null);
+  renderTourTab();
+}
+
+/* ============= HISTORY ============= */
+function tourShowHistory(){
+  tourHideAllPanels();
+  document.getElementById('tour-history').style.display = '';
+  
+  var hist = tourLoadHistory();
+  var el = document.getElementById('tour-history-list');
+  if(hist.length === 0){
+    el.innerHTML = '<div class="empty" style="padding:20px 0;">Chưa có giải nào kết thúc.</div>';
+    return;
+  }
+  
+  var html = '';
+  hist.forEach(function(t, idx){
+    var winner = t.winners && t.winners[0] ? t.winners[0] : null;
+    html += '<div class="tour-history-item" onclick="tourViewHistoryDetail('+idx+')">';
+    html += '<div>';
+    html += '<div class="tour-history-name">🏆 ' + t.name + '</div>';
+    html += '<div class="tour-history-meta">' + t.date + ' · ' + t.participants.length + ' người</div>';
+    html += '</div>';
+    if(winner){
+      html += '<div class="tour-history-winner">🥇 ' + winner.name + '<br>+' + tourFormatVnd(winner.prize) + '</div>';
+    }
+    html += '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function tourViewHistoryDetail(idx){
+  var hist = tourLoadHistory();
+  var t = hist[idx];
+  if(!t) return;
+  
+  var prizePool = t.buyin * t.participants.length;
+  var msg = '🏆 ' + t.name + '\n📅 ' + t.date + '\n💰 Pool: ' + tourFormatVnd(prizePool) + '\n\n=== TOP 3 ===\n';
+  var medals = ['🥇','🥈','🥉'];
+  t.winners.forEach(function(w){
+    msg += medals[w.place-1] + ' ' + w.name + ' — ' + tourFormatVnd(w.prize) + '\n';
+  });
+  alert(msg);
 }
 </script>
 </body>
