@@ -2236,6 +2236,114 @@ table.players tr:last-child td{border-bottom:none;}
   margin-top:6px;
 }
 
+/* ========== ACTIVE TOUR BANNER (tạm dừng resume) ========== */
+.tour-active-banner{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 14px;
+  margin-bottom:14px;
+  border-radius:12px;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(245,224,154,.15) 0%, transparent 60%),
+    linear-gradient(135deg, #1f1a0e 0%, #2a2210 50%, #1f1a0e 100%);
+  border:1.5px solid var(--gold);
+  cursor:pointer;
+  overflow:hidden;
+  box-shadow:
+    0 0 24px rgba(200,168,75,.25),
+    inset 0 1px 0 rgba(245,224,154,.18);
+  transition:all .2s;
+  animation:tourBannerPulse 2.4s ease-in-out infinite;
+}
+@keyframes tourBannerPulse{
+  0%,100%{box-shadow:0 0 24px rgba(200,168,75,.25), inset 0 1px 0 rgba(245,224,154,.18);}
+  50%{box-shadow:0 0 36px rgba(200,168,75,.45), inset 0 1px 0 rgba(245,224,154,.22);}
+}
+.tour-active-banner:active{transform:scale(.985);}
+.tour-active-banner::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.06) 50%, transparent 100%);
+  transform:translateX(-100%);
+  animation:tourBannerShine 3.5s ease-in-out infinite;
+}
+@keyframes tourBannerShine{
+  0%,100%{transform:translateX(-100%);}
+  50%{transform:translateX(100%);}
+}
+.tour-active-banner-icon{
+  width:42px;height:42px;
+  flex-shrink:0;
+  border-radius:50%;
+  background:linear-gradient(135deg, #f5e09a, #c8a84b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;
+  box-shadow:
+    0 0 14px rgba(245,224,154,.5),
+    inset 0 -2px 4px rgba(122,80,20,.4);
+  position:relative;
+  z-index:1;
+}
+.tour-active-banner-body{
+  flex:1;
+  min-width:0;
+  position:relative;
+  z-index:1;
+}
+.tour-active-banner-eyebrow{
+  font-size:9px;
+  letter-spacing:2.5px;
+  font-weight:800;
+  color:var(--gold2);
+  margin-bottom:3px;
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+.tour-active-banner-eyebrow .live-dot{
+  display:inline-block;
+  width:7px;height:7px;
+  border-radius:50%;
+  background:#ff5555;
+  box-shadow:0 0 8px rgba(255,80,80,.7);
+  animation:tourLiveDot 1.2s ease-in-out infinite;
+}
+@keyframes tourLiveDot{
+  0%,100%{opacity:1;transform:scale(1);}
+  50%{opacity:.5;transform:scale(.85);}
+}
+.tour-active-banner-name{
+  font-size:14px;
+  font-weight:900;
+  color:#fff5d0;
+  letter-spacing:.3px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  margin-bottom:2px;
+}
+.tour-active-banner-meta{
+  font-size:10px;
+  color:var(--text2);
+  letter-spacing:.2px;
+}
+.tour-active-banner-arrow{
+  flex-shrink:0;
+  color:var(--gold2);
+  font-size:18px;
+  font-weight:900;
+  position:relative;
+  z-index:1;
+  animation:tourBannerArrow 1.5s ease-in-out infinite;
+}
+@keyframes tourBannerArrow{
+  0%,100%{transform:translateX(0);}
+  50%{transform:translateX(4px);}
+}
+
 /* ========== PAYOUT CUSTOMIZATION ========== */
 .tour-payout-toggle{
   display:flex;
@@ -2537,6 +2645,9 @@ table.players tr:last-child td{border-bottom:none;}
   <!-- EMPTY STATE: ELO Ranking + Tạo giải -->
   <div class="card" id="tour-empty" style="display:none;">
     
+    <!-- ACTIVE TOUR BANNER (chỉ hiện khi có giải đang tạm dừng) -->
+    <div id="tour-active-banner-wrap" style="display:none;"></div>
+    
     <!-- ELO RANKING HERO -->
     <div class="elo-hero-wrap">
       <div class="elo-hero-eyebrow">◆ PRESTIGE LEADERBOARD ◆</div>
@@ -2686,7 +2797,7 @@ table.players tr:last-child td{border-bottom:none;}
     <div id="tour-reg-rows"></div>
     
     <button class="tour-btn-primary" id="tour-draw-btn" onclick="tourDoTheDraw()" disabled style="margin-top:14px;">🎲 BỐC THĂM CHIA BÀN</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy giải</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">⏸ Tạm dừng (lưu lại để tiếp sau)</button>
   </div>
   
   <!-- EDIT REG MODAL: chỉnh sửa danh sách / số người / xóa giải -->
@@ -2726,7 +2837,8 @@ table.players tr:last-child td{border-bottom:none;}
     <div id="tour-tables"></div>
     
     <button class="tour-btn-primary" id="tour-go-final" onclick="tourGoToFinal()" disabled style="margin-top:12px;">› VÀO VÒNG FINAL</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">⏸ Tạm dừng (lưu lại để tiếp sau)</button>
+    <button class="btn-red" onclick="tourDiscardActive()" style="margin-top:6px;">🗑 Xóa giải</button>
   </div>
 
   <!-- FINAL -->
@@ -2737,7 +2849,8 @@ table.players tr:last-child td{border-bottom:none;}
     <div id="tour-final-content"></div>
     
     <button class="tour-btn-primary" id="tour-finish-btn" onclick="tourFinish()" disabled style="margin-top:12px;">🏆 CHỐT KẾT QUẢ</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">⏸ Tạm dừng (lưu lại để tiếp sau)</button>
+    <button class="btn-red" onclick="tourDiscardActive()" style="margin-top:6px;">🗑 Xóa giải</button>
   </div>
 
   <!-- RESULT -->
@@ -5377,11 +5490,90 @@ function tourHideAllPanels(){
 function renderTourTab(){
   tourHideAllPanels();
   var active = tourLoadActive();
-  if(!active){
-    document.getElementById('tour-empty').style.display = '';
-    tourRenderEloRanking();
+  
+  // Always show empty state (with ELO + optional banner) when entering tab
+  // User must explicitly click banner to resume an active tour
+  document.getElementById('tour-empty').style.display = '';
+  tourRenderEloRanking();
+  tourRenderActiveBanner(active);
+}
+
+function tourRenderActiveBanner(active){
+  var wrap = document.getElementById('tour-active-banner-wrap');
+  if(!wrap) return;
+  
+  if(!active || active.phase === 'done'){
+    wrap.style.display = 'none';
+    wrap.innerHTML = '';
     return;
   }
+  
+  // Build banner
+  var modeIcon = active.mode === 'event' ? '⚡' : '🏆';
+  var modeName = active.mode === 'event' ? 'EVENT DAY' : 'SESSION EVENT';
+  
+  var phaseLabel = '';
+  if(active.phase === 'reg'){
+    var filled = (active.participants || []).filter(function(p){ return p && p.name; }).length;
+    var maxP = active.maxPlayers || 0;
+    phaseLabel = 'Đăng ký · ' + filled + '/' + maxP + ' người';
+  } else if(active.phase === 'rounds'){
+    if(active.mode === 'session' && active.groupDays){
+      phaseLabel = 'Vòng bảng · Day ' + (active.currentDay || 1) + '/' + active.groupDays;
+    } else {
+      phaseLabel = 'Đang chốt kết quả';
+    }
+  } else if(active.phase === 'final'){
+    phaseLabel = 'Vòng FINAL TABLE';
+  }
+  
+  wrap.innerHTML = '';
+  var banner = document.createElement('div');
+  banner.className = 'tour-active-banner';
+  banner.onclick = tourResumeActive;
+  banner.addEventListener('touchend', function(ev){
+    ev.preventDefault();
+    tourResumeActive();
+  }, { passive: false });
+  
+  var icon = document.createElement('div');
+  icon.className = 'tour-active-banner-icon';
+  icon.textContent = modeIcon;
+  
+  var body = document.createElement('div');
+  body.className = 'tour-active-banner-body';
+  
+  var eyebrow = document.createElement('div');
+  eyebrow.className = 'tour-active-banner-eyebrow';
+  eyebrow.innerHTML = '<span class="live-dot"></span> ĐANG DIỄN RA · ' + modeName;
+  
+  var nameDiv = document.createElement('div');
+  nameDiv.className = 'tour-active-banner-name';
+  nameDiv.textContent = active.name;
+  
+  var meta = document.createElement('div');
+  meta.className = 'tour-active-banner-meta';
+  meta.textContent = '📅 ' + active.date + ' · ' + phaseLabel + ' · Bấm để tiếp tục';
+  
+  body.appendChild(eyebrow);
+  body.appendChild(nameDiv);
+  body.appendChild(meta);
+  
+  var arrow = document.createElement('div');
+  arrow.className = 'tour-active-banner-arrow';
+  arrow.textContent = '›';
+  
+  banner.appendChild(icon);
+  banner.appendChild(body);
+  banner.appendChild(arrow);
+  
+  wrap.appendChild(banner);
+  wrap.style.display = '';
+}
+
+function tourResumeActive(){
+  var active = tourLoadActive();
+  if(!active) return;
   if(active.phase === 'reg') tourRenderReg();
   else if(active.phase === 'rounds') tourRenderRounds();
   else if(active.phase === 'final') tourRenderFinal();
@@ -5389,23 +5581,34 @@ function renderTourTab(){
 }
 
 function tourBackToMain(){
-  var active = tourLoadActive();
-  if(active && active.phase === 'reg'){
-    if(confirm('Hủy giải đấu này?')){
-      tourSaveActive(null);
-      renderTourTab();
-    } else {
-      tourRenderReg();
-    }
-    return;
-  }
+  // Pause: keep active tour in storage, just show empty state
+  // No data loss — user can resume via banner
   tourHideAllPanels();
   document.getElementById('tour-empty').style.display = '';
   tourRenderEloRanking();
+  tourRenderActiveBanner(tourLoadActive());
+}
+
+function tourDiscardActive(){
+  if(!confirm('Xóa giải đấu này? Mọi dữ liệu sẽ mất, không thể hoàn tác.')) return;
+  tourSaveActive(null);
+  tourBackToMain();
 }
 
 /* ============= SETUP ============= */
 function tourShowSetup(){
+  // Block if there's an active tour in progress
+  var active = tourLoadActive();
+  if(active && active.phase !== 'done'){
+    var modeName = active.mode === 'event' ? 'EVENT DAY' : 'SESSION EVENT';
+    if(!confirm('⚠ Đang có giải "' + active.name + '" (' + modeName + ') chưa kết thúc.\n\nMuốn TIẾP TỤC giải đó hay XÓA để tạo giải mới?\n\n[OK] = Xóa giải cũ và tạo mới\n[Hủy] = Quay lại tiếp tục giải cũ')){
+      tourResumeActive();
+      return;
+    }
+    // User confirmed → wipe and create fresh
+    tourSaveActive(null);
+  }
+  
   tourHideAllPanels();
   document.getElementById('tour-setup').style.display = '';
   var dateInput = document.getElementById('tourDate');
