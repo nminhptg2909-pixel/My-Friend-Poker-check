@@ -1657,7 +1657,665 @@ table.players tr:last-child td{border-bottom:none;}
   box-shadow:0 0 12px var(--gold-glow);
   outline:none;
 }
-  
+
+/* ========== MODE SELECTOR ========== */
+.tour-mode-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  margin:14px 0 4px;
+}
+.tour-mode-card{
+  position:relative;
+  padding:14px 14px 14px 56px;
+  border-radius:10px;
+  border:1.5px solid var(--border);
+  background:linear-gradient(135deg,#0e1014 0%,#15171f 50%,#0e1014 100%);
+  cursor:pointer;
+  transition:all .25s ease;
+  overflow:hidden;
+}
+.tour-mode-card:active{transform:scale(.985);}
+.tour-mode-card.selected{
+  border-color:var(--gold);
+  background:linear-gradient(135deg,#1a1408 0%,#2a2010 50%,#1a1408 100%);
+  box-shadow:
+    0 0 0 1px rgba(245,224,154,.12),
+    0 0 18px rgba(200,168,75,.22),
+    inset 0 1px 0 rgba(245,224,154,.12);
+}
+.tour-mode-card.selected::after{
+  content:'✓';
+  position:absolute;
+  top:10px;right:12px;
+  width:20px;height:20px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#1a1408;
+  font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 10px var(--gold-glow);
+}
+.tour-mode-icon{
+  position:absolute;
+  left:14px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  filter:drop-shadow(0 0 6px rgba(245,224,154,.4));
+}
+.tour-mode-title{
+  font-size:12px;
+  font-weight:900;
+  color:var(--gold3);
+  letter-spacing:1.5px;
+  margin-bottom:3px;
+}
+.tour-mode-card.selected .tour-mode-title{color:#fff;}
+.tour-mode-desc{
+  font-size:10.5px;
+  color:var(--text2);
+  line-height:1.5;
+  letter-spacing:.2px;
+}
+.tour-mode-badge{
+  display:inline-block;
+  margin-top:6px;
+  padding:2px 7px;
+  border-radius:4px;
+  background:rgba(245,224,154,.1);
+  border:1px solid rgba(245,224,154,.2);
+  font-size:9px;
+  font-weight:700;
+  color:var(--gold2);
+  letter-spacing:.8px;
+}
+
+/* ========== SESSION EVENT - DAILY SCORE TABLE ========== */
+.tour-session-tabs{
+  display:flex;
+  gap:6px;
+  margin-bottom:12px;
+  flex-wrap:wrap;
+}
+.tour-session-tab{
+  flex:1;
+  min-width:90px;
+  padding:8px 6px;
+  border-radius:7px;
+  border:1px solid var(--border);
+  background:var(--bg3);
+  color:var(--text2);
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.8px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+}
+.tour-session-tab.active{
+  border-color:var(--gold);
+  background:linear-gradient(135deg,#1a1408,#2a2010);
+  color:var(--gold3);
+  box-shadow:0 0 12px rgba(200,168,75,.2);
+}
+.tour-session-tab.done{
+  border-color:rgba(80,160,100,.4);
+  color:#7fe3a0;
+}
+.tour-session-tab.done::after{content:' ✓';}
+
+.tour-score-input{
+  width:54px;
+  padding:5px 6px;
+  border-radius:5px;
+  border:1px solid var(--border);
+  background:var(--bg4);
+  color:var(--text);
+  font-family:var(--font);
+  font-size:11px;
+  font-weight:700;
+  text-align:center;
+}
+.tour-score-input:focus{
+  border-color:var(--gold2);
+  box-shadow:0 0 8px var(--gold-glow);
+  outline:none;
+}
+
+.tour-points-badge{
+  display:inline-block;
+  min-width:32px;
+  padding:3px 8px;
+  border-radius:5px;
+  background:linear-gradient(135deg,var(--gold2),var(--gold));
+  color:#1a1408;
+  font-size:11px;
+  font-weight:900;
+  text-align:center;
+  letter-spacing:.5px;
+}
+
+.tour-standings-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 10px;
+  margin-bottom:5px;
+  border-radius:7px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+}
+.tour-standings-row.qualify{
+  border-color:rgba(245,224,154,.4);
+  background:linear-gradient(135deg,#1a1408 0%,#2a2010 50%,#1a1408 100%);
+}
+.tour-standings-rank{
+  min-width:22px;
+  font-size:12px;
+  font-weight:900;
+  color:var(--gold3);
+  text-align:center;
+}
+.tour-standings-name{
+  flex:1;
+  font-size:11.5px;
+  font-weight:700;
+  color:var(--text);
+}
+.tour-standings-from{
+  font-size:9px;
+  color:var(--text3);
+  font-weight:500;
+  margin-left:6px;
+}
+
+.tour-day-info{
+  padding:9px 11px;
+  margin-bottom:10px;
+  border-radius:7px;
+  background:linear-gradient(135deg,rgba(245,224,154,.06),rgba(245,224,154,.02));
+  border:1px solid rgba(245,224,154,.15);
+  font-size:10.5px;
+  color:var(--text2);
+  line-height:1.6;
+}
+
+/* ========== ELO RANKING — LUXURY ========== */
+.elo-hero-wrap{
+  position:relative;
+  padding:18px 14px 14px;
+  margin-bottom:14px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(245,224,154,.18) 0%, transparent 60%),
+    linear-gradient(180deg, #1a1408 0%, #0e1014 100%);
+  border:1px solid rgba(245,224,154,.25);
+  box-shadow:
+    0 0 0 1px rgba(245,224,154,.08),
+    0 8px 32px rgba(0,0,0,.6),
+    0 0 40px rgba(200,168,75,.12),
+    inset 0 1px 0 rgba(245,224,154,.15);
+  overflow:hidden;
+}
+.elo-hero-wrap::before{
+  content:'';
+  position:absolute;
+  top:-50%;left:-50%;
+  width:200%;height:200%;
+  background:
+    radial-gradient(circle at 30% 20%, rgba(245,224,154,.08) 0%, transparent 30%),
+    radial-gradient(circle at 70% 80%, rgba(245,224,154,.06) 0%, transparent 30%);
+  animation:eloAmbient 12s linear infinite;
+  pointer-events:none;
+}
+@keyframes eloAmbient{
+  0%{transform:rotate(0deg);}
+  100%{transform:rotate(360deg);}
+}
+
+.elo-hero-eyebrow{
+  position:relative;
+  font-size:9px;
+  letter-spacing:4px;
+  font-weight:800;
+  color:var(--gold2);
+  text-align:center;
+  margin-bottom:4px;
+  text-shadow:0 0 12px rgba(245,224,154,.4);
+}
+.elo-hero-title{
+  position:relative;
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:6px;
+  text-align:center;
+  margin-bottom:2px;
+  background:linear-gradient(90deg, #c8a84b 0%, #f5e09a 25%, #fff5d0 50%, #f5e09a 75%, #c8a84b 100%);
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:eloTitleShine 4s linear infinite;
+  filter:drop-shadow(0 0 8px rgba(245,224,154,.3));
+}
+@keyframes eloTitleShine{
+  0%{background-position:200% 50%;}
+  100%{background-position:-100% 50%;}
+}
+.elo-hero-sub{
+  position:relative;
+  font-size:10px;
+  letter-spacing:2px;
+  color:var(--text3);
+  text-align:center;
+  margin-bottom:14px;
+  font-weight:600;
+}
+.elo-hero-divider{
+  position:relative;
+  text-align:center;
+  margin:8px 0 14px;
+  color:var(--gold2);
+  font-size:8px;
+  letter-spacing:8px;
+  opacity:.6;
+}
+
+/* PODIUM */
+.elo-podium{
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  gap:6px;
+  margin:14px 0 18px;
+  min-height:180px;
+}
+.elo-podium-spot{
+  flex:1;
+  max-width:110px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  position:relative;
+}
+.elo-podium-crown{
+  font-size:22px;
+  margin-bottom:4px;
+  filter:drop-shadow(0 0 8px rgba(245,224,154,.6));
+  animation:eloCrownBob 2.5s ease-in-out infinite;
+}
+@keyframes eloCrownBob{
+  0%,100%{transform:translateY(0) rotate(-3deg);}
+  50%{transform:translateY(-3px) rotate(3deg);}
+}
+.elo-podium-avatar{
+  width:54px;height:54px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;font-weight:900;
+  color:#1a1408;
+  margin-bottom:6px;
+  position:relative;
+  border:2px solid transparent;
+}
+.elo-podium-spot.rank1 .elo-podium-avatar{
+  background:linear-gradient(135deg,#fff5d0 0%, #f5e09a 40%, #c8a84b 100%);
+  border-color:#fff5d0;
+  width:64px;height:64px;
+  font-size:24px;
+  box-shadow:
+    0 0 0 3px rgba(245,224,154,.2),
+    0 0 25px rgba(245,224,154,.5),
+    inset 0 -3px 6px rgba(122,80,20,.4);
+  animation:eloGoldPulse 2.5s ease-in-out infinite;
+}
+@keyframes eloGoldPulse{
+  0%,100%{box-shadow:0 0 0 3px rgba(245,224,154,.2), 0 0 25px rgba(245,224,154,.5), inset 0 -3px 6px rgba(122,80,20,.4);}
+  50%{box-shadow:0 0 0 4px rgba(245,224,154,.3), 0 0 35px rgba(245,224,154,.7), inset 0 -3px 6px rgba(122,80,20,.4);}
+}
+.elo-podium-spot.rank2 .elo-podium-avatar{
+  background:linear-gradient(135deg,#e8e8e8 0%, #c0c0c0 40%, #8a8a8a 100%);
+  border-color:#e8e8e8;
+  box-shadow:0 0 0 2px rgba(220,220,220,.15), 0 0 18px rgba(192,192,192,.35), inset 0 -3px 6px rgba(60,60,60,.4);
+}
+.elo-podium-spot.rank3 .elo-podium-avatar{
+  background:linear-gradient(135deg,#e8a878 0%, #c08454 40%, #8a5630 100%);
+  border-color:#e8a878;
+  box-shadow:0 0 0 2px rgba(192,132,84,.15), 0 0 18px rgba(192,132,84,.35), inset 0 -3px 6px rgba(60,30,10,.4);
+}
+.elo-podium-name{
+  font-size:11px;
+  font-weight:800;
+  color:var(--text);
+  text-align:center;
+  letter-spacing:.4px;
+  line-height:1.3;
+  margin-bottom:3px;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  width:100%;
+}
+.elo-podium-spot.rank1 .elo-podium-name{
+  color:#fff5d0;
+  font-size:12px;
+  text-shadow:0 0 10px rgba(245,224,154,.5);
+}
+.elo-podium-elo{
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:.5px;
+  margin-bottom:6px;
+}
+.elo-podium-spot.rank1 .elo-podium-elo{
+  font-size:16px;
+  background:linear-gradient(90deg, #c8a84b, #fff5d0, #c8a84b);
+  background-size:200% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  animation:eloTitleShine 3s linear infinite;
+}
+.elo-podium-spot.rank2 .elo-podium-elo{color:#e0e0e0;}
+.elo-podium-spot.rank3 .elo-podium-elo{color:#e8a878;}
+
+.elo-podium-bar{
+  width:100%;
+  border-radius:8px 8px 0 0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  font-weight:900;
+  letter-spacing:1px;
+  position:relative;
+  overflow:hidden;
+}
+.elo-podium-spot.rank1 .elo-podium-bar{
+  height:80px;
+  background:linear-gradient(180deg, #c8a84b 0%, #8a6818 50%, #5a4810 100%);
+  color:#fff5d0;
+  box-shadow:
+    inset 0 2px 0 #fff5d0,
+    inset 0 -10px 20px rgba(0,0,0,.4),
+    0 -2px 12px rgba(245,224,154,.4);
+}
+.elo-podium-spot.rank2 .elo-podium-bar{
+  height:60px;
+  background:linear-gradient(180deg, #c0c0c0 0%, #707070 50%, #404040 100%);
+  color:#fff;
+  box-shadow:inset 0 2px 0 #e8e8e8, inset 0 -8px 16px rgba(0,0,0,.4);
+}
+.elo-podium-spot.rank3 .elo-podium-bar{
+  height:46px;
+  background:linear-gradient(180deg, #c08454 0%, #7a5430 50%, #4a3418 100%);
+  color:#fff5e0;
+  box-shadow:inset 0 2px 0 #e8a878, inset 0 -8px 16px rgba(0,0,0,.4);
+}
+.elo-podium-bar::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.15) 50%, transparent 100%);
+  transform:translateX(-100%);
+  animation:eloBarShine 4s ease-in-out infinite;
+}
+@keyframes eloBarShine{
+  0%,100%{transform:translateX(-100%);}
+  50%{transform:translateX(100%);}
+}
+
+/* RANK LIST (4 trở đi) */
+.elo-list{
+  margin-top:14px;
+  border-top:1px solid rgba(245,224,154,.12);
+  padding-top:10px;
+}
+.elo-list-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+  padding:0 4px;
+}
+.elo-list-title{
+  font-size:10px;
+  letter-spacing:3px;
+  font-weight:800;
+  color:var(--gold2);
+}
+.elo-list-count{
+  font-size:9px;
+  color:var(--text3);
+  letter-spacing:1px;
+}
+.elo-list-empty{
+  text-align:center;
+  padding:18px 12px;
+  color:var(--text3);
+  font-size:11px;
+  font-style:italic;
+  background:rgba(255,255,255,.02);
+  border-radius:8px;
+  border:1px dashed rgba(245,224,154,.15);
+}
+.elo-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 11px;
+  margin-bottom:4px;
+  border-radius:8px;
+  background:linear-gradient(90deg, rgba(255,255,255,.02), rgba(255,255,255,.01));
+  border:1px solid rgba(245,224,154,.06);
+  transition:all .2s;
+}
+.elo-row:hover{
+  background:linear-gradient(90deg, rgba(245,224,154,.05), rgba(245,224,154,.02));
+  border-color:rgba(245,224,154,.18);
+}
+.elo-row-rank{
+  min-width:28px;
+  font-size:11px;
+  font-weight:900;
+  color:var(--gold3);
+  letter-spacing:.5px;
+  font-family:var(--font);
+}
+.elo-row-name{
+  flex:1;
+  font-size:12px;
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:.3px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.elo-row-stats{
+  font-size:9px;
+  color:var(--text3);
+  font-weight:600;
+  letter-spacing:.5px;
+  margin-right:8px;
+  text-align:right;
+}
+.elo-row-elo{
+  min-width:48px;
+  text-align:right;
+  font-size:13px;
+  font-weight:900;
+  color:var(--gold2);
+  letter-spacing:.3px;
+  font-family:var(--font);
+}
+
+/* ACTION BUTTONS WRAP under ranking */
+.elo-actions-wrap{
+  margin-top:6px;
+}
+
+/* ========== PAYOUT CUSTOMIZATION ========== */
+.tour-payout-toggle{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 12px;
+  margin:10px 0;
+  border-radius:8px;
+  background:linear-gradient(135deg,#1a1408 0%,#15171f 100%);
+  border:1px solid var(--border2);
+  cursor:pointer;
+  transition:all .2s;
+}
+.tour-payout-toggle:hover{
+  border-color:var(--gold2);
+  box-shadow:0 0 12px rgba(200,168,75,.15);
+}
+.tour-payout-toggle-label{
+  font-size:11px;
+  font-weight:800;
+  color:var(--gold2);
+  letter-spacing:1.5px;
+}
+.tour-payout-toggle-arrow{
+  color:var(--gold3);
+  font-size:11px;
+  transition:transform .2s;
+}
+.tour-payout-toggle.open .tour-payout-toggle-arrow{
+  transform:rotate(180deg);
+}
+
+.tour-payout-panel{
+  background:linear-gradient(135deg,rgba(245,224,154,.04),rgba(245,224,154,.01));
+  border:1px solid rgba(245,224,154,.18);
+  border-radius:8px;
+  padding:12px;
+  margin-bottom:12px;
+  display:none;
+}
+.tour-payout-panel.open{display:block;}
+
+.tour-payout-preset-wrap{
+  display:flex;
+  gap:5px;
+  margin-bottom:10px;
+  flex-wrap:wrap;
+}
+.tour-payout-preset{
+  flex:1;
+  min-width:70px;
+  padding:6px 4px;
+  border-radius:6px;
+  border:1px solid var(--border);
+  background:var(--bg3);
+  color:var(--text2);
+  font-size:9.5px;
+  font-weight:700;
+  letter-spacing:.4px;
+  text-align:center;
+  cursor:pointer;
+  transition:all .2s;
+}
+.tour-payout-preset.active{
+  border-color:var(--gold);
+  background:linear-gradient(135deg,#2a2010,#1a1408);
+  color:var(--gold3);
+  box-shadow:0 0 10px rgba(200,168,75,.2);
+}
+
+.tour-payout-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 0;
+  border-bottom:1px solid rgba(245,224,154,.06);
+}
+.tour-payout-row:last-of-type{border-bottom:none;}
+.tour-payout-medal{
+  width:24px;
+  font-size:14px;
+  text-align:center;
+}
+.tour-payout-label{
+  flex:1;
+  font-size:11px;
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:.3px;
+}
+.tour-payout-input{
+  width:52px !important;
+  padding:5px 6px !important;
+  border-radius:5px !important;
+  border:1px solid var(--border) !important;
+  background:var(--bg4) !important;
+  color:var(--gold2) !important;
+  font-family:var(--font) !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+  text-align:right;
+}
+.tour-payout-pct{
+  color:var(--gold3);
+  font-size:11px;
+  font-weight:800;
+  min-width:14px;
+}
+
+.tour-payout-summary{
+  margin-top:10px;
+  padding:8px 10px;
+  border-radius:6px;
+  background:rgba(0,0,0,.3);
+  border:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-size:10.5px;
+}
+.tour-payout-summary.bad{
+  border-color:rgba(220,80,80,.4);
+  background:rgba(60,20,20,.3);
+}
+.tour-payout-summary.good{
+  border-color:rgba(80,180,100,.3);
+  background:rgba(20,40,25,.3);
+}
+.tour-payout-total{
+  font-weight:900;
+  font-size:13px;
+  color:var(--gold2);
+  letter-spacing:.5px;
+}
+.tour-payout-summary.bad .tour-payout-total{color:#ff8080;}
+.tour-payout-summary.good .tour-payout-total{color:#7fe3a0;}
+
+.elo-actions-label{
+  text-align:center;
+  font-size:9px;
+  letter-spacing:3px;
+  font-weight:800;
+  color:var(--gold2);
+  margin-bottom:10px;
+  position:relative;
+}
+.elo-actions-label::before,
+.elo-actions-label::after{
+  content:'';
+  position:absolute;
+  top:50%;
+  width:30%;
+  height:1px;
+  background:linear-gradient(90deg, transparent, rgba(245,224,154,.3), transparent);
+}
+.elo-actions-label::before{left:0;}
+.elo-actions-label::after{right:0;}
+
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
@@ -1798,30 +2456,62 @@ table.players tr:last-child td{border-bottom:none;}
 <!-- ============== TOURNAMENT TAB ============== -->
 <div class="page" id="tab-tour">
 
-  <!-- EMPTY STATE: chưa có giải đang chạy -->
+  <!-- EMPTY STATE: ELO Ranking + Tạo giải -->
   <div class="card" id="tour-empty" style="display:none;">
-    <div class="tour-hero">
-      <div class="tour-hero-cup-rays"></div>
-      <span class="tour-hero-cup">🏆</span>
-      <div class="tour-hero-title">TOURNAMENT</div>
-      <div class="tour-hero-sub">Vòng bảng → Final · 12 người · Top 3 ăn giải</div>
-      <div class="tour-hero-divider"><span>◆ ◆ ◆</span></div>
+    
+    <!-- ELO RANKING HERO -->
+    <div class="elo-hero-wrap">
+      <div class="elo-hero-eyebrow">◆ PRESTIGE LEADERBOARD ◆</div>
+      <div class="elo-hero-title">RANKING</div>
+      <div class="elo-hero-sub">ELO RATING SYSTEM</div>
+      <div class="elo-hero-divider">◆ ◆ ◆</div>
+      
+      <div id="elo-podium-wrap"></div>
+      
+      <div class="elo-list">
+        <div class="elo-list-header">
+          <div class="elo-list-title">⚔ XẾP HẠNG</div>
+          <div class="elo-list-count" id="elo-list-count"></div>
+        </div>
+        <div id="elo-list-body"></div>
+      </div>
     </div>
-    <button class="tour-btn-primary" onclick="tourShowSetup()">+ TẠO GIẢI MỚI</button>
-    <button class="btn-green" id="tour-history-btn" onclick="tourShowHistory()" style="margin-top:8px;">📜 Lịch Sử Giải</button>
+    
+    <!-- ACTION BUTTONS -->
+    <div class="elo-actions-wrap">
+      <div class="elo-actions-label">◆ GIẢI ĐẤU ◆</div>
+      <button class="tour-btn-primary" onclick="tourShowSetup()">+ TẠO GIẢI MỚI</button>
+      <button class="btn-green" id="tour-history-btn" onclick="tourShowHistory()" style="margin-top:8px;">📜 Lịch Sử Giải</button>
+    </div>
   </div>
 
   <!-- SETUP: nhập thông tin giải -->
   <div class="card" id="tour-setup" style="display:none;">
     <div class="card-title">⚙️ Thiết lập giải đấu</div>
     
-    <div class="form-row" style="margin-bottom:12px;">
+    <div style="color:var(--gold);font-size:10.5px;letter-spacing:1.5px;font-weight:800;margin-bottom:6px;">CHỌN THỂ THỨC</div>
+    <div class="tour-mode-grid">
+      <div class="tour-mode-card selected" id="mode-card-event" onclick="tourSelectMode('event')">
+        <div class="tour-mode-icon">⚡</div>
+        <div class="tour-mode-title">EVENT DAY</div>
+        <div class="tour-mode-desc">Đánh trong 1 ngày · 8-10 người · 1 bàn duy nhất, top 3 ăn giải luôn</div>
+        <div class="tour-mode-badge">QUY MÔ NHỎ</div>
+      </div>
+      <div class="tour-mode-card" id="mode-card-session" onclick="tourSelectMode('session')">
+        <div class="tour-mode-icon">🏆</div>
+        <div class="tour-mode-title">SESSION EVENT</div>
+        <div class="tour-mode-desc">Nhiều ngày · 2 bàn (6-8 người/bàn) · Vòng bảng tích điểm → Final table</div>
+        <div class="tour-mode-badge">QUY MÔ LỚN</div>
+      </div>
+    </div>
+    
+    <div class="form-row" style="margin-top:16px;margin-bottom:12px;">
       <label style="min-width:80px;color:var(--gold);font-size:11px;">Tên giải:</label>
       <input type="text" id="tourName" placeholder="VD: Cup Cầu Lông T11" style="flex:1;">
     </div>
     
     <div class="form-row" style="margin-bottom:12px;">
-      <label style="min-width:80px;color:var(--gold);font-size:11px;">Ngày:</label>
+      <label style="min-width:80px;color:var(--gold);font-size:11px;">Ngày bắt đầu:</label>
       <input type="text" id="tourDate" placeholder="dd/mm/yyyy" style="flex:1;">
     </div>
     
@@ -1831,11 +2521,68 @@ table.players tr:last-child td{border-bottom:none;}
       <span style="color:var(--text3);font-size:11px;">VND</span>
     </div>
     
-    <div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
-      📋 <b style="color:var(--gold2);">Luật giải:</b><br>
-      • 12 người chia 2 bàn (random)<br>
-      • Top 3 mỗi bàn → 6 người vào Final<br>
-      • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3
+    <!-- EVENT DAY fields -->
+    <div id="setup-event-fields">
+      <div class="form-row" style="margin-bottom:12px;">
+        <label style="min-width:80px;color:var(--gold);font-size:11px;">Số người:</label>
+        <input type="number" id="tourMaxPlayers" value="8" min="4" max="10" style="flex:1;">
+        <span style="color:var(--text3);font-size:11px;">(4-10)</span>
+      </div>
+    </div>
+    
+    <!-- SESSION EVENT fields -->
+    <div id="setup-session-fields" style="display:none;">
+      <div class="form-row" style="margin-bottom:12px;">
+        <label style="min-width:80px;color:var(--gold);font-size:11px;">Số ngày bảng:</label>
+        <input type="number" id="tourGroupDays" value="2" min="1" max="5" style="flex:1;">
+        <span style="color:var(--text3);font-size:11px;">+ 1 ngày Final</span>
+      </div>
+      <div class="form-row" style="margin-bottom:12px;">
+        <label style="min-width:80px;color:var(--gold);font-size:11px;">Người/bàn:</label>
+        <input type="number" id="tourSeatsPerTable" value="6" min="6" max="8" style="flex:1;">
+        <span style="color:var(--text3);font-size:11px;">(6-8) × 2 bàn</span>
+      </div>
+    </div>
+    
+    <!-- EVENT DAY rules -->
+    <div id="rules-event" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
+      📋 <b style="color:var(--gold2);">Luật EVENT DAY:</b><br>
+      • <b id="rules-event-count">8</b> người, 1 bàn duy nhất<br>
+      • Đánh tới cuối, chốt <b id="rules-event-payout-count">top 4</b> luôn<br>
+      • Prize: <b id="rules-event-payout" style="color:var(--gold2);">50% / 25% / 15% / 10%</b>
+    </div>
+    
+    <!-- SESSION EVENT rules -->
+    <div id="rules-session" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
+      📋 <b style="color:var(--gold2);">Luật SESSION EVENT:</b><br>
+      • <b id="rules-session-count">12</b> người chia <b>2 bàn</b> (random)<br>
+      • Vòng bảng <b id="rules-session-days">2</b> ngày: mỗi ngày Top 1 = 3đ, Top 2 = 2đ, Top 3 = 1đ<br>
+      • <b id="rules-session-qualify">Top 3</b> mỗi bàn (theo tổng điểm) → <b id="rules-session-finalists">6</b> người vào Final<br>
+      • Prize: <b id="rules-session-payout" style="color:var(--gold2);">50% / 30% / 20%</b>
+    </div>
+    
+    <!-- PAYOUT CUSTOMIZATION -->
+    <div class="tour-payout-toggle" id="payout-toggle" onclick="tourTogglePayoutPanel()">
+      <span class="tour-payout-toggle-label">🎛️ TÙY CHỈNH PAYOUT</span>
+      <span class="tour-payout-toggle-arrow">▼</span>
+    </div>
+    <div class="tour-payout-panel" id="payout-panel">
+      <div style="font-size:10px;color:var(--text3);margin-bottom:8px;letter-spacing:.5px;line-height:1.5;">
+        Tự set % chia thưởng. Tổng phải bằng <b style="color:var(--gold2);">100%</b>.
+      </div>
+      
+      <div class="tour-payout-preset-wrap">
+        <div class="tour-payout-preset" onclick="tourApplyPreset('default')">📦 Default</div>
+        <div class="tour-payout-preset" onclick="tourApplyPreset('wta')">👑 WTA</div>
+        <div class="tour-payout-preset" onclick="tourApplyPreset('flat')">⚖️ Đều</div>
+      </div>
+      
+      <div id="payout-rows"></div>
+      
+      <div class="tour-payout-summary" id="payout-summary">
+        <span style="color:var(--text2);">Tổng:</span>
+        <span class="tour-payout-total" id="payout-total">0%</span>
+      </div>
     </div>
     
     <button class="tour-btn-primary" onclick="tourCreateAndOpenReg()">› TIẾP TỤC</button>
@@ -4206,13 +4953,19 @@ function renderFortuneHistory(){  var hist = getFortuneHistory();
    Data shape:
    pk_active_tour = {
      id, name, date, buyin, createdAt,
+     mode: 'event' | 'session',          // NEW
+     maxPlayers: 8,                       // for event mode
+     seatsPerTable: 6,                    // for session mode (6-8)
+     groupDays: 2,                        // for session mode (số ngày vòng bảng)
+     currentDay: 1,                       // session mode: ngày hiện tại
      phase: 'reg' | 'rounds' | 'final' | 'done',
      participants: [{ id, name }],
-     tables: [{ name, seats:[{ name, memberId, out, rank }] }],
-     finalists: [{ name, memberId, fromTable, fromRank, finalRank }],
+     // EVENT mode tables: [{ name, seats:[{ name, memberId, rank }] }]
+     // SESSION mode tables: [{ name, seats:[{ name, memberId, dailyRanks:{1:rank,2:rank,...}, totalPoints }] }]
+     tables: [],
+     finalists: [{ name, memberId, fromTable, totalPoints, finalRank }],
      winners: [{ name, memberId, place, prize }]
    }
-   pk_tournaments = array of completed tournaments
    ============================================================ */
 
 function tourLoadActive(){
@@ -4236,6 +4989,265 @@ function tourFormatVnd(n){
   return n.toLocaleString('vi-VN') + 'đ';
 }
 
+/* ============= PAYOUT LOGIC =============
+   Số người ăn giải tính theo người mỗi bàn (event 1 bàn = bàn đó, session = bàn ở vòng bảng):
+   - 6 hoặc 7 người/bàn → top 3 ăn giải (50/30/20)
+   - 8+ người/bàn → top 4 ăn giải (50/25/15/10)
+   User có thể custom payout qua panel.
+*/
+function tourDefaultPayoutPcts(payoutSlots){
+  if(payoutSlots === 3) return [50, 30, 20];
+  if(payoutSlots === 4) return [50, 25, 15, 10];
+  if(payoutSlots === 5) return [40, 25, 18, 12, 5];
+  // fallback
+  return [50, 30, 20];
+}
+
+function tourPayoutSlotsForSeats(seatsPerTable){
+  if(seatsPerTable >= 8) return 4;
+  return 3;
+}
+
+function tourGetTourPayout(t){
+  // Returns array of pcts (numbers, sum=100). Uses custom if set, else default.
+  if(t.payoutPcts && Array.isArray(t.payoutPcts) && t.payoutPcts.length > 0){
+    return t.payoutPcts;
+  }
+  var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 6);
+  return tourDefaultPayoutPcts(slots);
+}
+
+function tourFormatPayoutPcts(pcts){
+  return pcts.map(function(p){ return p + '%'; }).join(' / ');
+}
+
+/* ============= ELO RATING SYSTEM ============= */
+/* Start: 1500. K=32 (<30 trận), K=24 (>=30 trận).
+   Mỗi tournament được xem như round-robin: với mọi cặp (A,B) trong giải,
+   so sánh hạng cuối → người hạng cao hơn "thắng", thua "thua".
+   Hạng cuối = winner.place (1/2/3); người không vào top 3 = hạng 99 (đồng đều).
+   Session Event nhân hệ số 2.0 cho gain/loss.
+*/
+function tourEloStart(){ return 1500; }
+
+function tourGetPlayerFinalRank(t, memberId){
+  // Returns final rank for elo purposes: 1/2/3 for winners, 99 for others (loser bucket)
+  if(!t.winners) return null;
+  var w = t.winners.find(function(x){ return x.memberId === memberId; });
+  if(w) return w.place;
+  return 99; // loser bucket - all losers tie
+}
+
+function tourComputeEloFromHistory(){
+  // Build ratings map: memberId -> { name, elo, games, wins, podiums }
+  var history = tourLoadHistory();
+  // Sort oldest → newest for proper chronological ELO progression
+  var sorted = history.slice().sort(function(a,b){
+    var ta = a.finishedAt || a.createdAt || 0;
+    var tb = b.finishedAt || b.createdAt || 0;
+    return ta - tb;
+  });
+  
+  var ratings = {}; // memberId -> stats
+  
+  function getR(id, name){
+    if(!ratings[id]){
+      ratings[id] = {
+        memberId: id,
+        name: name,
+        elo: tourEloStart(),
+        games: 0,
+        wins: 0,
+        podiums: 0,
+        lastDelta: 0
+      };
+    }
+    return ratings[id];
+  }
+  
+  function expected(rA, rB){
+    return 1 / (1 + Math.pow(10, (rB - rA) / 400));
+  }
+  
+  sorted.forEach(function(t){
+    if(!t.participants || !t.winners) return;
+    if(t.phase !== 'done') return;
+    
+    var modeMul = t.mode === 'session' ? 2.0 : 1.0;
+    
+    // Get final ranks for all participants
+    var players = t.participants.map(function(p){
+      var rank = tourGetPlayerFinalRank(t, p.id);
+      return { id: p.id, name: p.name, rank: rank };
+    });
+    
+    // Update player names (in case changed)
+    players.forEach(function(p){ getR(p.id, p.name).name = p.name; });
+    
+    // For each unordered pair, compute elo change
+    var deltas = {}; // memberId -> total delta this tournament
+    players.forEach(function(p){ deltas[p.id] = 0; });
+    
+    for(var i = 0; i < players.length; i++){
+      for(var j = i+1; j < players.length; j++){
+        var A = players[i], B = players[j];
+        var rA = getR(A.id, A.name);
+        var rB = getR(B.id, B.name);
+        
+        // Score: 1 if A beats B (lower rank wins), 0.5 if tie, 0 if loses
+        var sA;
+        if(A.rank < B.rank) sA = 1;
+        else if(A.rank > B.rank) sA = 0;
+        else sA = 0.5;
+        var sB = 1 - sA;
+        
+        var eA = expected(rA.elo, rB.elo);
+        var eB = expected(rB.elo, rA.elo);
+        
+        var kA = rA.games < 30 ? 32 : 24;
+        var kB = rB.games < 30 ? 32 : 24;
+        
+        // Normalize: each player plays N-1 "matches" per tournament; divide K so total impact roughly 1 K worth
+        var n = players.length - 1;
+        var dA = (kA / n) * (sA - eA) * modeMul;
+        var dB = (kB / n) * (sB - eB) * modeMul;
+        
+        deltas[A.id] += dA;
+        deltas[B.id] += dB;
+      }
+    }
+    
+    // Apply deltas after the tournament
+    players.forEach(function(p){
+      var r = getR(p.id, p.name);
+      r.elo += deltas[p.id];
+      r.lastDelta = deltas[p.id];
+      r.games += 1;
+      if(p.rank === 1) r.wins += 1;
+      if(p.rank >= 1 && p.rank <= 3) r.podiums += 1;
+    });
+  });
+  
+  // Convert to array, round elo
+  var arr = Object.keys(ratings).map(function(id){
+    var r = ratings[id];
+    return {
+      memberId: r.memberId,
+      name: r.name,
+      elo: Math.round(r.elo),
+      games: r.games,
+      wins: r.wins,
+      podiums: r.podiums
+    };
+  });
+  
+  // Sort by elo desc, tie-breaker: wins desc, then podiums desc, then games desc
+  arr.sort(function(a,b){
+    if(b.elo !== a.elo) return b.elo - a.elo;
+    if(b.wins !== a.wins) return b.wins - a.wins;
+    if(b.podiums !== a.podiums) return b.podiums - a.podiums;
+    return b.games - a.games;
+  });
+  
+  return arr;
+}
+
+function tourRenderEloRanking(){
+  var ratings = tourComputeEloFromHistory();
+  var podiumEl = document.getElementById('elo-podium-wrap');
+  var listBody = document.getElementById('elo-list-body');
+  var listCount = document.getElementById('elo-list-count');
+  var listWrap = document.querySelector('#tour-empty .elo-list');
+  if(!podiumEl || !listBody) return;
+  
+  if(ratings.length === 0){
+    podiumEl.innerHTML = '<div class="elo-list-empty">Chưa có giải nào kết thúc.<br>Tạo giải đầu tiên để bắt đầu xếp hạng!</div>';
+    listBody.innerHTML = '';
+    listCount.textContent = '';
+    if(listWrap) listWrap.style.display = 'none';
+    return;
+  }
+  if(listWrap) listWrap.style.display = '';
+  
+  // PODIUM (top 3): order in display is rank2 - rank1 - rank3
+  var top3 = ratings.slice(0, 3);
+  var r1 = top3[0] || null;
+  var r2 = top3[1] || null;
+  var r3 = top3[2] || null;
+  
+  function initial(name){
+    if(!name) return '?';
+    var parts = name.trim().split(/\s+/);
+    var last = parts[parts.length - 1];
+    return last.charAt(0).toUpperCase();
+  }
+  
+  var podHtml = '<div class="elo-podium">';
+  
+  // RANK 2 (left)
+  if(r2){
+    podHtml += '<div class="elo-podium-spot rank2">';
+    podHtml += '<div class="elo-podium-crown">🥈</div>';
+    podHtml += '<div class="elo-podium-avatar">'+initial(r2.name)+'</div>';
+    podHtml += '<div class="elo-podium-name">'+r2.name+'</div>';
+    podHtml += '<div class="elo-podium-elo">'+r2.elo+'</div>';
+    podHtml += '<div class="elo-podium-bar">II</div>';
+    podHtml += '</div>';
+  } else {
+    podHtml += '<div class="elo-podium-spot rank2" style="opacity:.25;"><div class="elo-podium-crown">🥈</div><div class="elo-podium-avatar">?</div><div class="elo-podium-name">—</div><div class="elo-podium-elo">—</div><div class="elo-podium-bar">II</div></div>';
+  }
+  
+  // RANK 1 (center)
+  if(r1){
+    podHtml += '<div class="elo-podium-spot rank1">';
+    podHtml += '<div class="elo-podium-crown">👑</div>';
+    podHtml += '<div class="elo-podium-avatar">'+initial(r1.name)+'</div>';
+    podHtml += '<div class="elo-podium-name">'+r1.name+'</div>';
+    podHtml += '<div class="elo-podium-elo">'+r1.elo+'</div>';
+    podHtml += '<div class="elo-podium-bar">I</div>';
+    podHtml += '</div>';
+  } else {
+    podHtml += '<div class="elo-podium-spot rank1" style="opacity:.25;"><div class="elo-podium-crown">👑</div><div class="elo-podium-avatar">?</div><div class="elo-podium-name">—</div><div class="elo-podium-elo">—</div><div class="elo-podium-bar">I</div></div>';
+  }
+  
+  // RANK 3 (right)
+  if(r3){
+    podHtml += '<div class="elo-podium-spot rank3">';
+    podHtml += '<div class="elo-podium-crown">🥉</div>';
+    podHtml += '<div class="elo-podium-avatar">'+initial(r3.name)+'</div>';
+    podHtml += '<div class="elo-podium-name">'+r3.name+'</div>';
+    podHtml += '<div class="elo-podium-elo">'+r3.elo+'</div>';
+    podHtml += '<div class="elo-podium-bar">III</div>';
+    podHtml += '</div>';
+  } else {
+    podHtml += '<div class="elo-podium-spot rank3" style="opacity:.25;"><div class="elo-podium-crown">🥉</div><div class="elo-podium-avatar">?</div><div class="elo-podium-name">—</div><div class="elo-podium-elo">—</div><div class="elo-podium-bar">III</div></div>';
+  }
+  
+  podHtml += '</div>';
+  podiumEl.innerHTML = podHtml;
+  
+  // LIST (rank 4+)
+  var rest = ratings.slice(3);
+  if(rest.length === 0){
+    if(listWrap) listWrap.style.display = 'none';
+  } else {
+    if(listWrap) listWrap.style.display = '';
+    var listHtml = '';
+    rest.forEach(function(r, idx){
+      var rank = idx + 4;
+      listHtml += '<div class="elo-row">';
+      listHtml += '<div class="elo-row-rank">#'+rank+'</div>';
+      listHtml += '<div class="elo-row-name">'+r.name+'</div>';
+      listHtml += '<div class="elo-row-stats">'+r.games+' giải · '+r.wins+' 🏆</div>';
+      listHtml += '<div class="elo-row-elo">'+r.elo+'</div>';
+      listHtml += '</div>';
+    });
+    listBody.innerHTML = listHtml;
+  }
+  
+  listCount.textContent = ratings.length + ' người · ' + tourLoadHistory().filter(function(t){ return t.phase === 'done'; }).length + ' giải';
+}
+
 function tourTodayStr(){
   var d = new Date();
   var dd = String(d.getDate()).padStart(2,'0');
@@ -4257,6 +5269,7 @@ function renderTourTab(){
   var active = tourLoadActive();
   if(!active){
     document.getElementById('tour-empty').style.display = '';
+    tourRenderEloRanking();
     return;
   }
   if(active.phase === 'reg') tourRenderReg();
@@ -4278,6 +5291,7 @@ function tourBackToMain(){
   }
   tourHideAllPanels();
   document.getElementById('tour-empty').style.display = '';
+  tourRenderEloRanking();
 }
 
 /* ============= SETUP ============= */
@@ -4286,20 +5300,285 @@ function tourShowSetup(){
   document.getElementById('tour-setup').style.display = '';
   var dateInput = document.getElementById('tourDate');
   if(!dateInput.value) dateInput.value = tourTodayStr();
+  // Reset payout state
+  window._tourPayoutPcts = null; // null = use default
+  window._tourPayoutCustom = false;
+  // Close payout panel
+  var panel = document.getElementById('payout-panel');
+  var toggle = document.getElementById('payout-toggle');
+  if(panel) panel.classList.remove('open');
+  if(toggle) toggle.classList.remove('open');
+  // Reset to event mode default
+  tourSelectMode('event');
+  // Bind input listeners for live rules update
+  var maxP = document.getElementById('tourMaxPlayers');
+  var seats = document.getElementById('tourSeatsPerTable');
+  var gDays = document.getElementById('tourGroupDays');
+  if(maxP) maxP.oninput = tourUpdateRulesPreview;
+  if(seats) seats.oninput = tourUpdateRulesPreview;
+  if(gDays) gDays.oninput = tourUpdateRulesPreview;
+}
+
+function tourSelectMode(mode){
+  var cardE = document.getElementById('mode-card-event');
+  var cardS = document.getElementById('mode-card-session');
+  var fieldsE = document.getElementById('setup-event-fields');
+  var fieldsS = document.getElementById('setup-session-fields');
+  var rulesE = document.getElementById('rules-event');
+  var rulesS = document.getElementById('rules-session');
+  
+  if(mode === 'event'){
+    cardE.classList.add('selected');
+    cardS.classList.remove('selected');
+    fieldsE.style.display = '';
+    fieldsS.style.display = 'none';
+    rulesE.style.display = '';
+    rulesS.style.display = 'none';
+  } else {
+    cardE.classList.remove('selected');
+    cardS.classList.add('selected');
+    fieldsE.style.display = 'none';
+    fieldsS.style.display = '';
+    rulesE.style.display = 'none';
+    rulesS.style.display = '';
+  }
+  window._tourSelectedMode = mode;
+  // Mode change → reset custom payout (slots may differ)
+  window._tourPayoutPcts = null;
+  window._tourPayoutCustom = false;
+  tourUpdateRulesPreview();
+}
+
+function tourGetCurrentSeatsPerTable(){
+  var mode = window._tourSelectedMode || 'event';
+  if(mode === 'event'){
+    return parseInt(document.getElementById('tourMaxPlayers').value) || 8;
+  } else {
+    return parseInt(document.getElementById('tourSeatsPerTable').value) || 6;
+  }
+}
+
+function tourUpdateRulesPreview(){
+  var mode = window._tourSelectedMode || 'event';
+  var seats = tourGetCurrentSeatsPerTable();
+  var slots = tourPayoutSlotsForSeats(seats);
+  
+  // If user hasn't customized, reset pcts to default for current slots
+  if(!window._tourPayoutCustom){
+    window._tourPayoutPcts = tourDefaultPayoutPcts(slots);
+  } else {
+    // If user customized but slot count changed, normalize length
+    if(window._tourPayoutPcts && window._tourPayoutPcts.length !== slots){
+      window._tourPayoutPcts = tourDefaultPayoutPcts(slots);
+      window._tourPayoutCustom = false;
+    }
+  }
+  
+  var pcts = window._tourPayoutPcts;
+  var payoutStr = tourFormatPayoutPcts(pcts);
+  
+  if(mode === 'event'){
+    var maxP = parseInt(document.getElementById('tourMaxPlayers').value) || 8;
+    var el = document.getElementById('rules-event-count');
+    if(el) el.textContent = maxP;
+    var ec = document.getElementById('rules-event-payout-count');
+    if(ec) ec.textContent = 'top ' + slots;
+    var ep = document.getElementById('rules-event-payout');
+    if(ep) ep.textContent = payoutStr;
+  } else {
+    var seats2 = parseInt(document.getElementById('tourSeatsPerTable').value) || 6;
+    var gDays = parseInt(document.getElementById('tourGroupDays').value) || 2;
+    var total = seats2 * 2;
+    var c = document.getElementById('rules-session-count');
+    var d = document.getElementById('rules-session-days');
+    var q = document.getElementById('rules-session-qualify');
+    var f = document.getElementById('rules-session-finalists');
+    var sp = document.getElementById('rules-session-payout');
+    if(c) c.textContent = total;
+    if(d) d.textContent = gDays;
+    if(q) q.textContent = 'Top ' + slots;
+    if(f) f.textContent = slots * 2;
+    if(sp) sp.textContent = payoutStr;
+  }
+  
+  // Re-render payout panel
+  tourRenderPayoutPanel();
+}
+
+/* ===== PAYOUT PANEL UI ===== */
+function tourTogglePayoutPanel(){
+  var panel = document.getElementById('payout-panel');
+  var toggle = document.getElementById('payout-toggle');
+  if(!panel) return;
+  var isOpen = panel.classList.toggle('open');
+  toggle.classList.toggle('open', isOpen);
+  if(isOpen) tourRenderPayoutPanel();
+}
+
+function tourRenderPayoutPanel(){
+  var rowsEl = document.getElementById('payout-rows');
+  if(!rowsEl) return;
+  
+  var seats = tourGetCurrentSeatsPerTable();
+  var slots = tourPayoutSlotsForSeats(seats);
+  var pcts = window._tourPayoutPcts || tourDefaultPayoutPcts(slots);
+  
+  var medals = ['🥇','🥈','🥉','🏅','🎖️'];
+  var labels = ['Hạng 1','Hạng 2','Hạng 3','Hạng 4','Hạng 5'];
+  
+  var html = '';
+  for(var i = 0; i < slots; i++){
+    html += '<div class="tour-payout-row">';
+    html += '<div class="tour-payout-medal">' + (medals[i] || '🎖️') + '</div>';
+    html += '<div class="tour-payout-label">' + (labels[i] || ('Hạng ' + (i+1))) + '</div>';
+    html += '<input type="number" class="tour-payout-input" min="0" max="100" step="1" '
+          + 'value="' + (pcts[i] || 0) + '" '
+          + 'oninput="tourOnPayoutChange(' + i + ', this.value)">';
+    html += '<div class="tour-payout-pct">%</div>';
+    html += '</div>';
+  }
+  rowsEl.innerHTML = html;
+  
+  tourUpdatePayoutTotal();
+  tourUpdatePresetActive();
+}
+
+function tourOnPayoutChange(idx, val){
+  var v = parseInt(val) || 0;
+  if(v < 0) v = 0;
+  if(v > 100) v = 100;
+  if(!window._tourPayoutPcts) window._tourPayoutPcts = tourDefaultPayoutPcts(tourPayoutSlotsForSeats(tourGetCurrentSeatsPerTable())).slice();
+  window._tourPayoutPcts[idx] = v;
+  window._tourPayoutCustom = true;
+  tourUpdatePayoutTotal();
+  tourUpdatePresetActive();
+  // Update inline rules preview
+  var mode = window._tourSelectedMode || 'event';
+  var payoutStr = tourFormatPayoutPcts(window._tourPayoutPcts);
+  if(mode === 'event'){
+    var ep = document.getElementById('rules-event-payout');
+    if(ep) ep.textContent = payoutStr;
+  } else {
+    var sp = document.getElementById('rules-session-payout');
+    if(sp) sp.textContent = payoutStr;
+  }
+}
+
+function tourUpdatePayoutTotal(){
+  var pcts = window._tourPayoutPcts || [];
+  var total = pcts.reduce(function(a,b){ return a + (parseInt(b) || 0); }, 0);
+  var totalEl = document.getElementById('payout-total');
+  var summaryEl = document.getElementById('payout-summary');
+  if(totalEl) totalEl.textContent = total + '%';
+  if(summaryEl){
+    summaryEl.classList.remove('good','bad');
+    if(total === 100) summaryEl.classList.add('good');
+    else summaryEl.classList.add('bad');
+  }
+}
+
+function tourApplyPreset(kind){
+  var seats = tourGetCurrentSeatsPerTable();
+  var slots = tourPayoutSlotsForSeats(seats);
+  var pcts;
+  if(kind === 'default'){
+    pcts = tourDefaultPayoutPcts(slots);
+    window._tourPayoutCustom = false;
+  } else if(kind === 'wta'){
+    // Winner takes all
+    pcts = [];
+    for(var i = 0; i < slots; i++) pcts.push(i === 0 ? 100 : 0);
+    window._tourPayoutCustom = true;
+  } else if(kind === 'flat'){
+    // Equal split among top N
+    var per = Math.floor(100 / slots);
+    var rem = 100 - per * slots;
+    pcts = [];
+    for(var j = 0; j < slots; j++) pcts.push(per + (j === 0 ? rem : 0));
+    window._tourPayoutCustom = true;
+  }
+  window._tourPayoutPcts = pcts;
+  tourRenderPayoutPanel();
+  // Update inline rules
+  tourUpdateRulesPreview();
+}
+
+function tourUpdatePresetActive(){
+  var pcts = window._tourPayoutPcts || [];
+  var seats = tourGetCurrentSeatsPerTable();
+  var slots = tourPayoutSlotsForSeats(seats);
+  var defaultP = tourDefaultPayoutPcts(slots);
+  
+  var presets = document.querySelectorAll('.tour-payout-preset');
+  presets.forEach(function(el){ el.classList.remove('active'); });
+  
+  function arraysEqual(a, b){
+    if(a.length !== b.length) return false;
+    for(var i = 0; i < a.length; i++){ if(a[i] !== b[i]) return false; }
+    return true;
+  }
+  
+  // Default
+  if(arraysEqual(pcts, defaultP)) presets[0] && presets[0].classList.add('active');
+  // WTA
+  var wta = [];
+  for(var i = 0; i < slots; i++) wta.push(i === 0 ? 100 : 0);
+  if(arraysEqual(pcts, wta)) presets[1] && presets[1].classList.add('active');
+  // Flat
+  var per = Math.floor(100 / slots);
+  var rem = 100 - per * slots;
+  var flat = [];
+  for(var j = 0; j < slots; j++) flat.push(per + (j === 0 ? rem : 0));
+  if(arraysEqual(pcts, flat)) presets[2] && presets[2].classList.add('active');
 }
 
 function tourCreateAndOpenReg(){
   var name = document.getElementById('tourName').value.trim();
   var date = document.getElementById('tourDate').value.trim();
   var buyin = parseInt(document.getElementById('tourBuyin').value) || 0;
+  var mode = window._tourSelectedMode || 'event';
   
   if(!name){ alert('Nhập tên giải đi má'); return; }
   if(!date){ alert('Nhập ngày'); return; }
   if(buyin <= 0){ alert('Buy-in phải lớn hơn 0'); return; }
   
+  var maxPlayers, seatsPerTable, groupDays;
+  
+  if(mode === 'event'){
+    maxPlayers = parseInt(document.getElementById('tourMaxPlayers').value) || 8;
+    if(maxPlayers < 4 || maxPlayers > 10){
+      alert('EVENT DAY: số người phải từ 4 đến 10');
+      return;
+    }
+    seatsPerTable = maxPlayers; // 1 bàn duy nhất
+    groupDays = 0;
+  } else {
+    seatsPerTable = parseInt(document.getElementById('tourSeatsPerTable').value) || 6;
+    groupDays = parseInt(document.getElementById('tourGroupDays').value) || 2;
+    if(seatsPerTable < 6 || seatsPerTable > 8){
+      alert('SESSION EVENT: số người mỗi bàn phải từ 6 đến 8');
+      return;
+    }
+    if(groupDays < 1 || groupDays > 5){
+      alert('Số ngày vòng bảng phải từ 1 đến 5');
+      return;
+    }
+    maxPlayers = seatsPerTable * 2;
+  }
+  
+  var payoutSlots = tourPayoutSlotsForSeats(seatsPerTable);
+  var payoutPcts = window._tourPayoutPcts ? window._tourPayoutPcts.slice() : tourDefaultPayoutPcts(payoutSlots);
+  
+  // Validate payout sum = 100
+  var sum = payoutPcts.reduce(function(a,b){ return a + (parseInt(b) || 0); }, 0);
+  if(sum !== 100){
+    alert('Tổng payout phải bằng 100% (hiện ' + sum + '%). Mở "Tùy chỉnh payout" để chỉnh lại.');
+    return;
+  }
+  
   var members = getMembers();
-  if(members.length < 12){
-    if(!confirm('Hội chỉ có ' + members.length + ' thành viên, cần ít nhất 12 người. Vẫn tạo giải?')) return;
+  if(members.length < maxPlayers){
+    if(!confirm('Hội chỉ có ' + members.length + ' thành viên, cần ít nhất ' + maxPlayers + ' người. Vẫn tạo giải?')) return;
   }
   
   var tour = {
@@ -4308,6 +5587,13 @@ function tourCreateAndOpenReg(){
     date: date,
     buyin: buyin,
     createdAt: Date.now(),
+    mode: mode,
+    maxPlayers: maxPlayers,
+    seatsPerTable: seatsPerTable,
+    groupDays: groupDays,
+    currentDay: 1,
+    payoutSlots: payoutSlots,
+    payoutPcts: payoutPcts,
     phase: 'reg',
     participants: [],
     tables: null,
@@ -4326,9 +5612,18 @@ function tourRenderReg(){
   var t = tourLoadActive();
   if(!t) return;
   
+  var maxP = t.maxPlayers || 12;
+  var modeLabel = t.mode === 'event' ? '⚡ EVENT DAY' : '🏆 SESSION EVENT';
+  
   document.getElementById('tour-reg-title').textContent = '📝 ' + t.name;
   document.getElementById('tour-reg-info').innerHTML = 
-    '📅 ' + t.date + ' · 💰 Buy-in <b>' + tourFormatVnd(t.buyin) + '</b> · Prize pool: <b>' + tourFormatVnd(t.buyin * 12) + '</b> (đủ 12 người)';
+    modeLabel + ' · 📅 ' + t.date + ' · 💰 Buy-in <b>' + tourFormatVnd(t.buyin) + '</b> · Pool dự kiến: <b>' + tourFormatVnd(t.buyin * maxP) + '</b>';
+  
+  // Update counter label
+  var counterNum = document.getElementById('tour-reg-num-wrap');
+  if(counterNum){
+    counterNum.innerHTML = '<span id="tour-reg-count">' + t.participants.length + '</span> / ' + maxP;
+  }
   
   var members = getMembers();
   var selectedIds = t.participants.map(function(p){ return p.id; });
@@ -4354,23 +5649,37 @@ function tourRenderReg(){
   document.getElementById('tour-reg-list').innerHTML = html;
   
   var count = t.participants.length;
-  document.getElementById('tour-reg-count').textContent = count;
   
   var numWrap = document.getElementById('tour-reg-num-wrap');
   if(numWrap){
-    numWrap.className = 'tour-counter-num' + (count === 12 ? ' full' : '');
+    numWrap.className = 'tour-counter-num' + (count === maxP ? ' full' : '');
   }
   
   var drawBtn = document.getElementById('tour-draw-btn');
-  if(count === 12){
-    drawBtn.disabled = false;
-    drawBtn.textContent = '🎲 BỐC THĂM CHIA BÀN';
-  } else if(count < 12){
-    drawBtn.disabled = true;
-    drawBtn.textContent = '🎲 Cần thêm ' + (12 - count) + ' người';
+  if(t.mode === 'event'){
+    // EVENT: chỉ cần đủ số người là start được
+    if(count === maxP){
+      drawBtn.disabled = false;
+      drawBtn.textContent = '🎲 BẮT ĐẦU GIẢI';
+    } else if(count < maxP){
+      drawBtn.disabled = true;
+      drawBtn.textContent = '🎲 Cần thêm ' + (maxP - count) + ' người';
+    } else {
+      drawBtn.disabled = true;
+      drawBtn.textContent = '⚠️ Quá ' + (count - maxP) + ' người';
+    }
   } else {
-    drawBtn.disabled = true;
-    drawBtn.textContent = '⚠️ Quá ' + (count - 12) + ' người';
+    // SESSION: cần đủ số người, sau đó bốc chia 2 bàn
+    if(count === maxP){
+      drawBtn.disabled = false;
+      drawBtn.textContent = '🎲 BỐC THĂM CHIA BÀN';
+    } else if(count < maxP){
+      drawBtn.disabled = true;
+      drawBtn.textContent = '🎲 Cần thêm ' + (maxP - count) + ' người';
+    } else {
+      drawBtn.disabled = true;
+      drawBtn.textContent = '⚠️ Quá ' + (count - maxP) + ' người';
+    }
   }
 }
 
@@ -4378,6 +5687,7 @@ function tourToggleReg(memberId){
   var t = tourLoadActive();
   if(!t || t.phase !== 'reg') return;
   
+  var maxP = t.maxPlayers || 12;
   var members = getMembers();
   var m = members.find(function(x){ return x.id === memberId; });
   if(!m) return;
@@ -4386,8 +5696,8 @@ function tourToggleReg(memberId){
   if(idx >= 0){
     t.participants.splice(idx, 1);
   } else {
-    if(t.participants.length >= 12){
-      alert('Đủ 12 người rồi. Bỏ chọn người khác nếu muốn đổi.');
+    if(t.participants.length >= maxP){
+      alert('Đủ ' + maxP + ' người rồi. Bỏ chọn người khác nếu muốn đổi.');
       return;
     }
     t.participants.push({ id: m.id, name: m.name });
@@ -4408,25 +5718,38 @@ function tourShuffle(arr){
 
 function tourDoTheDraw(){
   var t = tourLoadActive();
-  if(!t || t.participants.length !== 12) return;
+  if(!t) return;
+  var maxP = t.maxPlayers || 12;
+  if(t.participants.length !== maxP) return;
   
   var shuffled = tourShuffle(t.participants);
-  var tableA = shuffled.slice(0,6).map(function(p){
-    return { name: p.name, memberId: p.id, out: false, rank: null };
-  });
-  var tableB = shuffled.slice(6,12).map(function(p){
-    return { name: p.name, memberId: p.id, out: false, rank: null };
-  });
   
-  t.tables = [
-    { name: 'Bàn A', seats: tableA },
-    { name: 'Bàn B', seats: tableB }
-  ];
+  if(t.mode === 'event'){
+    // EVENT DAY: 1 bàn duy nhất, không cần bốc thăm phức tạp
+    var seats = shuffled.map(function(p){
+      return { name: p.name, memberId: p.id, rank: null };
+    });
+    t.tables = [{ name: 'Bàn Chính', seats: seats }];
+  } else {
+    // SESSION EVENT: chia 2 bàn
+    var seatsPerTable = t.seatsPerTable || 6;
+    var tableA = shuffled.slice(0, seatsPerTable).map(function(p){
+      return { name: p.name, memberId: p.id, dailyRanks: {}, totalPoints: 0 };
+    });
+    var tableB = shuffled.slice(seatsPerTable, seatsPerTable*2).map(function(p){
+      return { name: p.name, memberId: p.id, dailyRanks: {}, totalPoints: 0 };
+    });
+    t.tables = [
+      { name: 'Bàn A', seats: tableA },
+      { name: 'Bàn B', seats: tableB }
+    ];
+  }
   
   tourHideAllPanels();
   document.getElementById('tour-draw').style.display = '';
   var stage = document.getElementById('tour-draw-stage');
-  stage.innerHTML = '<div class="tour-draw-message">🎴 Đang bốc thăm chia bàn...</div>'
+  var msg = t.mode === 'event' ? '🎴 Đang sắp bàn chính...' : '🎴 Đang bốc thăm chia bàn...';
+  stage.innerHTML = '<div class="tour-draw-message">' + msg + '</div>'
     + '<div id="tour-draw-flow" style="display:flex;flex-wrap:wrap;justify-content:center;"></div>';
   
   var flow = document.getElementById('tour-draw-flow');
@@ -4461,7 +5784,7 @@ function tourDoTheDraw(){
   nextCard();
 }
 
-/* ============= ROUNDS (vòng loại) ============= */
+/* ============= ROUNDS (vòng loại / vòng bảng) ============= */
 function tourRenderRounds(){
   tourHideAllPanels();
   document.getElementById('tour-rounds').style.display = '';
@@ -4469,64 +5792,296 @@ function tourRenderRounds(){
   var t = tourLoadActive();
   if(!t || !t.tables) return;
   
-  document.getElementById('tour-rounds-title').textContent = '🃏 ' + t.name + ' · Vòng Loại';
+  if(t.mode === 'event'){
+    tourRenderRoundsEvent(t);
+  } else {
+    tourRenderRoundsSession(t);
+  }
+}
+
+/* --- EVENT DAY MODE: 1 bàn, chốt top 3 luôn --- */
+function tourRenderRoundsEvent(t){
+  var modeLabel = '⚡ EVENT DAY';
+  var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 8);
+  var pcts = tourGetTourPayout(t);
+  var medals = ['🥇','🥈','🥉','🏅','🎖️'];
+  
+  document.getElementById('tour-rounds-title').textContent = '🃏 ' + t.name;
+  var prizePool = t.buyin * t.participants.length;
+  var medalStr = medals.slice(0, slots).join(' ');
   document.getElementById('tour-rounds-info').innerHTML = 
-    '📅 ' + t.date + ' · Top 3 mỗi bàn → 6 người vào Final. Chọn rank 1/2/3 cho người vào tiếp; OUT cho người bị loại.';
+    modeLabel + ' · 📅 ' + t.date + ' · 💰 Pool: <b>' + tourFormatVnd(prizePool) + '</b><br>'
+    + '🎯 Đánh tới cuối · Chọn rank ' + medalStr + ' cho top ' + slots + ' ăn giải · '
+    + '<b style="color:var(--gold2);">' + tourFormatPayoutPcts(pcts) + '</b>';
   
   var tablesEl = document.getElementById('tour-tables');
   var html = '';
+  var table = t.tables[0];
+  var rankedCount = table.seats.filter(function(s){ return s.rank >= 1 && s.rank <= slots; }).length;
+  var isDone = rankedCount === slots;
+  
+  html += '<div class="tour-table-card final">';
+  html += '<div class="tour-table-header">';
+  html += '<div class="tour-table-name">👑 ' + table.name + '</div>';
+  html += '<div class="tour-table-status ' + (isDone ? 'done' : 'live') + '">' + (isDone ? '✓ Xong' : 'Đang chơi') + '</div>';
+  html += '</div>';
+  
+  table.seats.forEach(function(seat, si){
+    var cls = 'tour-seat';
+    if(seat.rank === 1) cls += ' top1';
+    else if(seat.rank === 2) cls += ' top2';
+    else if(seat.rank === 3) cls += ' top3';
+    else if(seat.rank >= 4) cls += ' top3'; // reuse top3 style for hạng 4+
+    
+    html += '<div class="' + cls + '">';
+    html += '<div class="tour-seat-num">G'+(si+1)+'</div>';
+    html += '<div class="tour-seat-name">' + seat.name + '</div>';
+    html += '<select class="tour-rank-select" onchange="tourSetEventRank('+si+',this.value)">';
+    html += '<option value="">—</option>';
+    for(var r = 1; r <= slots; r++){
+      var taken = table.seats.some(function(s,idx){ return idx !== si && s.rank === r; });
+      var disabled = taken ? ' disabled' : '';
+      var sel = seat.rank === r ? ' selected' : '';
+      var label = (medals[r-1] || '🎖️') + ' ' + r + ' (' + pcts[r-1] + '%)';
+      html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+    }
+    html += '</select>';
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  tablesEl.innerHTML = html;
+  
+  var btn = document.getElementById('tour-go-final');
+  btn.disabled = !isDone;
+  btn.textContent = '🏆 CHỐT KẾT QUẢ';
+  btn.onclick = tourFinishEventDay;
+}
+
+function tourSetEventRank(seatIdx, val){
+  var t = tourLoadActive();
+  if(!t || t.mode !== 'event' || !t.tables) return;
+  var seat = t.tables[0].seats[seatIdx];
+  seat.rank = val === '' ? null : parseInt(val);
+  tourSaveActive(t);
+  tourRenderRounds();
+}
+
+function tourFinishEventDay(){
+  var t = tourLoadActive();
+  if(!t || t.mode !== 'event') return;
+  
+  var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 8);
+  var topN = t.tables[0].seats.filter(function(s){ return s.rank >= 1 && s.rank <= slots; });
+  if(topN.length !== slots){ alert('Chưa đủ top ' + slots + '.'); return; }
+  
+  var prizePool = t.buyin * t.participants.length;
+  var pcts = tourGetTourPayout(t);
+  var winners = [];
+  for(var r = 1; r <= slots; r++){
+    var s = t.tables[0].seats.find(function(x){ return x.rank === r; });
+    if(s){
+      winners.push({
+        name: s.name,
+        memberId: s.memberId,
+        place: r,
+        prize: Math.round(prizePool * (pcts[r-1] / 100))
+      });
+    }
+  }
+  
+  t.winners = winners;
+  t.phase = 'done';
+  t.finishedAt = Date.now();
+  tourSaveActive(t);
+  
+  var history = tourLoadHistory();
+  history.unshift(JSON.parse(JSON.stringify(t)));
+  tourSaveHistory(history);
+  
+  tourRenderResult();
+  setTimeout(function(){ if(typeof startConfetti === 'function') startConfetti(); }, 200);
+}
+
+/* --- SESSION EVENT MODE: nhiều ngày, tích điểm --- */
+function tourRenderRoundsSession(t){
+  var modeLabel = '🏆 SESSION EVENT';
+  var currentDay = t.currentDay || 1;
+  var totalDays = t.groupDays || 2;
+  
+  document.getElementById('tour-rounds-title').textContent = '🃏 ' + t.name + ' · Vòng Bảng';
+  document.getElementById('tour-rounds-info').innerHTML = 
+    modeLabel + ' · 📅 Bắt đầu ' + t.date + '<br>'
+    + '🎯 Mỗi ngày: Top 1 = <b>3đ</b>, Top 2 = <b>2đ</b>, Top 3 = <b>1đ</b> · Cuối <b>'+totalDays+' ngày</b> chọn top 3 mỗi bàn vào Final';
+  
+  var tablesEl = document.getElementById('tour-tables');
+  var html = '';
+  
+  // Day tabs
+  html += '<div class="tour-session-tabs">';
+  for(var d = 1; d <= totalDays; d++){
+    var isActive = d === currentDay;
+    var dayDone = tourIsDayComplete(t, d);
+    var cls = 'tour-session-tab';
+    if(isActive) cls += ' active';
+    if(dayDone && !isActive) cls += ' done';
+    html += '<div class="' + cls + '" onclick="tourSwitchDay('+d+')">DAY ' + d + '</div>';
+  }
+  html += '</div>';
+  
+  // Day info
+  html += '<div class="tour-day-info">';
+  html += '📅 Đang nhập kết quả <b>Day ' + currentDay + ' / ' + totalDays + '</b>. Chọn 🥇 🥈 🥉 cho mỗi bàn trong ngày này.';
+  html += '</div>';
+  
+  // Render 2 tables for current day
   t.tables.forEach(function(table, ti){
-    var top3Count = table.seats.filter(function(s){ return s.rank >= 1 && s.rank <= 3; }).length;
-    var isDone = top3Count === 3;
+    var dayRanks = {};
+    table.seats.forEach(function(s){
+      if(s.dailyRanks && s.dailyRanks[currentDay]){
+        dayRanks[s.dailyRanks[currentDay]] = true;
+      }
+    });
+    var dayDone = dayRanks[1] && dayRanks[2] && dayRanks[3];
     
     html += '<div class="tour-table-card">';
     html += '<div class="tour-table-header">';
-    html += '<div class="tour-table-name">' + table.name + '</div>';
-    html += '<div class="tour-table-status ' + (isDone ? 'done' : 'live') + '">' + (isDone ? '✓ Xong' : 'Đang chơi') + '</div>';
+    html += '<div class="tour-table-name">' + table.name + ' <span style="font-size:9px;color:var(--text3);font-weight:500;">· Day ' + currentDay + '</span></div>';
+    html += '<div class="tour-table-status ' + (dayDone ? 'done' : 'live') + '">' + (dayDone ? '✓ Xong' : 'Đang chơi') + '</div>';
     html += '</div>';
     
     table.seats.forEach(function(seat, si){
+      var thisDayRank = seat.dailyRanks ? seat.dailyRanks[currentDay] : null;
+      var totalPts = tourCalcTotalPoints(seat);
+      
       var cls = 'tour-seat';
-      if(seat.out) cls += ' out';
-      if(seat.rank === 1) cls += ' top1';
-      else if(seat.rank === 2) cls += ' top2';
-      else if(seat.rank === 3) cls += ' top3';
+      if(thisDayRank === 1) cls += ' top1';
+      else if(thisDayRank === 2) cls += ' top2';
+      else if(thisDayRank === 3) cls += ' top3';
       
       html += '<div class="' + cls + '">';
       html += '<div class="tour-seat-num">G'+(si+1)+'</div>';
-      html += '<div class="tour-seat-name">' + seat.name + '</div>';
-      html += '<select class="tour-rank-select" onchange="tourSetRank('+ti+','+si+',this.value)">';
+      html += '<div class="tour-seat-name">' + seat.name 
+            + ' <span class="tour-points-badge" style="margin-left:6px;">'+totalPts+'đ</span></div>';
+      html += '<select class="tour-rank-select" onchange="tourSetDailyRank('+ti+','+si+','+currentDay+',this.value)">';
       html += '<option value="">—</option>';
       [1,2,3].forEach(function(r){
-        var taken = table.seats.some(function(s,idx){ return idx !== si && s.rank === r; });
+        var taken = table.seats.some(function(s,idx){ 
+          return idx !== si && s.dailyRanks && s.dailyRanks[currentDay] === r; 
+        });
         var disabled = taken ? ' disabled' : '';
-        var sel = seat.rank === r ? ' selected' : '';
-        html += '<option value="'+r+'"'+disabled+sel+'>TOP '+r+'</option>';
+        var sel = thisDayRank === r ? ' selected' : '';
+        var label = r === 1 ? '🥇 3đ' : (r === 2 ? '🥈 2đ' : '🥉 1đ');
+        html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
       });
-      html += '<option value="out"' + (seat.out ? ' selected' : '') + '>OUT</option>';
       html += '</select>';
       html += '</div>';
     });
     html += '</div>';
   });
+  
+  // Standings preview after at least 1 day done
+  var anyDayDone = false;
+  for(var dd = 1; dd <= totalDays; dd++){
+    if(tourIsDayComplete(t, dd)){ anyDayDone = true; break; }
+  }
+  var qualifySlots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 6);
+  if(anyDayDone){
+    html += '<div class="tour-table-card" style="margin-top:14px;">';
+    html += '<div class="tour-table-header"><div class="tour-table-name">📊 Bảng Xếp Hạng Hiện Tại</div><div class="tour-table-status live">Top '+qualifySlots+' vào Final</div></div>';
+    t.tables.forEach(function(table){
+      html += '<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;font-weight:800;margin:10px 0 6px;">'+table.name+'</div>';
+      var ranked = tourGetTableStandings(table);
+      ranked.forEach(function(seat, ridx){
+        var qualify = ridx < qualifySlots;
+        var rankIcon = ridx === 0 ? '🥇' : (ridx === 1 ? '🥈' : (ridx === 2 ? '🥉' : (ridx === 3 ? '🏅' : '#' + (ridx+1))));
+        html += '<div class="tour-standings-row' + (qualify ? ' qualify' : '') + '">';
+        html += '<div class="tour-standings-rank">' + rankIcon + '</div>';
+        html += '<div class="tour-standings-name">' + seat.name + '</div>';
+        html += '<div class="tour-points-badge">' + tourCalcTotalPoints(seat) + 'đ</div>';
+        html += '</div>';
+      });
+    });
+    html += '</div>';
+  }
+  
   tablesEl.innerHTML = html;
   
-  var bothDone = t.tables.every(function(table){
-    return table.seats.filter(function(s){ return s.rank >= 1 && s.rank <= 3; }).length === 3;
-  });
-  document.getElementById('tour-go-final').disabled = !bothDone;
+  // Button: only enable when all days complete
+  var allDone = true;
+  for(var d2 = 1; d2 <= totalDays; d2++){
+    if(!tourIsDayComplete(t, d2)){ allDone = false; break; }
+  }
+  var btn = document.getElementById('tour-go-final');
+  btn.disabled = !allDone;
+  btn.textContent = allDone ? '› VÀO VÒNG FINAL' : '› Hoàn tất tất cả ' + totalDays + ' ngày';
+  btn.onclick = tourGoToFinal;
 }
 
-function tourSetRank(tableIdx, seatIdx, val){
+function tourCalcTotalPoints(seat){
+  if(!seat.dailyRanks) return 0;
+  var pts = 0;
+  Object.keys(seat.dailyRanks).forEach(function(k){
+    var r = seat.dailyRanks[k];
+    if(r === 1) pts += 3;
+    else if(r === 2) pts += 2;
+    else if(r === 3) pts += 1;
+  });
+  return pts;
+}
+
+function tourGetTableStandings(table){
+  // Sort by total points desc; tie-breaker: count of 1st, 2nd, 3rd places
+  return table.seats.slice().sort(function(a,b){
+    var pa = tourCalcTotalPoints(a);
+    var pb = tourCalcTotalPoints(b);
+    if(pb !== pa) return pb - pa;
+    // tie-break: more 1st places, then 2nd, then 3rd
+    function count(s, rank){
+      if(!s.dailyRanks) return 0;
+      var c = 0;
+      Object.keys(s.dailyRanks).forEach(function(k){ if(s.dailyRanks[k] === rank) c++; });
+      return c;
+    }
+    var c1a = count(a,1), c1b = count(b,1);
+    if(c1b !== c1a) return c1b - c1a;
+    var c2a = count(a,2), c2b = count(b,2);
+    if(c2b !== c2a) return c2b - c2a;
+    var c3a = count(a,3), c3b = count(b,3);
+    return c3b - c3a;
+  });
+}
+
+function tourIsDayComplete(t, day){
+  if(!t.tables) return false;
+  return t.tables.every(function(table){
+    var dayRanks = {};
+    table.seats.forEach(function(s){
+      if(s.dailyRanks && s.dailyRanks[day]){
+        dayRanks[s.dailyRanks[day]] = true;
+      }
+    });
+    return dayRanks[1] && dayRanks[2] && dayRanks[3];
+  });
+}
+
+function tourSwitchDay(day){
+  var t = tourLoadActive();
+  if(!t) return;
+  t.currentDay = day;
+  tourSaveActive(t);
+  tourRenderRounds();
+}
+
+function tourSetDailyRank(tableIdx, seatIdx, day, val){
   var t = tourLoadActive();
   if(!t || !t.tables) return;
   var seat = t.tables[tableIdx].seats[seatIdx];
+  if(!seat.dailyRanks) seat.dailyRanks = {};
   if(val === ''){
-    seat.rank = null; seat.out = false;
-  } else if(val === 'out'){
-    seat.rank = null; seat.out = true;
+    delete seat.dailyRanks[day];
   } else {
-    seat.rank = parseInt(val); seat.out = false;
+    seat.dailyRanks[day] = parseInt(val);
   }
   tourSaveActive(t);
   tourRenderRounds();
@@ -4534,26 +6089,37 @@ function tourSetRank(tableIdx, seatIdx, val){
 
 function tourGoToFinal(){
   var t = tourLoadActive();
-  if(!t || !t.tables) return;
+  if(!t || !t.tables || t.mode !== 'session') return;
   
+  // Verify all days complete
+  var totalDays = t.groupDays || 2;
+  for(var d = 1; d <= totalDays; d++){
+    if(!tourIsDayComplete(t, d)){
+      alert('Day ' + d + ' chưa hoàn tất. Hoàn thành hết các ngày bảng trước.');
+      return;
+    }
+  }
+  
+  var qualifySlots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 6);
+  var expectedFinalists = qualifySlots * 2;
+  
+  // Get top N from each table by total points
   var finalists = [];
   t.tables.forEach(function(table){
-    [1,2,3].forEach(function(r){
-      var seat = table.seats.find(function(s){ return s.rank === r; });
-      if(seat){
-        finalists.push({
-          name: seat.name,
-          memberId: seat.memberId,
-          fromTable: table.name,
-          fromRank: r,
-          finalRank: null
-        });
-      }
-    });
+    var standings = tourGetTableStandings(table);
+    for(var i = 0; i < qualifySlots && i < standings.length; i++){
+      finalists.push({
+        name: standings[i].name,
+        memberId: standings[i].memberId,
+        fromTable: table.name,
+        totalPoints: tourCalcTotalPoints(standings[i]),
+        finalRank: null
+      });
+    }
   });
   
-  if(finalists.length !== 6){
-    alert('Chưa đủ 6 finalists. Kiểm tra lại rank các bàn.');
+  if(finalists.length !== expectedFinalists){
+    alert('Không đủ ' + expectedFinalists + ' finalists. Kiểm tra lại bảng xếp hạng.');
     return;
   }
   
@@ -4571,15 +6137,19 @@ function tourRenderFinal(){
   var t = tourLoadActive();
   if(!t || !t.finalists) return;
   
+  var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 6);
+  var pcts = tourGetTourPayout(t);
+  var medals = ['🥇','🥈','🥉','🏅','🎖️'];
+  
   var prizePool = t.buyin * t.participants.length;
   document.getElementById('tour-final-info').innerHTML =
-    '💰 Prize pool: <b>' + tourFormatVnd(prizePool) + '</b> · Chia <b>50% / 30% / 20%</b><br>'
-    + '🎯 Chọn rank 1/2/3 cho top 3 final.';
+    '💰 Prize pool: <b>' + tourFormatVnd(prizePool) + '</b> · Chia <b style="color:var(--gold2);">' + tourFormatPayoutPcts(pcts) + '</b><br>'
+    + '🎯 Chọn rank cho top ' + slots + ' final.';
   
   var html = '<div class="tour-table-card final">';
   html += '<div class="tour-table-header">';
   html += '<div class="tour-table-name">👑 FINAL TABLE</div>';
-  var done = t.finalists.filter(function(f){ return f.finalRank >= 1 && f.finalRank <= 3; }).length === 3;
+  var done = t.finalists.filter(function(f){ return f.finalRank >= 1 && f.finalRank <= slots; }).length === slots;
   html += '<div class="tour-table-status ' + (done ? 'done' : 'live') + '">' + (done ? '✓ Sẵn sàng' : 'Đang chơi') + '</div>';
   html += '</div>';
   
@@ -4588,19 +6158,23 @@ function tourRenderFinal(){
     if(f.finalRank === 1) cls += ' top1';
     else if(f.finalRank === 2) cls += ' top2';
     else if(f.finalRank === 3) cls += ' top3';
+    else if(f.finalRank >= 4) cls += ' top3';
     
     html += '<div class="' + cls + '">';
     html += '<div class="tour-seat-num">G'+(fi+1)+'</div>';
-    html += '<div class="tour-seat-name">' + f.name + ' <span style="font-size:9px;color:var(--text3);font-weight:400;">('+f.fromTable+' #'+f.fromRank+')</span></div>';
+    var fromInfo = f.totalPoints != null 
+      ? '('+f.fromTable+' · '+f.totalPoints+'đ)'
+      : (f.fromRank ? '('+f.fromTable+' #'+f.fromRank+')' : '('+f.fromTable+')');
+    html += '<div class="tour-seat-name">' + f.name + ' <span style="font-size:9px;color:var(--text3);font-weight:400;">'+fromInfo+'</span></div>';
     html += '<select class="tour-rank-select" onchange="tourSetFinalRank('+fi+',this.value)">';
     html += '<option value="">—</option>';
-    [1,2,3].forEach(function(r){
+    for(var r = 1; r <= slots; r++){
       var taken = t.finalists.some(function(x,idx){ return idx !== fi && x.finalRank === r; });
       var disabled = taken ? ' disabled' : '';
       var sel = f.finalRank === r ? ' selected' : '';
-      var label = r === 1 ? '🥇 1' : (r === 2 ? '🥈 2' : '🥉 3');
+      var label = (medals[r-1] || '🎖️') + ' ' + r + ' (' + pcts[r-1] + '%)';
       html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
-    });
+    }
     html += '</select>';
     html += '</div>';
   });
@@ -4622,23 +6196,24 @@ function tourFinish(){
   var t = tourLoadActive();
   if(!t || !t.finalists) return;
   
+  var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 6);
+  var pcts = tourGetTourPayout(t);
   var prizePool = t.buyin * t.participants.length;
-  var pcts = [0.5, 0.3, 0.2];
   
   var winners = [];
-  [1,2,3].forEach(function(r){
+  for(var r = 1; r <= slots; r++){
     var f = t.finalists.find(function(x){ return x.finalRank === r; });
     if(f){
       winners.push({
         name: f.name,
         memberId: f.memberId,
         place: r,
-        prize: Math.round(prizePool * pcts[r-1])
+        prize: Math.round(prizePool * (pcts[r-1] / 100))
       });
     }
-  });
+  }
   
-  if(winners.length !== 3){ alert('Chưa đủ 3 finalists.'); return; }
+  if(winners.length !== slots){ alert('Chưa đủ top ' + slots + ' finalists.'); return; }
   
   t.winners = winners;
   t.phase = 'done';
@@ -4683,16 +6258,16 @@ function tourRenderResult(){
   html += '📅 ' + t.date + ' · 👥 ' + t.participants.length + ' người · 💰 Pool: <b>' + tourFormatVnd(prizePool) + '</b>';
   html += '</div>';
   
-  var medals = ['🥇','🥈','🥉'];
-  var placeClass = ['gold','silver','bronze'];
-  var pcts = [50,30,20];
+  var medals = ['🥇','🥈','🥉','🏅','🎖️'];
+  var placeClass = ['gold','silver','bronze','bronze','bronze'];
+  var pcts = tourGetTourPayout(t);
   t.winners.forEach(function(w){
-    var cls = 'tour-prize-row ' + placeClass[w.place-1];
+    var cls = 'tour-prize-row ' + (placeClass[w.place-1] || 'bronze');
     html += '<div class="' + cls + '">';
-    html += '<div class="tour-prize-medal">' + medals[w.place-1] + '</div>';
+    html += '<div class="tour-prize-medal">' + (medals[w.place-1] || '🎖️') + '</div>';
     html += '<div class="tour-prize-info">';
     html += '<div class="tour-prize-name">' + w.name + '</div>';
-    html += '<div class="tour-prize-amount">Hạng '+w.place+' · ' + pcts[w.place-1] + '% prize pool</div>';
+    html += '<div class="tour-prize-amount">Hạng '+w.place+' · ' + (pcts[w.place-1] || 0) + '% prize pool</div>';
     html += '</div>';
     html += '<div class="tour-prize-vnd">+' + tourFormatVnd(w.prize) + '</div>';
     html += '</div>';
@@ -4736,10 +6311,12 @@ function tourShowHistory(){
   var html = '';
   hist.forEach(function(t, idx){
     var winner = t.winners && t.winners[0] ? t.winners[0] : null;
+    var modeIcon = t.mode === 'event' ? '⚡' : (t.mode === 'session' ? '🏆' : '🏆');
+    var modeName = t.mode === 'event' ? 'EVENT DAY' : (t.mode === 'session' ? 'SESSION' : '');
     html += '<div class="tour-history-item" onclick="tourViewHistoryDetail('+idx+')">';
     html += '<div>';
-    html += '<div class="tour-history-name">🏆 ' + t.name + '</div>';
-    html += '<div class="tour-history-meta">' + t.date + ' · ' + t.participants.length + ' người</div>';
+    html += '<div class="tour-history-name">' + modeIcon + ' ' + t.name + '</div>';
+    html += '<div class="tour-history-meta">' + (modeName ? modeName + ' · ' : '') + t.date + ' · ' + t.participants.length + ' người</div>';
     html += '</div>';
     if(winner){
       html += '<div class="tour-history-winner">🥇 ' + winner.name + '<br>+' + tourFormatVnd(winner.prize) + '</div>';
@@ -4755,10 +6332,11 @@ function tourViewHistoryDetail(idx){
   if(!t) return;
   
   var prizePool = t.buyin * t.participants.length;
-  var msg = '🏆 ' + t.name + '\n📅 ' + t.date + '\n💰 Pool: ' + tourFormatVnd(prizePool) + '\n\n=== TOP 3 ===\n';
-  var medals = ['🥇','🥈','🥉'];
+  var slots = (t.winners && t.winners.length) || 3;
+  var msg = '🏆 ' + t.name + '\n📅 ' + t.date + '\n💰 Pool: ' + tourFormatVnd(prizePool) + '\n\n=== TOP ' + slots + ' ===\n';
+  var medals = ['🥇','🥈','🥉','🏅','🎖️'];
   t.winners.forEach(function(w){
-    msg += medals[w.place-1] + ' ' + w.name + ' — ' + tourFormatVnd(w.prize) + '\n';
+    msg += (medals[w.place-1] || '🎖️') + ' ' + w.name + ' — ' + tourFormatVnd(w.prize) + '\n';
   });
   alert(msg);
 }
