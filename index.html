@@ -2494,7 +2494,7 @@ table.players tr:last-child td{border-bottom:none;}
       <div class="tour-mode-card selected" id="mode-card-event" onclick="tourSelectMode('event')">
         <div class="tour-mode-icon">⚡</div>
         <div class="tour-mode-title">EVENT DAY</div>
-        <div class="tour-mode-desc">Đánh trong 1 ngày · 8-10 người · 1 bàn duy nhất, top 3 ăn giải luôn</div>
+        <div class="tour-mode-desc">Đánh trong 1 ngày · 2-10 người · 1 bàn duy nhất, top N ăn giải luôn</div>
         <div class="tour-mode-badge">QUY MÔ NHỎ</div>
       </div>
       <div class="tour-mode-card" id="mode-card-session" onclick="tourSelectMode('session')">
@@ -2525,8 +2525,8 @@ table.players tr:last-child td{border-bottom:none;}
     <div id="setup-event-fields">
       <div class="form-row" style="margin-bottom:12px;">
         <label style="min-width:80px;color:var(--gold);font-size:11px;">Số người:</label>
-        <input type="number" id="tourMaxPlayers" value="8" min="4" max="10" style="flex:1;">
-        <span style="color:var(--text3);font-size:11px;">(4-10)</span>
+        <input type="number" id="tourMaxPlayers" value="8" min="2" max="10" style="flex:1;">
+        <span style="color:var(--text3);font-size:11px;">(2-10)</span>
       </div>
     </div>
     
@@ -4996,6 +4996,8 @@ function tourFormatVnd(n){
    User có thể custom payout qua panel.
 */
 function tourDefaultPayoutPcts(payoutSlots){
+  if(payoutSlots === 1) return [100];
+  if(payoutSlots === 2) return [70, 30];
   if(payoutSlots === 3) return [50, 30, 20];
   if(payoutSlots === 4) return [50, 25, 15, 10];
   if(payoutSlots === 5) return [40, 25, 18, 12, 5];
@@ -5004,8 +5006,10 @@ function tourDefaultPayoutPcts(payoutSlots){
 }
 
 function tourPayoutSlotsForSeats(seatsPerTable){
-  if(seatsPerTable >= 8) return 4;
-  return 3;
+  if(seatsPerTable <= 2) return 1; // 2 người: top 1 ăn hết
+  if(seatsPerTable <= 4) return 2; // 3-4 người: top 2
+  if(seatsPerTable >= 8) return 4; // 8+: top 4
+  return 3; // 5-7: top 3
 }
 
 function tourGetTourPayout(t){
@@ -5546,8 +5550,8 @@ function tourCreateAndOpenReg(){
   
   if(mode === 'event'){
     maxPlayers = parseInt(document.getElementById('tourMaxPlayers').value) || 8;
-    if(maxPlayers < 4 || maxPlayers > 10){
-      alert('EVENT DAY: số người phải từ 4 đến 10');
+    if(maxPlayers < 2 || maxPlayers > 10){
+      alert('EVENT DAY: số người phải từ 2 đến 10');
       return;
     }
     seatsPerTable = maxPlayers; // 1 bàn duy nhất
@@ -5640,13 +5644,28 @@ function tourRenderReg(){
     });
     members.forEach(function(m){
       var isSel = selectedIds.indexOf(m.id) >= 0;
-      html += '<div class="tour-reg-item' + (isSel ? ' selected' : '') + '" onclick="tourToggleReg(\''+m.id+'\')">'
+      // Escape memberId for HTML attribute (handles quotes/special chars)
+      var safeId = String(m.id).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+      var safeName = String(m.name).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      html += '<div class="tour-reg-item' + (isSel ? ' selected' : '') + '" data-member-id="'+safeId+'">'
             + '<div class="tour-reg-checkbox">✓</div>'
-            + '<div class="tour-reg-name">' + m.name + '</div>'
+            + '<div class="tour-reg-name">' + safeName + '</div>'
             + '</div>';
     });
   }
-  document.getElementById('tour-reg-list').innerHTML = html;
+  var listEl = document.getElementById('tour-reg-list');
+  listEl.innerHTML = html;
+  
+  // Attach delegated click handler (idempotent: only one listener total)
+  if(!listEl._regClickAttached){
+    listEl._regClickAttached = true;
+    listEl.addEventListener('click', function(ev){
+      var item = ev.target.closest('.tour-reg-item');
+      if(!item) return;
+      var id = item.getAttribute('data-member-id');
+      if(id) tourToggleReg(id);
+    });
+  }
   
   var count = t.participants.length;
   
