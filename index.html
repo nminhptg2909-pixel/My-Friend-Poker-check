@@ -1371,6 +1371,79 @@ table.players tr:last-child td{border-bottom:none;}
 }
 .tour-table-card>*{position:relative;z-index:1;}
 
+/* ========== POKER TABLE SVG ========== */
+.tour-poker-table-wrap{
+  position:relative;
+  width:100%;
+  margin:8px 0 14px;
+  padding:8px 0;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.tour-poker-table-svg{
+  width:100%;
+  max-width:340px;
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 4px 14px rgba(0,0,0,.6));
+}
+.tour-poker-seat-circle{
+  cursor:default;
+  transition:transform .3s ease;
+}
+.tour-poker-seat-circle.top1 .seat-bg{fill:url(#poker-grad-gold);}
+.tour-poker-seat-circle.top2 .seat-bg{fill:url(#poker-grad-silver);}
+.tour-poker-seat-circle.top3 .seat-bg{fill:url(#poker-grad-bronze);}
+.tour-poker-felt{fill:url(#poker-felt-grad);}
+.tour-poker-rail{fill:url(#poker-rail-grad);}
+.tour-poker-table-label{
+  fill:rgba(245,224,154,.6);
+  font-family:'Cormorant Garamond', Georgia, serif;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:3px;
+  text-anchor:middle;
+  pointer-events:none;
+}
+.tour-poker-seat-bg{
+  fill:#181a20;
+  stroke:var(--border);
+  stroke-width:1.2;
+}
+.tour-poker-seat-bg.filled{
+  fill:linear-gradient(135deg,#1a1408,#2a2010);
+  stroke:var(--gold2);
+  stroke-width:1.5;
+}
+.tour-poker-seat-num{
+  fill:var(--gold3);
+  font-family:var(--font);
+  font-size:9px;
+  font-weight:900;
+  text-anchor:middle;
+  letter-spacing:.5px;
+  pointer-events:none;
+}
+.tour-poker-seat-name{
+  fill:var(--text);
+  font-family:var(--font);
+  font-size:9px;
+  font-weight:800;
+  text-anchor:middle;
+  letter-spacing:0;
+  pointer-events:none;
+}
+.tour-poker-seat-rank{
+  fill:#fff5d0;
+  font-family:var(--font);
+  font-size:14px;
+  font-weight:900;
+  text-anchor:middle;
+  pointer-events:none;
+  filter:drop-shadow(0 0 4px rgba(245,224,154,.6));
+}
+
 .tour-table-card.final{
   border:1.5px solid var(--gold2);
   box-shadow:
@@ -6209,6 +6282,143 @@ function tourShuffle(arr){
   return a;
 }
 
+/* ============= POKER TABLE SVG ============= 
+   Build an SVG representing a poker table with seats arranged around an oval.
+   seats: array of {name, memberId, rank?} (rank optional for final/result)
+   isFinal: render with gold accents
+*/
+function tourBuildPokerTableSVG(seats, isFinal){
+  var n = seats.length;
+  if(n === 0) return '';
+  
+  // SVG canvas dimensions (mobile-friendly)
+  var W = 320, H = 220;
+  var cx = W / 2, cy = H / 2;
+  // Oval table dimensions
+  var rx = W * 0.38; // horizontal radius
+  var ry = H * 0.30; // vertical radius
+  // Seat radius (distance of seat center from table center)
+  var seatRx = rx + 22;
+  var seatRy = ry + 24;
+  var seatR = 22; // seat circle radius
+  
+  // Gradients & filters
+  var defs = ''
+    + '<defs>'
+    + '<radialGradient id="poker-felt-grad" cx="50%" cy="40%" r="65%">'
+    + '<stop offset="0%" stop-color="#2d6a44" stop-opacity="1"/>'
+    + '<stop offset="55%" stop-color="#1e4a30" stop-opacity="1"/>'
+    + '<stop offset="100%" stop-color="#0f2818" stop-opacity="1"/>'
+    + '</radialGradient>'
+    + '<linearGradient id="poker-rail-grad" x1="0%" y1="0%" x2="0%" y2="100%">'
+    + '<stop offset="0%" stop-color="' + (isFinal ? '#5a4810' : '#3a2c14') + '"/>'
+    + '<stop offset="50%" stop-color="' + (isFinal ? '#8a6818' : '#5a3a18') + '"/>'
+    + '<stop offset="100%" stop-color="' + (isFinal ? '#3a2810' : '#2a1c0a') + '"/>'
+    + '</linearGradient>'
+    + '<radialGradient id="poker-grad-gold" cx="40%" cy="40%" r="65%">'
+    + '<stop offset="0%" stop-color="#fff5d0"/>'
+    + '<stop offset="60%" stop-color="#f5e09a"/>'
+    + '<stop offset="100%" stop-color="#8a6818"/>'
+    + '</radialGradient>'
+    + '<radialGradient id="poker-grad-silver" cx="40%" cy="40%" r="65%">'
+    + '<stop offset="0%" stop-color="#f0f0f0"/>'
+    + '<stop offset="60%" stop-color="#c0c0c0"/>'
+    + '<stop offset="100%" stop-color="#707070"/>'
+    + '</radialGradient>'
+    + '<radialGradient id="poker-grad-bronze" cx="40%" cy="40%" r="65%">'
+    + '<stop offset="0%" stop-color="#e8a878"/>'
+    + '<stop offset="60%" stop-color="#c08454"/>'
+    + '<stop offset="100%" stop-color="#7a5430"/>'
+    + '</radialGradient>'
+    + '<filter id="poker-seat-shadow" x="-50%" y="-50%" width="200%" height="200%">'
+    + '<feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity="0.4"/>'
+    + '</filter>'
+    + '</defs>';
+  
+  var svg = '<svg class="tour-poker-table-svg" viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg">';
+  svg += defs;
+  
+  // Rail (outer ring)
+  svg += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + (rx + 8) + '" ry="' + (ry + 8) + '" class="tour-poker-rail"/>';
+  // Felt (inner table)
+  svg += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + rx + '" ry="' + ry + '" class="tour-poker-felt"/>';
+  // Inner felt ring (decorative)
+  svg += '<ellipse cx="' + cx + '" cy="' + cy + '" rx="' + (rx - 14) + '" ry="' + (ry - 14) + '" fill="none" stroke="rgba(0,0,0,.25)" stroke-width="1"/>';
+  
+  // Center label
+  var centerLabel = isFinal ? '👑 FINAL TABLE' : '♠ ♥ ♦ ♣';
+  svg += '<text x="' + cx + '" y="' + (cy + 4) + '" class="tour-poker-table-label">' + centerLabel + '</text>';
+  
+  // Seats arranged around the oval
+  // Start angle from top (12 o'clock) and go clockwise
+  // -PI/2 = top (12), 0 = right (3), PI/2 = bottom (6), PI = left (9)
+  var startAngle = -Math.PI / 2;
+  
+  for(var i = 0; i < n; i++){
+    var theta = startAngle + (2 * Math.PI * i) / n;
+    var sx = cx + seatRx * Math.cos(theta);
+    var sy = cy + seatRy * Math.sin(theta);
+    var seat = seats[i];
+    
+    var hasRank = seat.rank >= 1 && seat.rank <= 5;
+    var hasFinalRank = seat.finalRank >= 1 && seat.finalRank <= 5;
+    var rankVal = hasRank ? seat.rank : (hasFinalRank ? seat.finalRank : null);
+    
+    var grpClass = 'tour-poker-seat-circle';
+    if(rankVal === 1) grpClass += ' top1';
+    else if(rankVal === 2) grpClass += ' top2';
+    else if(rankVal === 3) grpClass += ' top3';
+    
+    svg += '<g class="' + grpClass + '" transform="translate(' + sx.toFixed(1) + ',' + sy.toFixed(1) + ')">';
+    
+    // Seat circle background
+    var bgFill = '#1a1c24';
+    var bgStroke = 'rgba(245,224,154,.25)';
+    if(rankVal === 1){ bgFill = 'url(#poker-grad-gold)'; bgStroke = '#fff5d0'; }
+    else if(rankVal === 2){ bgFill = 'url(#poker-grad-silver)'; bgStroke = '#e8e8e8'; }
+    else if(rankVal === 3){ bgFill = 'url(#poker-grad-bronze)'; bgStroke = '#e8a878'; }
+    
+    svg += '<circle class="seat-bg" r="' + seatR + '" fill="' + bgFill + '" stroke="' + bgStroke + '" stroke-width="1.5" filter="url(#poker-seat-shadow)"/>';
+    
+    // Seat number (top of circle)
+    svg += '<text class="tour-poker-seat-num" y="-3">G' + (i + 1) + '</text>';
+    
+    // Player name (bottom of circle) - use last word (first name in Vietnamese) for compact display
+    var fullName = seat.name || '';
+    var nameParts = fullName.trim().split(/\s+/);
+    var displayName = nameParts[nameParts.length - 1]; // last word = personal name in VN
+    if(displayName.length > 8) displayName = displayName.substring(0, 7) + '…';
+    var nameY = 8;
+    var nameFill = '#fff';
+    if(rankVal === 1) nameFill = '#1a1408';
+    else if(rankVal === 2) nameFill = '#1a1a1a';
+    else if(rankVal === 3) nameFill = '#1a0e08';
+    svg += '<text class="tour-poker-seat-name" y="' + nameY + '" fill="' + nameFill + '">' + tourEscapeXml(displayName) + '</text>';
+    
+    // Rank badge if has rank
+    if(rankVal){
+      var medals = {1:'🥇', 2:'🥈', 3:'🥉', 4:'🏅', 5:'🎖'};
+      svg += '<text class="tour-poker-seat-rank" x="' + (seatR - 2) + '" y="-' + (seatR - 6) + '">' + medals[rankVal] + '</text>';
+    }
+    
+    svg += '</g>';
+  }
+  
+  svg += '</svg>';
+  
+  return '<div class="tour-poker-table-wrap">' + svg + '</div>';
+}
+
+function tourEscapeXml(s){
+  if(!s) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;');
+}
+
 function tourFlushAllRegInputs(){
   // Force-save all input rows to storage (in case blur didn't fire)
   var t = tourLoadActive();
@@ -6270,21 +6480,24 @@ function tourDoTheDraw(){
   t.participants = participants;
   tourSaveActive(t);
   
+  // Double-shuffle for true random seat assignment (random thuần túy)
+  // Pass 1: shuffle participants pool
+  // Pass 2: shuffle seats within each table
   var shuffled = tourShuffle(t.participants);
   
   if(t.mode === 'event'){
-    // EVENT DAY: 1 bàn duy nhất, không cần bốc thăm phức tạp
-    var seats = shuffled.map(function(p){
+    // EVENT DAY: 1 bàn duy nhất - shuffle lần 2 cho ghế trong bàn
+    var seats = tourShuffle(shuffled).map(function(p){
       return { name: p.name, memberId: p.id, rank: null };
     });
     t.tables = [{ name: 'Bàn Chính', seats: seats }];
   } else {
-    // SESSION EVENT: chia 2 bàn
+    // SESSION EVENT: chia 2 bàn, mỗi bàn shuffle ghế độc lập
     var seatsPerTable = t.seatsPerTable || 6;
-    var tableA = shuffled.slice(0, seatsPerTable).map(function(p){
+    var tableA = tourShuffle(shuffled.slice(0, seatsPerTable)).map(function(p){
       return { name: p.name, memberId: p.id, dailyRanks: {}, totalPoints: 0 };
     });
-    var tableB = shuffled.slice(seatsPerTable, seatsPerTable*2).map(function(p){
+    var tableB = tourShuffle(shuffled.slice(seatsPerTable, seatsPerTable*2)).map(function(p){
       return { name: p.name, memberId: p.id, dailyRanks: {}, totalPoints: 0 };
     });
     t.tables = [
@@ -6373,6 +6586,9 @@ function tourRenderRoundsEvent(t){
   html += '<div class="tour-table-name">👑 ' + table.name + '</div>';
   html += '<div class="tour-table-status ' + (isDone ? 'done' : 'live') + '">' + (isDone ? '✓ Xong' : 'Đang chơi') + '</div>';
   html += '</div>';
+  
+  // Visual poker table
+  html += tourBuildPokerTableSVG(table.seats, true);
   
   table.seats.forEach(function(seat, si){
     var cls = 'tour-seat';
@@ -6497,6 +6713,16 @@ function tourRenderRoundsSession(t){
     html += '<div class="tour-table-name">' + table.name + ' <span style="font-size:9px;color:var(--text3);font-weight:500;">· Day ' + currentDay + '</span></div>';
     html += '<div class="tour-table-status ' + (dayDone ? 'done' : 'live') + '">' + (dayDone ? '✓ Xong' : 'Đang chơi') + '</div>';
     html += '</div>';
+    
+    // Visual poker table — map dailyRanks[currentDay] → rank for the SVG
+    var seatsWithDayRank = table.seats.map(function(s){
+      return {
+        name: s.name,
+        memberId: s.memberId,
+        rank: s.dailyRanks ? s.dailyRanks[currentDay] : null
+      };
+    });
+    html += tourBuildPokerTableSVG(seatsWithDayRank, false);
     
     table.seats.forEach(function(seat, si){
       var thisDayRank = seat.dailyRanks ? seat.dailyRanks[currentDay] : null;
@@ -6700,6 +6926,11 @@ function tourRenderFinal(){
   var done = t.finalists.filter(function(f){ return f.finalRank >= 1 && f.finalRank <= slots; }).length === slots;
   html += '<div class="tour-table-status ' + (done ? 'done' : 'live') + '">' + (done ? '✓ Sẵn sàng' : 'Đang chơi') + '</div>';
   html += '</div>';
+  
+  // Visual poker table for final
+  html += tourBuildPokerTableSVG(t.finalists.map(function(f){
+    return { name: f.name, memberId: f.memberId, rank: f.finalRank };
+  }), true);
   
   t.finalists.forEach(function(f, fi){
     var cls = 'tour-seat';
