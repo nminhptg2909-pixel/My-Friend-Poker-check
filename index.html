@@ -1157,6 +1157,84 @@ table.players tr:last-child td{border-bottom:none;}
 .tour-reg-name{flex:1;font-size:13px;font-weight:600;color:var(--text);}
 .tour-reg-item.selected .tour-reg-name{color:var(--gold3);}
 
+/* ========== TOURNAMENT REG ROWS (input style like setup bàn) ========== */
+.tour-reg-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  background:linear-gradient(135deg,#181a20 0%,#1e2028 100%);
+  border:1px solid var(--border2);
+  border-radius:8px;
+  padding:8px 10px;
+  margin-bottom:6px;
+  transition:all .2s;
+}
+.tour-reg-row.filled{
+  background:linear-gradient(135deg,#1a1408 0%,#2a2010 50%,#1a1408 100%);
+  border-color:rgba(245,224,154,.35);
+  box-shadow:0 0 10px rgba(200,168,75,.15), inset 0 1px 0 rgba(245,224,154,.1);
+}
+.tour-reg-row.filled .tour-reg-row-num{
+  background:linear-gradient(135deg,#f5e09a,#c8a84b);
+  color:#1a1408;
+  border-color:var(--gold3);
+  box-shadow:0 0 8px rgba(245,224,154,.35);
+}
+.tour-reg-row-num{
+  width:24px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  border:1.5px solid var(--text3);
+  background:var(--bg4);
+  color:var(--text3);
+  font-size:10px;font-weight:900;
+  flex-shrink:0;
+  transition:all .2s;
+}
+.tour-reg-row-input{
+  flex:1;
+  background:transparent !important;
+  border:none !important;
+  color:var(--text) !important;
+  font-family:var(--font) !important;
+  font-size:13px !important;
+  font-weight:700 !important;
+  padding:6px 4px !important;
+  letter-spacing:.3px;
+  outline:none !important;
+}
+.tour-reg-row-input::placeholder{
+  color:var(--text3);
+  font-weight:500;
+  font-style:italic;
+}
+.tour-reg-row-input:focus{
+  background:transparent !important;
+  box-shadow:none !important;
+  border:none !important;
+}
+.tour-reg-row.filled .tour-reg-row-input{
+  color:var(--gold3) !important;
+}
+.tour-reg-row-clear{
+  width:22px;height:22px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;
+  background:rgba(220,80,80,.15);
+  border:1px solid rgba(220,80,80,.3);
+  color:#ff8080;
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:all .15s;
+}
+.tour-reg-row-clear:hover{
+  background:rgba(220,80,80,.3);
+  transform:scale(1.1);
+}
+.tour-reg-row-clear:active{transform:scale(.9);}
+
 /* ========== DRAW ANIMATION (epic) ========== */
 .tour-draw-stage{
   min-height:320px;
@@ -2591,7 +2669,10 @@ table.players tr:last-child td{border-bottom:none;}
 
   <!-- REGISTRATION: đăng ký người chơi -->
   <div class="card" id="tour-reg" style="display:none;">
-    <div class="card-title" id="tour-reg-title">📝 Đăng ký giải</div>
+    <div class="card-title" id="tour-reg-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>📝 Đăng ký giải</span>
+      <button class="btn-edit" id="tour-reg-edit-btn" onclick="tourToggleEditReg()" style="margin-right:0;">✏ Sửa</button>
+    </div>
     
     <div class="tour-info-bar" id="tour-reg-info"></div>
     
@@ -2600,10 +2681,35 @@ table.players tr:last-child td{border-bottom:none;}
       <span class="tour-counter-label">người đã đăng ký</span>
     </div>
     
-    <div id="tour-reg-list"></div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:10px;font-style:italic;text-align:center;">* Gõ tên sẽ tự động gợi ý từ Hội viên đã lưu.</div>
     
-    <button class="tour-btn-primary" id="tour-draw-btn" onclick="tourDoTheDraw()" disabled>🎲 BỐC THĂM CHIA BÀN</button>
+    <div id="tour-reg-rows"></div>
+    
+    <button class="tour-btn-primary" id="tour-draw-btn" onclick="tourDoTheDraw()" disabled style="margin-top:14px;">🎲 BỐC THĂM CHIA BÀN</button>
     <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy giải</button>
+  </div>
+  
+  <!-- EDIT REG MODAL: chỉnh sửa danh sách / số người / xóa giải -->
+  <div id="tourEditRegModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.78);z-index:9999;align-items:flex-start;justify-content:center;overflow-y:auto;padding:20px 0;" onclick="tourCloseEditRegOutside(event)">
+    <div style="background:linear-gradient(180deg,#0e1014,#15171f);border:1px solid var(--gold);border-radius:14px;padding:18px;max-width:420px;width:92%;box-shadow:0 0 40px rgba(200,168,75,.25);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <div style="font-size:13px;font-weight:900;color:var(--gold2);letter-spacing:2px;">✏ SỬA DANH SÁCH</div>
+        <div onclick="tourCloseEditRegModal()" style="width:28px;height:28px;border-radius:50%;background:var(--bg3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);font-size:14px;">×</div>
+      </div>
+      
+      <div class="form-row" style="margin-bottom:12px;">
+        <label style="min-width:90px;color:var(--gold);font-size:11px;">Tổng số người:</label>
+        <input type="number" id="tourEditMaxP" min="2" max="20" style="flex:1;text-align:center;font-weight:900;">
+      </div>
+      
+      <div style="font-size:10px;color:var(--text3);margin-bottom:10px;font-style:italic;">
+        Thay đổi số người sẽ thêm/bớt ô đăng ký. Tên đã nhập được giữ nguyên.
+      </div>
+      
+      <button class="btn-gold" onclick="tourApplyEditReg()" style="width:100%;margin-top:8px;">💾 LƯU THAY ĐỔI</button>
+      <button class="btn-red" onclick="tourCancelTour()" style="width:100%;margin-top:8px;">🗑 HỦY VÀ XÓA GIẢI</button>
+      <button class="btn-green" onclick="tourCloseEditRegModal()" style="width:100%;margin-top:6px;">← Đóng</button>
+    </div>
   </div>
 
   <!-- DRAW ANIMATION -->
@@ -5608,7 +5714,7 @@ function tourCreateAndOpenReg(){
   tourRenderReg();
 }
 
-/* ============= REGISTRATION ============= */
+/* ============= REGISTRATION (input rows pattern, like setup bàn in tab GAME) ============= */
 function tourRenderReg(){
   tourHideAllPanels();
   document.getElementById('tour-reg').style.display = '';
@@ -5619,120 +5725,244 @@ function tourRenderReg(){
   var maxP = t.maxPlayers || 12;
   var modeLabel = t.mode === 'event' ? '⚡ EVENT DAY' : '🏆 SESSION EVENT';
   
-  document.getElementById('tour-reg-title').textContent = '📝 ' + t.name;
+  // Update title (split into name + edit button)
+  var titleSpan = document.querySelector('#tour-reg-title span');
+  if(titleSpan) titleSpan.textContent = '📝 ' + t.name;
+  
   document.getElementById('tour-reg-info').innerHTML = 
     modeLabel + ' · 📅 ' + t.date + ' · 💰 Buy-in <b>' + tourFormatVnd(t.buyin) + '</b> · Pool dự kiến: <b>' + tourFormatVnd(t.buyin * maxP) + '</b>';
   
-  // Update counter label
-  var counterNum = document.getElementById('tour-reg-num-wrap');
-  if(counterNum){
-    counterNum.innerHTML = '<span id="tour-reg-count">' + t.participants.length + '</span> / ' + maxP;
+  // Initialize participants array to maxP slots (filled or empty)
+  if(!t.participants) t.participants = [];
+  // Trim to maxP if was longer
+  while(t.participants.length > maxP) t.participants.pop();
+  
+  // Ensure global datalist is up-to-date with members
+  if(typeof updateGlobalDatalist === 'function') updateGlobalDatalist();
+  
+  // Render input rows (one row per slot, up to maxP)
+  var rowsEl = document.getElementById('tour-reg-rows');
+  rowsEl.innerHTML = '';
+  
+  for(var i = 0; i < maxP; i++){
+    var p = t.participants[i] || null;
+    var row = tourBuildRegRow(i, p);
+    rowsEl.appendChild(row);
   }
   
+  tourUpdateRegCounter();
+}
+
+function tourBuildRegRow(idx, participant){
+  var row = document.createElement('div');
+  row.className = 'tour-reg-row' + (participant && participant.name ? ' filled' : '');
+  row.id = 'tour-reg-row-' + idx;
+  
+  // Number badge
+  var num = document.createElement('div');
+  num.className = 'tour-reg-row-num';
+  num.textContent = (idx + 1);
+  
+  // Input
+  var input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'tour-reg-row-input';
+  input.id = 'tour-reg-input-' + idx;
+  input.placeholder = 'Người chơi ' + (idx + 1);
+  input.setAttribute('list', 'memberListGlobal');
+  input.setAttribute('autocomplete', 'off');
+  input.setAttribute('autocorrect', 'off');
+  input.setAttribute('autocapitalize', 'off');
+  input.value = participant && participant.name ? participant.name : '';
+  
+  // Save on blur AND on change (datalist pick fires change)
+  input.addEventListener('change', function(){ tourSaveRegRow(idx); });
+  input.addEventListener('blur', function(){ tourSaveRegRow(idx); });
+  
+  // Clear button
+  var clearBtn = document.createElement('div');
+  clearBtn.className = 'tour-reg-row-clear';
+  clearBtn.textContent = '×';
+  clearBtn.title = 'Xóa';
+  clearBtn.onclick = function(){
+    input.value = '';
+    tourSaveRegRow(idx);
+  };
+  clearBtn.addEventListener('touchend', function(ev){
+    ev.preventDefault();
+    input.value = '';
+    tourSaveRegRow(idx);
+  }, { passive: false });
+  
+  row.appendChild(num);
+  row.appendChild(input);
+  row.appendChild(clearBtn);
+  
+  return row;
+}
+
+function tourSaveRegRow(idx){
+  var t = tourLoadActive();
+  if(!t || t.phase !== 'reg') return;
+  
+  var input = document.getElementById('tour-reg-input-' + idx);
+  if(!input) return;
+  
+  var name = input.value.trim();
   var members = getMembers();
-  var selectedIds = t.participants.map(function(p){ return p.id; });
   
-  var listEl = document.getElementById('tour-reg-list');
-  listEl.innerHTML = '';
-  
-  if(members.length === 0){
-    listEl.innerHTML = '<div class="empty" style="padding:20px 0;">Chưa có hội viên nào.</div>';
-  } else {
-    members = members.slice().sort(function(a,b){
-      var aSel = selectedIds.indexOf(a.id) >= 0 ? 0 : 1;
-      var bSel = selectedIds.indexOf(b.id) >= 0 ? 0 : 1;
-      if(aSel !== bSel) return aSel - bSel;
-      return a.name.localeCompare(b.name);
-    });
-    
-    // Build DOM elements directly instead of innerHTML string (avoids escaping issues)
-    members.forEach(function(m){
-      var isSel = selectedIds.indexOf(m.id) >= 0;
-      
-      var item = document.createElement('div');
-      item.className = 'tour-reg-item' + (isSel ? ' selected' : '');
-      
-      var checkbox = document.createElement('div');
-      checkbox.className = 'tour-reg-checkbox';
-      checkbox.textContent = '✓';
-      
-      var nameDiv = document.createElement('div');
-      nameDiv.className = 'tour-reg-name';
-      nameDiv.textContent = m.name; // safe: textContent, no HTML injection
-      
-      item.appendChild(checkbox);
-      item.appendChild(nameDiv);
-      
-      // Closure captures memberId reliably
-      (function(memberId){
-        item.onclick = function(){ tourToggleReg(memberId); };
-        // Also bind touchend for iOS to avoid 300ms delay/missed taps
-        item.addEventListener('touchend', function(ev){
-          ev.preventDefault();
-          tourToggleReg(memberId);
-        }, { passive: false });
-      })(m.id);
-      
-      listEl.appendChild(item);
-    });
-  }
-  
-  var count = t.participants.length;
-  
-  var numWrap = document.getElementById('tour-reg-num-wrap');
-  if(numWrap){
-    numWrap.className = 'tour-counter-num' + (count === maxP ? ' full' : '');
-  }
-  
-  var drawBtn = document.getElementById('tour-draw-btn');
-  if(t.mode === 'event'){
-    // EVENT: chỉ cần đủ số người là start được
-    if(count === maxP){
-      drawBtn.disabled = false;
-      drawBtn.textContent = '🎲 BẮT ĐẦU GIẢI';
-    } else if(count < maxP){
-      drawBtn.disabled = true;
-      drawBtn.textContent = '🎲 Cần thêm ' + (maxP - count) + ' người';
-    } else {
-      drawBtn.disabled = true;
-      drawBtn.textContent = '⚠️ Quá ' + (count - maxP) + ' người';
+  if(!name){
+    // Remove participant at this slot
+    if(t.participants[idx]){
+      t.participants[idx] = null;
     }
   } else {
-    // SESSION: cần đủ số người, sau đó bốc chia 2 bàn
-    if(count === maxP){
+    // Check duplicate (case-insensitive, excluding this slot)
+    var lower = name.toLowerCase();
+    var dupIdx = -1;
+    for(var i = 0; i < t.participants.length; i++){
+      if(i === idx) continue;
+      if(t.participants[i] && t.participants[i].name.toLowerCase() === lower){
+        dupIdx = i;
+        break;
+      }
+    }
+    if(dupIdx >= 0){
+      alert('"' + name + '" đã có ở vị trí #' + (dupIdx + 1) + '. Chọn tên khác.');
+      input.value = t.participants[idx] ? t.participants[idx].name : '';
+      return;
+    }
+    
+    // Find matching member (case-insensitive) or treat as guest
+    var member = members.find(function(m){ return m.name.toLowerCase() === lower; });
+    t.participants[idx] = {
+      id: member ? member.id : ('guest_' + idx + '_' + Date.now()),
+      name: member ? member.name : name
+    };
+  }
+  
+  // Compact: remove null slots but keep positional integrity via filtering for participants count
+  // We store the array as-is (with nulls) for slot positioning
+  tourSaveActive(t);
+  
+  // Update visual state of this row
+  var row = document.getElementById('tour-reg-row-' + idx);
+  if(row){
+    if(t.participants[idx] && t.participants[idx].name){
+      row.classList.add('filled');
+      input.value = t.participants[idx].name;
+    } else {
+      row.classList.remove('filled');
+    }
+  }
+  
+  tourUpdateRegCounter();
+}
+
+function tourUpdateRegCounter(){
+  var t = tourLoadActive();
+  if(!t) return;
+  
+  var maxP = t.maxPlayers || 12;
+  var filledCount = t.participants.filter(function(p){ return p && p.name; }).length;
+  
+  // Update counter display
+  var counterNum = document.getElementById('tour-reg-num-wrap');
+  if(counterNum){
+    counterNum.innerHTML = '<span id="tour-reg-count">' + filledCount + '</span> / ' + maxP;
+    counterNum.className = 'tour-counter-num' + (filledCount === maxP ? ' full' : '');
+  }
+  
+  // Update draw button
+  var drawBtn = document.getElementById('tour-draw-btn');
+  if(t.mode === 'event'){
+    if(filledCount === maxP){
       drawBtn.disabled = false;
-      drawBtn.textContent = '🎲 BỐC THĂM CHIA BÀN';
-    } else if(count < maxP){
-      drawBtn.disabled = true;
-      drawBtn.textContent = '🎲 Cần thêm ' + (maxP - count) + ' người';
+      drawBtn.textContent = '🎲 BẮT ĐẦU GIẢI';
     } else {
       drawBtn.disabled = true;
-      drawBtn.textContent = '⚠️ Quá ' + (count - maxP) + ' người';
+      drawBtn.textContent = '🎲 Cần thêm ' + (maxP - filledCount) + ' người';
+    }
+  } else {
+    if(filledCount === maxP){
+      drawBtn.disabled = false;
+      drawBtn.textContent = '🎲 BỐC THĂM CHIA BÀN';
+    } else {
+      drawBtn.disabled = true;
+      drawBtn.textContent = '🎲 Cần thêm ' + (maxP - filledCount) + ' người';
     }
   }
 }
 
-function tourToggleReg(memberId){
+function tourToggleEditReg(){
+  // Open a modal listing current participants + allowing edit/remove
+  tourOpenEditRegModal();
+}
+
+function tourOpenEditRegModal(){
   var t = tourLoadActive();
-  if(!t || t.phase !== 'reg') return;
+  if(!t) return;
+  document.getElementById('tourEditMaxP').value = t.maxPlayers || 8;
+  document.getElementById('tourEditRegModal').style.display = 'flex';
+}
+
+function tourCloseEditRegModal(){
+  document.getElementById('tourEditRegModal').style.display = 'none';
+}
+
+function tourCloseEditRegOutside(ev){
+  if(ev.target.id === 'tourEditRegModal') tourCloseEditRegModal();
+}
+
+function tourApplyEditReg(){
+  var t = tourLoadActive();
+  if(!t) return;
   
-  var maxP = t.maxPlayers || 12;
-  var members = getMembers();
-  var m = members.find(function(x){ return x.id === memberId; });
-  if(!m) return;
+  var newMaxP = parseInt(document.getElementById('tourEditMaxP').value) || t.maxPlayers;
   
-  var idx = t.participants.findIndex(function(p){ return p.id === memberId; });
-  if(idx >= 0){
-    t.participants.splice(idx, 1);
-  } else {
-    if(t.participants.length >= maxP){
-      alert('Đủ ' + maxP + ' người rồi. Bỏ chọn người khác nếu muốn đổi.');
+  // Validate based on mode
+  if(t.mode === 'event'){
+    if(newMaxP < 2 || newMaxP > 10){
+      alert('EVENT DAY: số người phải từ 2 đến 10');
       return;
     }
-    t.participants.push({ id: m.id, name: m.name });
+    t.maxPlayers = newMaxP;
+    t.seatsPerTable = newMaxP;
+  } else {
+    // Session: must be even (2 tables)
+    if(newMaxP % 2 !== 0){
+      alert('SESSION EVENT: tổng số người phải chia hết cho 2');
+      return;
+    }
+    var perTable = newMaxP / 2;
+    if(perTable < 6 || perTable > 8){
+      alert('SESSION EVENT: mỗi bàn phải có 6-8 người (tổng 12-16)');
+      return;
+    }
+    t.maxPlayers = newMaxP;
+    t.seatsPerTable = perTable;
   }
+  
+  // Recompute default payout slots based on new size
+  var newSlots = tourPayoutSlotsForSeats(t.seatsPerTable);
+  if(t.payoutSlots !== newSlots){
+    t.payoutSlots = newSlots;
+    t.payoutPcts = tourDefaultPayoutPcts(newSlots);
+  }
+  
+  // Trim participants if needed
+  while(t.participants.length > newMaxP) t.participants.pop();
+  
   tourSaveActive(t);
+  tourCloseEditRegModal();
   tourRenderReg();
+}
+
+function tourCancelTour(){
+  if(!confirm('Xóa toàn bộ giải đấu này? Không thể hoàn tác.')) return;
+  tourSaveActive(null);
+  tourCloseEditRegModal();
+  renderTourTab();
 }
 
 /* ============= DRAW ANIMATION ============= */
@@ -5749,7 +5979,16 @@ function tourDoTheDraw(){
   var t = tourLoadActive();
   if(!t) return;
   var maxP = t.maxPlayers || 12;
-  if(t.participants.length !== maxP) return;
+  
+  // Compact participants array (remove null/empty slots)
+  var filled = t.participants.filter(function(p){ return p && p.name; });
+  if(filled.length !== maxP){
+    alert('Chưa đủ ' + maxP + ' người. Hiện có ' + filled.length + '.');
+    return;
+  }
+  
+  // Update t.participants to compacted version (no nulls)
+  t.participants = filled;
   
   var shuffled = tourShuffle(t.participants);
   
