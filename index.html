@@ -5632,9 +5632,11 @@ function tourRenderReg(){
   var members = getMembers();
   var selectedIds = t.participants.map(function(p){ return p.id; });
   
-  var html = '';
+  var listEl = document.getElementById('tour-reg-list');
+  listEl.innerHTML = '';
+  
   if(members.length === 0){
-    html = '<div class="empty" style="padding:20px 0;">Chưa có hội viên nào.</div>';
+    listEl.innerHTML = '<div class="empty" style="padding:20px 0;">Chưa có hội viên nào.</div>';
   } else {
     members = members.slice().sort(function(a,b){
       var aSel = selectedIds.indexOf(a.id) >= 0 ? 0 : 1;
@@ -5642,28 +5644,36 @@ function tourRenderReg(){
       if(aSel !== bSel) return aSel - bSel;
       return a.name.localeCompare(b.name);
     });
+    
+    // Build DOM elements directly instead of innerHTML string (avoids escaping issues)
     members.forEach(function(m){
       var isSel = selectedIds.indexOf(m.id) >= 0;
-      // Escape memberId for HTML attribute (handles quotes/special chars)
-      var safeId = String(m.id).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-      var safeName = String(m.name).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      html += '<div class="tour-reg-item' + (isSel ? ' selected' : '') + '" data-member-id="'+safeId+'">'
-            + '<div class="tour-reg-checkbox">✓</div>'
-            + '<div class="tour-reg-name">' + safeName + '</div>'
-            + '</div>';
-    });
-  }
-  var listEl = document.getElementById('tour-reg-list');
-  listEl.innerHTML = html;
-  
-  // Attach delegated click handler (idempotent: only one listener total)
-  if(!listEl._regClickAttached){
-    listEl._regClickAttached = true;
-    listEl.addEventListener('click', function(ev){
-      var item = ev.target.closest('.tour-reg-item');
-      if(!item) return;
-      var id = item.getAttribute('data-member-id');
-      if(id) tourToggleReg(id);
+      
+      var item = document.createElement('div');
+      item.className = 'tour-reg-item' + (isSel ? ' selected' : '');
+      
+      var checkbox = document.createElement('div');
+      checkbox.className = 'tour-reg-checkbox';
+      checkbox.textContent = '✓';
+      
+      var nameDiv = document.createElement('div');
+      nameDiv.className = 'tour-reg-name';
+      nameDiv.textContent = m.name; // safe: textContent, no HTML injection
+      
+      item.appendChild(checkbox);
+      item.appendChild(nameDiv);
+      
+      // Closure captures memberId reliably
+      (function(memberId){
+        item.onclick = function(){ tourToggleReg(memberId); };
+        // Also bind touchend for iOS to avoid 300ms delay/missed taps
+        item.addEventListener('touchend', function(ev){
+          ev.preventDefault();
+          tourToggleReg(memberId);
+        }, { passive: false });
+      })(m.id);
+      
+      listEl.appendChild(item);
     });
   }
   
