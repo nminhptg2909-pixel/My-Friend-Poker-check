@@ -5775,9 +5775,23 @@ function tourBuildRegRow(idx, participant){
   input.setAttribute('autocapitalize', 'off');
   input.value = participant && participant.name ? participant.name : '';
   
-  // Save on blur AND on change (datalist pick fires change)
-  input.addEventListener('change', function(){ tourSaveRegRow(idx); });
-  input.addEventListener('blur', function(){ tourSaveRegRow(idx); });
+  // Save real-time on input (debounced) — works on all platforms including mobile
+  var debounceTimer;
+  input.addEventListener('input', function(){
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(function(){
+      tourSaveRegRow(idx, true); // silent mode: don't show dup alert during typing
+    }, 200);
+  });
+  // Also save on change (datalist pick) and blur (final commit)
+  input.addEventListener('change', function(){
+    clearTimeout(debounceTimer);
+    tourSaveRegRow(idx);
+  });
+  input.addEventListener('blur', function(){
+    clearTimeout(debounceTimer);
+    tourSaveRegRow(idx);
+  });
   
   // Clear button
   var clearBtn = document.createElement('div');
@@ -5801,7 +5815,7 @@ function tourBuildRegRow(idx, participant){
   return row;
 }
 
-function tourSaveRegRow(idx){
+function tourSaveRegRow(idx, silent){
   var t = tourLoadActive();
   if(!t || t.phase !== 'reg') return;
   
@@ -5811,11 +5825,12 @@ function tourSaveRegRow(idx){
   var name = input.value.trim();
   var members = getMembers();
   
+  // Ensure participants array has correct length (pad with nulls)
+  while(t.participants.length <= idx) t.participants.push(null);
+  
   if(!name){
     // Remove participant at this slot
-    if(t.participants[idx]){
-      t.participants[idx] = null;
-    }
+    t.participants[idx] = null;
   } else {
     // Check duplicate (case-insensitive, excluding this slot)
     var lower = name.toLowerCase();
@@ -5828,8 +5843,11 @@ function tourSaveRegRow(idx){
       }
     }
     if(dupIdx >= 0){
-      alert('"' + name + '" đã có ở vị trí #' + (dupIdx + 1) + '. Chọn tên khác.');
-      input.value = t.participants[idx] ? t.participants[idx].name : '';
+      // Don't alert on every keystroke; just don't save the duplicate
+      if(!silent){
+        alert('"' + name + '" đã có ở vị trí #' + (dupIdx + 1) + '. Chọn tên khác.');
+        input.value = t.participants[idx] ? t.participants[idx].name : '';
+      }
       return;
     }
     
@@ -5841,8 +5859,6 @@ function tourSaveRegRow(idx){
     };
   }
   
-  // Compact: remove null slots but keep positional integrity via filtering for participants count
-  // We store the array as-is (with nulls) for slot positioning
   tourSaveActive(t);
   
   // Update visual state of this row
@@ -5850,7 +5866,6 @@ function tourSaveRegRow(idx){
   if(row){
     if(t.participants[idx] && t.participants[idx].name){
       row.classList.add('filled');
-      input.value = t.participants[idx].name;
     } else {
       row.classList.remove('filled');
     }
@@ -5975,7 +5990,27 @@ function tourShuffle(arr){
   return a;
 }
 
+function tourFlushAllRegInputs(){
+  // Force-save all input rows to storage (in case blur didn't fire)
+  var t = tourLoadActive();
+  if(!t) return;
+  var maxP = t.maxPlayers || 12;
+  // Blur any active input first (triggers iOS keyboard down + change event)
+  if(document.activeElement && document.activeElement.tagName === 'INPUT'){
+    document.activeElement.blur();
+  }
+  for(var i = 0; i < maxP; i++){
+    var input = document.getElementById('tour-reg-input-' + i);
+    if(input){
+      tourSaveRegRow(i);
+    }
+  }
+}
+
 function tourDoTheDraw(){
+  // CRITICAL: flush any pending input before checking
+  tourFlushAllRegInputs();
+  
   var t = tourLoadActive();
   if(!t) return;
   var maxP = t.maxPlayers || 12;
