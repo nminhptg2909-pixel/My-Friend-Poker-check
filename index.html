@@ -5778,6 +5778,15 @@ function tourBuildRegRow(idx, participant){
   // Save real-time on input (debounced) — works on all platforms including mobile
   var debounceTimer;
   input.addEventListener('input', function(){
+    // Immediate visual feedback (no wait for debounce)
+    if(input.value.trim()){
+      row.classList.add('filled');
+    } else {
+      row.classList.remove('filled');
+    }
+    tourUpdateRegCounter(); // immediate counter update
+    
+    // Debounced save to storage
     clearTimeout(debounceTimer);
     debounceTimer = setTimeout(function(){
       tourSaveRegRow(idx, true); // silent mode: don't show dup alert during typing
@@ -5879,7 +5888,14 @@ function tourUpdateRegCounter(){
   if(!t) return;
   
   var maxP = t.maxPlayers || 12;
-  var filledCount = t.participants.filter(function(p){ return p && p.name; }).length;
+  
+  // SOURCE OF TRUTH: count from DOM input values directly
+  // This avoids race conditions with localStorage/Firebase sync
+  var filledCount = 0;
+  for(var i = 0; i < maxP; i++){
+    var inp = document.getElementById('tour-reg-input-' + i);
+    if(inp && inp.value && inp.value.trim()) filledCount++;
+  }
   
   // Update counter display
   var counterNum = document.getElementById('tour-reg-num-wrap');
@@ -6008,22 +6024,48 @@ function tourFlushAllRegInputs(){
 }
 
 function tourDoTheDraw(){
-  // CRITICAL: flush any pending input before checking
-  tourFlushAllRegInputs();
-  
   var t = tourLoadActive();
   if(!t) return;
   var maxP = t.maxPlayers || 12;
   
-  // Compact participants array (remove null/empty slots)
-  var filled = t.participants.filter(function(p){ return p && p.name; });
-  if(filled.length !== maxP){
-    alert('Chưa đủ ' + maxP + ' người. Hiện có ' + filled.length + '.');
+  // Blur active input to dismiss mobile keyboard
+  if(document.activeElement && document.activeElement.tagName === 'INPUT'){
+    document.activeElement.blur();
+  }
+  
+  // SOURCE OF TRUTH: read participants directly from DOM input values
+  // Don't trust storage which might be stale due to Firebase sync race
+  var members = getMembers();
+  var participants = [];
+  var seenLower = {};
+  
+  for(var i = 0; i < maxP; i++){
+    var input = document.getElementById('tour-reg-input-' + i);
+    if(!input) continue;
+    var name = input.value.trim();
+    if(!name) continue;
+    
+    var lower = name.toLowerCase();
+    if(seenLower[lower]){
+      alert('Tên "' + name + '" bị trùng. Vui lòng kiểm tra lại.');
+      return;
+    }
+    seenLower[lower] = true;
+    
+    var member = members.find(function(m){ return m.name.toLowerCase() === lower; });
+    participants.push({
+      id: member ? member.id : ('guest_' + i + '_' + Date.now()),
+      name: member ? member.name : name
+    });
+  }
+  
+  if(participants.length !== maxP){
+    alert('Chưa đủ ' + maxP + ' người. Hiện có ' + participants.length + '.');
     return;
   }
   
-  // Update t.participants to compacted version (no nulls)
-  t.participants = filled;
+  t.participants = participants;
+  tourSaveActive(t);
   
   var shuffled = tourShuffle(t.participants);
   
