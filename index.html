@@ -2260,7 +2260,7 @@ table.players tr:last-child td{border-bottom:none;}
 .elo-row{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:8px;
   padding:9px 11px;
   margin-bottom:4px;
   border-radius:8px;
@@ -2282,6 +2282,7 @@ table.players tr:last-child td{border-bottom:none;}
 }
 .elo-row-name{
   flex:1;
+  min-width:0;
   font-size:12px;
   font-weight:700;
   color:var(--text);
@@ -2306,6 +2307,66 @@ table.players tr:last-child td{border-bottom:none;}
   color:var(--gold2);
   letter-spacing:.3px;
   font-family:var(--font);
+}
+
+/* ========== RANK TIER (kiểu LMHT) ========== */
+.tour-tier-badge{
+  display:inline-block;
+  margin:4px auto 2px;
+  padding:3px 9px;
+  border-radius:6px;
+  font-size:8.5px;
+  font-weight:900;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  white-space:nowrap;
+  text-align:center;
+}
+.elo-tier-icon{
+  font-size:16px;
+  min-width:22px;
+  text-align:center;
+  flex-shrink:0;
+}
+.elo-row-tier-label{
+  font-size:8.5px;
+  font-weight:800;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  margin-top:1px;
+}
+
+/* ========== ELO NOTE ========== */
+.elo-note{
+  margin-top:12px;
+  padding:11px 13px;
+  border-radius:10px;
+  background:linear-gradient(135deg, rgba(245,224,154,.05), rgba(245,224,154,.01));
+  border:1px solid rgba(245,224,154,.15);
+  font-size:10px;
+  color:var(--text2);
+  line-height:1.7;
+}
+.elo-note-title{
+  font-size:9.5px;
+  font-weight:900;
+  letter-spacing:1.5px;
+  color:var(--gold2);
+  text-transform:uppercase;
+  margin-bottom:7px;
+  display:flex;align-items:center;gap:6px;
+}
+.elo-note b{color:var(--gold3);}
+.elo-tier-legend{
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-top:9px;padding-top:9px;
+  border-top:1px solid rgba(245,224,154,.1);
+}
+.elo-tier-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 8px;border-radius:6px;
+  font-size:8.5px;font-weight:800;letter-spacing:.5px;
+  border:1px solid;
 }
 
 /* ACTION BUTTONS WRAP under ranking */
@@ -2740,6 +2801,18 @@ table.players tr:last-child td{border-bottom:none;}
           <div class="elo-list-count" id="elo-list-count"></div>
         </div>
         <div id="elo-list-body"></div>
+      </div>
+      
+      <!-- ELO NOTE & TIER LEGEND -->
+      <div class="elo-note">
+        <div class="elo-note-title">ℹ️ Cách tính ELO & Phân hạng</div>
+        Mọi người bắt đầu ở <b>1500 điểm</b>. Sau mỗi giải, hệ thống so kè từng cặp người chơi: ai về hạng cao hơn thì <b>+điểm</b>, hạng thấp hơn thì <b>−điểm</b>. Thắng người mạnh (ELO cao) thì được nhiều điểm hơn, thua người yếu thì mất nhiều hơn. Giải <b>SESSION</b> nhân đôi điểm thưởng/phạt so với <b>EVENT DAY</b>.
+        <div class="elo-tier-legend">
+          <span class="elo-tier-chip" style="color:#f5e09a;border-color:#c8a84b;background:rgba(245,224,154,.08);">⚔️ Thách Đấu · #1-2</span>
+          <span class="elo-tier-chip" style="color:#e87dff;border-color:#a020f0;background:rgba(200,90,240,.08);">👑 Cao Thủ · #3-4</span>
+          <span class="elo-tier-chip" style="color:#5fe0d0;border-color:#1fa896;background:rgba(95,224,208,.08);">💎 Bạch Kim · #5-6</span>
+          <span class="elo-tier-chip" style="color:#9a8a7a;border-color:#5a4a3a;background:rgba(120,100,80,.08);">🔩 Đồng Nát · #7+</span>
+        </div>
       </div>
     </div>
     
@@ -5458,6 +5531,40 @@ function tourComputeEloFromHistory(){
   return arr;
 }
 
+/* ============= RANK TIER SYSTEM (kiểu LMHT) =============
+   Tier dựa trên VỊ TRÍ xếp hạng (không phải số ELO):
+   - Hạng 1-2: Thách Đấu (Challenger)
+   - Hạng 3-4: Cao Thủ (Master)
+   - Hạng 5-6: Bạch Kim (Platinum)
+   - Còn lại: Đồng Nát (Sắt)
+*/
+function tourGetTier(rankPosition){
+  if(rankPosition <= 2) return {
+    key:'challenger', name:'THÁCH ĐẤU', short:'Thách Đấu',
+    icon:'⚔️', color:'#f5e09a', color2:'#c8a84b',
+    glow:'rgba(245,224,154,.5)',
+    grad:'linear-gradient(135deg,#fff5d0,#f5e09a,#c8a84b)'
+  };
+  if(rankPosition <= 4) return {
+    key:'master', name:'CAO THỦ', short:'Cao Thủ',
+    icon:'👑', color:'#e87dff', color2:'#a020f0',
+    glow:'rgba(200,90,240,.5)',
+    grad:'linear-gradient(135deg,#f5d0ff,#e87dff,#a020f0)'
+  };
+  if(rankPosition <= 6) return {
+    key:'platinum', name:'BẠCH KIM', short:'Bạch Kim',
+    icon:'💎', color:'#5fe0d0', color2:'#1fa896',
+    glow:'rgba(95,224,208,.5)',
+    grad:'linear-gradient(135deg,#d0fff8,#5fe0d0,#1fa896)'
+  };
+  return {
+    key:'iron', name:'ĐỒNG NÁT', short:'Đồng Nát',
+    icon:'🔩', color:'#9a8a7a', color2:'#5a4a3a',
+    glow:'rgba(120,100,80,.4)',
+    grad:'linear-gradient(135deg,#a8988a,#7a6a5a,#4a3a2a)'
+  };
+}
+
 function tourRenderEloRanking(){
   var ratings = tourComputeEloFromHistory();
   var podiumEl = document.getElementById('elo-podium-wrap');
@@ -5492,10 +5599,12 @@ function tourRenderEloRanking(){
   
   // RANK 2 (left)
   if(r2){
+    var tier2 = tourGetTier(2);
     podHtml += '<div class="elo-podium-spot rank2">';
     podHtml += '<div class="elo-podium-crown">🥈</div>';
-    podHtml += '<div class="elo-podium-avatar">'+initial(r2.name)+'</div>';
+    podHtml += '<div class="elo-podium-avatar" style="border-color:'+tier2.color+';box-shadow:0 0 14px '+tier2.glow+';">'+initial(r2.name)+'</div>';
     podHtml += '<div class="elo-podium-name">'+r2.name+'</div>';
+    podHtml += '<div class="tour-tier-badge" style="background:'+tier2.grad+';color:#1a1408;box-shadow:0 0 10px '+tier2.glow+';">'+tier2.icon+' '+tier2.short+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r2.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">II</div>';
     podHtml += '</div>';
@@ -5505,10 +5614,12 @@ function tourRenderEloRanking(){
   
   // RANK 1 (center)
   if(r1){
+    var tier1 = tourGetTier(1);
     podHtml += '<div class="elo-podium-spot rank1">';
     podHtml += '<div class="elo-podium-crown">👑</div>';
-    podHtml += '<div class="elo-podium-avatar">'+initial(r1.name)+'</div>';
+    podHtml += '<div class="elo-podium-avatar" style="border-color:'+tier1.color+';box-shadow:0 0 18px '+tier1.glow+';">'+initial(r1.name)+'</div>';
     podHtml += '<div class="elo-podium-name">'+r1.name+'</div>';
+    podHtml += '<div class="tour-tier-badge" style="background:'+tier1.grad+';color:#1a1408;box-shadow:0 0 12px '+tier1.glow+';">'+tier1.icon+' '+tier1.short+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r1.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">I</div>';
     podHtml += '</div>';
@@ -5518,10 +5629,12 @@ function tourRenderEloRanking(){
   
   // RANK 3 (right)
   if(r3){
+    var tier3 = tourGetTier(3);
     podHtml += '<div class="elo-podium-spot rank3">';
     podHtml += '<div class="elo-podium-crown">🥉</div>';
-    podHtml += '<div class="elo-podium-avatar">'+initial(r3.name)+'</div>';
+    podHtml += '<div class="elo-podium-avatar" style="border-color:'+tier3.color+';box-shadow:0 0 14px '+tier3.glow+';">'+initial(r3.name)+'</div>';
     podHtml += '<div class="elo-podium-name">'+r3.name+'</div>';
+    podHtml += '<div class="tour-tier-badge" style="background:'+tier3.grad+';color:#fff;box-shadow:0 0 10px '+tier3.glow+';">'+tier3.icon+' '+tier3.short+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r3.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">III</div>';
     podHtml += '</div>';
@@ -5541,9 +5654,11 @@ function tourRenderEloRanking(){
     var listHtml = '';
     rest.forEach(function(r, idx){
       var rank = idx + 4;
-      listHtml += '<div class="elo-row">';
+      var tier = tourGetTier(rank);
+      listHtml += '<div class="elo-row" style="border-left:3px solid '+tier.color+';">';
       listHtml += '<div class="elo-row-rank">#'+rank+'</div>';
-      listHtml += '<div class="elo-row-name">'+r.name+'</div>';
+      listHtml += '<div class="elo-tier-icon" title="'+tier.name+'" style="color:'+tier.color+';text-shadow:0 0 6px '+tier.glow+';">'+tier.icon+'</div>';
+      listHtml += '<div class="elo-row-name">'+r.name+'<div class="elo-row-tier-label" style="color:'+tier.color+';">'+tier.short+'</div></div>';
       listHtml += '<div class="elo-row-stats">'+r.games+' giải · '+r.wins+' 🏆</div>';
       listHtml += '<div class="elo-row-elo">'+r.elo+'</div>';
       listHtml += '</div>';
