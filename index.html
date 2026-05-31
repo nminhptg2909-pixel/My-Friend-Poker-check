@@ -1639,6 +1639,10 @@ table.players tr:last-child td{border-bottom:none;}
   border:1.5px solid rgba(200,140,80,.4);
   box-shadow:0 4px 20px rgba(0,0,0,.5),0 0 22px rgba(200,140,80,.15);
 }
+.tour-prize-row.loser{
+  background:var(--bg3);
+  border:1px solid rgba(192,80,80,.2);
+}
 @keyframes tourGoldRowPulse{
   0%,100%{box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 32px rgba(245,224,154,.3),inset 0 1px 0 rgba(245,224,154,.2);}
   50%{box-shadow:0 4px 24px rgba(0,0,0,.6),0 0 44px rgba(245,224,154,.5),inset 0 1px 0 rgba(245,224,154,.3);}
@@ -5332,11 +5336,12 @@ function tourFormatPayoutPcts(pcts){
 function tourEloStart(){ return 1500; }
 
 function tourGetPlayerFinalRank(t, memberId){
-  // Returns final rank for elo purposes: 1/2/3 for winners, 99 for others (loser bucket)
+  // Returns actual final rank for elo purposes
   if(!t.winners) return null;
   var w = t.winners.find(function(x){ return x.memberId === memberId; });
   if(w) return w.place;
-  return 99; // loser bucket - all losers tie
+  // Fallback for old data without full ranking: assign last place
+  return (t.participants ? t.participants.length : 99);
 }
 
 function tourComputeEloFromHistory(){
@@ -6583,8 +6588,8 @@ function tourRenderRoundsEvent(t){
   var tablesEl = document.getElementById('tour-tables');
   var html = '';
   var table = t.tables[0];
-  var rankedCount = table.seats.filter(function(s){ return s.rank >= 1 && s.rank <= slots; }).length;
-  var isDone = rankedCount === slots;
+  var rankedCount = table.seats.filter(function(s){ return s.rank >= 1; }).length;
+  var isDone = rankedCount === table.seats.length;
   
   html += '<div class="tour-table-card final">';
   html += '<div class="tour-table-header">';
@@ -6595,24 +6600,35 @@ function tourRenderRoundsEvent(t){
   // Visual poker table
   html += tourBuildPokerTableSVG(table.seats, true);
   
+  var totalSeats = table.seats.length;
   table.seats.forEach(function(seat, si){
     var cls = 'tour-seat';
     if(seat.rank === 1) cls += ' top1';
     else if(seat.rank === 2) cls += ' top2';
     else if(seat.rank === 3) cls += ' top3';
-    else if(seat.rank >= 4) cls += ' top3'; // reuse top3 style for hạng 4+
+    else if(seat.rank >= 4) cls += ' top3';
     
     html += '<div class="' + cls + '">';
     html += '<div class="tour-seat-num">G'+(si+1)+'</div>';
     html += '<div class="tour-seat-name">' + seat.name + '</div>';
     html += '<select class="tour-rank-select" onchange="tourSetEventRank('+si+',this.value)">';
     html += '<option value="">—</option>';
-    for(var r = 1; r <= slots; r++){
+    for(var r = 1; r <= totalSeats; r++){
       var taken = table.seats.some(function(s,idx){ return idx !== si && s.rank === r; });
       var disabled = taken ? ' disabled' : '';
       var sel = seat.rank === r ? ' selected' : '';
-      var label = (medals[r-1] || '🎖️') + ' ' + r + ' (' + pcts[r-1] + '%)';
-      html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+      var netLabel = '';
+      if(r <= slots){
+        var prizeAmt = Math.round(prizePool * (pcts[r-1] / 100));
+        var net = prizeAmt - t.buyin;
+        netLabel = ' · ' + (net >= 0 ? '+' : '') + net.toLocaleString('vi-VN') + 'đ';
+        var label = (medals[r-1] || '🎖️') + ' Hạng ' + r + ' (' + pcts[r-1] + '%)' + netLabel;
+        html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+      } else {
+        var lossLabel = ' · -' + t.buyin.toLocaleString('vi-VN') + 'đ';
+        var label = '💀 Hạng ' + r + lossLabel;
+        html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+      }
     }
     html += '</select>';
     html += '</div>';
@@ -6641,20 +6657,25 @@ function tourFinishEventDay(){
   if(!t || t.mode !== 'event') return;
   
   var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 8);
-  var topN = t.tables[0].seats.filter(function(s){ return s.rank >= 1 && s.rank <= slots; });
-  if(topN.length !== slots){ alert('Chưa đủ top ' + slots + '.'); return; }
+  var totalSeats = t.tables[0].seats.length;
+  
+  // Check all seats have a rank assigned
+  var allRanked = t.tables[0].seats.every(function(s){ return s.rank >= 1; });
+  if(!allRanked){ alert('Chưa chọn hạng cho tất cả người chơi.'); return; }
   
   var prizePool = t.buyin * t.participants.length;
   var pcts = tourGetTourPayout(t);
   var winners = [];
-  for(var r = 1; r <= slots; r++){
+  for(var r = 1; r <= totalSeats; r++){
     var s = t.tables[0].seats.find(function(x){ return x.rank === r; });
     if(s){
+      var prize = r <= slots ? Math.round(prizePool * (pcts[r-1] / 100)) : 0;
       winners.push({
         name: s.name,
         memberId: s.memberId,
         place: r,
-        prize: Math.round(prizePool * (pcts[r-1] / 100))
+        prize: prize,
+        net: prize - t.buyin
       });
     }
   }
@@ -6928,7 +6949,7 @@ function tourRenderFinal(){
   var html = '<div class="tour-table-card final">';
   html += '<div class="tour-table-header">';
   html += '<div class="tour-table-name">👑 FINAL TABLE</div>';
-  var done = t.finalists.filter(function(f){ return f.finalRank >= 1 && f.finalRank <= slots; }).length === slots;
+  var done = t.finalists.every(function(f){ return f.finalRank >= 1; });
   html += '<div class="tour-table-status ' + (done ? 'done' : 'live') + '">' + (done ? '✓ Sẵn sàng' : 'Đang chơi') + '</div>';
   html += '</div>';
   
@@ -6937,6 +6958,7 @@ function tourRenderFinal(){
     return { name: f.name, memberId: f.memberId, rank: f.finalRank };
   }), true);
   
+  var totalFinalists = t.finalists.length;
   t.finalists.forEach(function(f, fi){
     var cls = 'tour-seat';
     if(f.finalRank === 1) cls += ' top1';
@@ -6952,12 +6974,19 @@ function tourRenderFinal(){
     html += '<div class="tour-seat-name">' + f.name + ' <span style="font-size:9px;color:var(--text3);font-weight:400;">'+fromInfo+'</span></div>';
     html += '<select class="tour-rank-select" onchange="tourSetFinalRank('+fi+',this.value)">';
     html += '<option value="">—</option>';
-    for(var r = 1; r <= slots; r++){
+    for(var r = 1; r <= totalFinalists; r++){
       var taken = t.finalists.some(function(x,idx){ return idx !== fi && x.finalRank === r; });
       var disabled = taken ? ' disabled' : '';
       var sel = f.finalRank === r ? ' selected' : '';
-      var label = (medals[r-1] || '🎖️') + ' ' + r + ' (' + pcts[r-1] + '%)';
-      html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+      if(r <= slots){
+        var prizeAmt = Math.round(prizePool * (pcts[r-1] / 100));
+        var net = prizeAmt - t.buyin;
+        var label = (medals[r-1] || '🎖️') + ' Hạng ' + r + ' (' + pcts[r-1] + '%) · ' + (net >= 0 ? '+' : '') + net.toLocaleString('vi-VN') + 'đ';
+        html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+      } else {
+        var label = '💀 Hạng ' + r + ' · -' + t.buyin.toLocaleString('vi-VN') + 'đ';
+        html += '<option value="'+r+'"'+disabled+sel+'>'+label+'</option>';
+      }
     }
     html += '</select>';
     html += '</div>';
@@ -6984,20 +7013,26 @@ function tourFinish(){
   var pcts = tourGetTourPayout(t);
   var prizePool = t.buyin * t.participants.length;
   
+  var totalFinalists = t.finalists.length;
+  var allFinalRanked = t.finalists.every(function(f){ return f.finalRank >= 1; });
+  if(!allFinalRanked){ alert('Chưa chọn hạng cho tất cả finalist.'); return; }
+  
   var winners = [];
-  for(var r = 1; r <= slots; r++){
+  for(var r = 1; r <= totalFinalists; r++){
     var f = t.finalists.find(function(x){ return x.finalRank === r; });
     if(f){
+      var prize = r <= slots ? Math.round(prizePool * (pcts[r-1] / 100)) : 0;
       winners.push({
         name: f.name,
         memberId: f.memberId,
         place: r,
-        prize: Math.round(prizePool * (pcts[r-1] / 100))
+        prize: prize,
+        net: prize - t.buyin
       });
     }
   }
   
-  if(winners.length !== slots){ alert('Chưa đủ top ' + slots + ' finalists.'); return; }
+  if(winners.length !== totalFinalists){ alert('Chưa đủ rank cho tất cả finalist.'); return; }
   
   t.winners = winners;
   t.phase = 'done';
@@ -7042,29 +7077,43 @@ function tourRenderResult(){
   html += '📅 ' + t.date + ' · 👥 ' + t.participants.length + ' người · 💰 Pool: <b>' + tourFormatVnd(prizePool) + '</b>';
   html += '</div>';
   
-  var medals = ['🥇','🥈','🥉','🏅','🎖️'];
+  var medals = ['🥇','🥈','🥉','🏅','🎖️','#6','#7','#8','#9','#10'];
   var placeClass = ['gold','silver','bronze','bronze','bronze'];
+  var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 8);
   var pcts = tourGetTourPayout(t);
-  t.winners.forEach(function(w){
-    var cls = 'tour-prize-row ' + (placeClass[w.place-1] || 'bronze');
+  
+  // Sort all winners by place
+  var allResults = (t.winners || []).slice().sort(function(a,b){ return a.place - b.place; });
+  
+  allResults.forEach(function(w){
+    var net = (w.net !== undefined) ? w.net : (w.prize - t.buyin);
+    var isWinner = w.place <= slots;
+    var cls = 'tour-prize-row ' + (isWinner ? (placeClass[w.place-1] || 'bronze') : 'loser');
+    var netStr = net > 0 ? ('<span style="color:#6dbf80;">+' + tourFormatVnd(net) + '</span>') 
+               : net < 0 ? ('<span style="color:#d07070;">-' + tourFormatVnd(Math.abs(net)) + '</span>')
+               : '<span style="color:var(--text3);">±0</span>';
     html += '<div class="' + cls + '">';
-    html += '<div class="tour-prize-medal">' + (medals[w.place-1] || '🎖️') + '</div>';
+    html += '<div class="tour-prize-medal">' + (medals[w.place-1] || ('#'+w.place)) + '</div>';
     html += '<div class="tour-prize-info">';
     html += '<div class="tour-prize-name">' + w.name + '</div>';
-    html += '<div class="tour-prize-amount">Hạng '+w.place+' · ' + (pcts[w.place-1] || 0) + '% prize pool</div>';
+    if(isWinner){
+      html += '<div class="tour-prize-amount">Hạng '+w.place+' · ' + tourFormatVnd(w.prize) + ' prize · bỏ ra ' + tourFormatVnd(t.buyin) + '</div>';
+    } else {
+      html += '<div class="tour-prize-amount">Hạng '+w.place+' · không ăn giải · bỏ ra ' + tourFormatVnd(t.buyin) + '</div>';
+    }
     html += '</div>';
-    html += '<div class="tour-prize-vnd">+' + tourFormatVnd(w.prize) + '</div>';
+    html += '<div class="tour-prize-vnd">' + netStr + '</div>';
     html += '</div>';
   });
   
-  var loserNames = t.participants.filter(function(p){
-    return !t.winners.some(function(w){ return w.memberId === p.id; });
-  }).map(function(p){ return p.name; });
-  
-  if(loserNames.length){
+  // Show participants without rank (if any - backward compat)
+  var unranked = t.participants.filter(function(p){
+    return !allResults.some(function(w){ return w.memberId === p.id; });
+  });
+  if(unranked.length){
     html += '<div style="margin-top:16px;padding:12px;background:linear-gradient(135deg,#1a1014,#0e1014);border:1px solid rgba(192,80,80,.3);border-radius:9px;">';
     html += '<div style="font-size:10px;color:#ff8080;letter-spacing:2px;font-weight:800;margin-bottom:8px;text-align:center;">😢 RA VỀ TAY KHÔNG</div>';
-    html += '<div style="font-size:11px;color:var(--text2);line-height:1.7;text-align:center;">' + loserNames.join(' · ') + '</div>';
+    html += '<div style="font-size:11px;color:var(--text2);line-height:1.7;text-align:center;">' + unranked.map(function(p){ return p.name; }).join(' · ') + '</div>';
     html += '<div style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">Mỗi người mất <b style="color:#ff9090;">' + tourFormatVnd(t.buyin) + '</b></div>';
     html += '</div>';
   }
@@ -7097,20 +7146,39 @@ function tourShowHistory(){
     var winner = t.winners && t.winners[0] ? t.winners[0] : null;
     var modeIcon = t.mode === 'event' ? '⚡' : (t.mode === 'session' ? '🏆' : '🏆');
     var modeName = t.mode === 'event' ? 'EVENT DAY' : (t.mode === 'session' ? 'SESSION' : '');
+    var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 8);
+    var medals = ['🥇','🥈','🥉','🏅','🎖️'];
     
-    html += '<div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">';
+    html += '<div style="margin-bottom:12px;">';
     
-    html += '<div class="tour-history-item" onclick="tourViewHistoryDetail('+idx+')" style="flex:1; margin-bottom:0;">';
-    html += '<div>';
+    // Header row with name + delete
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
+    html += '<div style="flex:1;">';
     html += '<div class="tour-history-name">' + modeIcon + ' ' + t.name + '</div>';
-    html += '<div class="tour-history-meta">' + (modeName ? modeName + ' · ' : '') + t.date + ' · ' + t.participants.length + ' người</div>';
+    html += '<div class="tour-history-meta">' + (modeName ? modeName + ' · ' : '') + t.date + ' · ' + t.participants.length + ' người · Buy-in: ' + tourFormatVnd(t.buyin) + '</div>';
     html += '</div>';
-    if(winner){
-      html += '<div class="tour-history-winner">🥇 ' + winner.name + '<br>+' + tourFormatVnd(winner.prize) + '</div>';
-    }
+    html += '<button class="del-btn" onclick="tourDeleteHistory('+idx+')">Xóa</button>';
     html += '</div>';
     
-    html += '<button class="del-btn" onclick="tourDeleteHistory('+idx+')">Xóa</button>';
+    // P&L rows for all participants
+    if(t.winners && t.winners.length){
+      var allW = t.winners.slice().sort(function(a,b){ return a.place - b.place; });
+      html += '<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;">';
+      allW.forEach(function(w, wi){
+        var net = (w.net !== undefined) ? w.net : (w.prize - t.buyin);
+        var netStr = net > 0 ? ('+' + tourFormatVnd(net)) : ('-' + tourFormatVnd(Math.abs(net)));
+        var netColor = net > 0 ? '#6dbf80' : '#d07070';
+        var medal = w.place <= medals.length ? medals[w.place-1] : ('#'+w.place);
+        var isWinner = w.place <= slots;
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'+(wi < allW.length-1 ? 'border-bottom:1px solid var(--border2);' : '')+'">';
+        html += '<div style="font-size:14px;width:22px;text-align:center;">' + medal + '</div>';
+        html += '<div style="flex:1;font-size:12px;font-weight:600;color:var(--text);">' + w.name + '</div>';
+        if(isWinner) html += '<div style="font-size:9px;color:var(--gold);margin-right:4px;">' + tourFormatVnd(w.prize) + '</div>';
+        html += '<div style="font-size:12px;font-weight:800;color:'+netColor+';">' + netStr + '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
     
     html += '</div>';
   });
