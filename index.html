@@ -3369,7 +3369,12 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
             else renderSessionHistory();
         }
         if(document.getElementById('tab-tour') && document.getElementById('tab-tour').classList.contains('show')) {
-            if(typeof renderTourTab === 'function') renderTourTab();
+            var tourPanels = ['tour-setup','tour-reg','tour-draw','tour-rounds','tour-final','tour-result','tour-history'];
+            var anyPanelOpen = tourPanels.some(function(id){
+                var el = document.getElementById(id);
+                return el && el.style.display !== 'none';
+            });
+            if(!anyPanelOpen && typeof renderTourTab === 'function') renderTourTab();
         }
         if(document.getElementById('tab-hof').classList.contains('show')) renderHof();
         if(document.getElementById('tab-fortune').classList.contains('show')) renderFortuneHistory();
