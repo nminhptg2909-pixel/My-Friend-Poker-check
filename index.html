@@ -2323,10 +2323,23 @@ table.players tr:last-child td{border-bottom:none;}
   text-align:center;
 }
 .elo-tier-icon{
-  font-size:16px;
-  min-width:22px;
-  text-align:center;
+  width:26px;
+  min-width:26px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   flex-shrink:0;
+}
+.elo-tier-icon svg{display:block;}
+.elo-podium-emblem{
+  margin-bottom:2px;
+  display:flex;align-items:center;justify-content:center;
+  animation:eloEmblemBob 3s ease-in-out infinite;
+}
+.elo-podium-emblem.big{margin-top:-4px;}
+@keyframes eloEmblemBob{
+  0%,100%{transform:translateY(0);}
+  50%{transform:translateY(-3px);}
 }
 .elo-row-tier-label{
   font-size:8.5px;
@@ -2368,6 +2381,8 @@ table.players tr:last-child td{border-bottom:none;}
   font-size:8.5px;font-weight:800;letter-spacing:.5px;
   border:1px solid;
 }
+.elo-tier-chip-emblem{display:inline-flex;align-items:center;}
+.elo-tier-chip-emblem svg{display:block;}
 
 /* ACTION BUTTONS WRAP under ranking */
 .elo-actions-wrap{
@@ -2807,12 +2822,7 @@ table.players tr:last-child td{border-bottom:none;}
       <div class="elo-note">
         <div class="elo-note-title">ℹ️ Cách tính ELO & Phân hạng</div>
         Mọi người bắt đầu ở <b>1500 điểm</b>. Sau mỗi giải, hệ thống so kè từng cặp người chơi: ai về hạng cao hơn thì <b>+điểm</b>, hạng thấp hơn thì <b>−điểm</b>. Thắng người mạnh (ELO cao) thì được nhiều điểm hơn, thua người yếu thì mất nhiều hơn. Giải <b>SESSION</b> nhân đôi điểm thưởng/phạt so với <b>EVENT DAY</b>.
-        <div class="elo-tier-legend">
-          <span class="elo-tier-chip" style="color:#f5e09a;border-color:#c8a84b;background:rgba(245,224,154,.08);">⚔️ Thách Đấu · #1-2</span>
-          <span class="elo-tier-chip" style="color:#e87dff;border-color:#a020f0;background:rgba(200,90,240,.08);">👑 Cao Thủ · #3-4</span>
-          <span class="elo-tier-chip" style="color:#5fe0d0;border-color:#1fa896;background:rgba(95,224,208,.08);">💎 Bạch Kim · #5-6</span>
-          <span class="elo-tier-chip" style="color:#9a8a7a;border-color:#5a4a3a;background:rgba(120,100,80,.08);">🔩 Đồng Nát · #7+</span>
-        </div>
+        <div class="elo-tier-legend" id="elo-tier-legend"></div>
       </div>
     </div>
     
@@ -5538,6 +5548,61 @@ function tourComputeEloFromHistory(){
    - Hạng 5-6: Bạch Kim (Platinum)
    - Còn lại: Đồng Nát (Sắt)
 */
+
+/* SVG emblem tự vẽ theo phong cách LMHT (mũ giáp + sừng + ngọc giữa).
+   key: challenger | master | platinum | iron
+   size: px (width = height)
+*/
+function tourTierEmblem(key, size){
+  size = size || 22;
+  var P = {
+    challenger: { metal1:'#fdf6e3', metal2:'#e8d59a', metal3:'#b89a4e', edge:'#8a6a28', gem:'#7fd8ff', gem2:'#2aa8e0', horn:'#f0e6c8' },
+    master:     { metal1:'#6a4a52', metal2:'#3a2228', metal3:'#1e1014', edge:'#0a0608', gem:'#ff5a6a', gem2:'#c81028', horn:'#7a2230' },
+    platinum:   { metal1:'#a8e8dc', metal2:'#4ab8a8', metal3:'#1f6e64', edge:'#0e3a34', gem:'#5effb0', gem2:'#1fc878', horn:'#3aa896' },
+    iron:       { metal1:'#c89878', metal2:'#9a6e4e', metal3:'#5e3e28', edge:'#2e1c10', gem:'#caa078', gem2:'#7a5230', horn:'#8a5e3e' }
+  };
+  var c = P[key] || P.iron;
+  var uid = key + '_' + Math.random().toString(36).slice(2,7);
+  var s =
+  '<svg viewBox="0 0 100 116" width="'+size+'" height="'+(size*1.16)+'" xmlns="http://www.w3.org/2000/svg" style="display:block;">'
+  + '<defs>'
+  + '<linearGradient id="mg'+uid+'" x1="0" y1="0" x2="0" y2="1">'
+  +   '<stop offset="0%" stop-color="'+c.metal1+'"/>'
+  +   '<stop offset="55%" stop-color="'+c.metal2+'"/>'
+  +   '<stop offset="100%" stop-color="'+c.metal3+'"/>'
+  + '</linearGradient>'
+  + '<radialGradient id="gm'+uid+'" cx="50%" cy="40%" r="60%">'
+  +   '<stop offset="0%" stop-color="#ffffff"/>'
+  +   '<stop offset="40%" stop-color="'+c.gem+'"/>'
+  +   '<stop offset="100%" stop-color="'+c.gem2+'"/>'
+  + '</radialGradient>'
+  + '<linearGradient id="hn'+uid+'" x1="0" y1="0" x2="0" y2="1">'
+  +   '<stop offset="0%" stop-color="'+c.horn+'"/>'
+  +   '<stop offset="100%" stop-color="'+c.metal3+'"/>'
+  + '</linearGradient>'
+  + '</defs>'
+  // Left horn
+  + '<path d="M30 36 C12 26 4 36 8 58 C16 50 24 50 30 56 Z" fill="url(#hn'+uid+')" stroke="'+c.edge+'" stroke-width="2"/>'
+  // Right horn
+  + '<path d="M70 36 C88 26 96 36 92 58 C84 50 76 50 70 56 Z" fill="url(#hn'+uid+')" stroke="'+c.edge+'" stroke-width="2"/>'
+  // Top crest spike
+  + '<path d="M50 2 L60 20 L50 28 L40 20 Z" fill="url(#mg'+uid+')" stroke="'+c.edge+'" stroke-width="2"/>'
+  // Main helmet body (shield-ish)
+  + '<path d="M50 14 C30 18 18 30 18 52 C18 78 34 96 50 106 C66 96 82 78 82 52 C82 30 70 18 50 14 Z" fill="url(#mg'+uid+')" stroke="'+c.edge+'" stroke-width="2.5"/>'
+  // Inner visor split
+  + '<path d="M50 30 C40 34 34 44 34 58 C34 76 42 88 50 96 C58 88 66 76 66 58 C66 44 60 34 50 30 Z" fill="'+c.metal3+'" opacity="0.55"/>'
+  // Cheek edges (highlights)
+  + '<path d="M26 50 C28 70 38 86 50 96" fill="none" stroke="'+c.metal1+'" stroke-width="2" opacity="0.5" stroke-linecap="round"/>'
+  + '<path d="M74 50 C72 70 62 86 50 96" fill="none" stroke="'+c.metal1+'" stroke-width="2" opacity="0.5" stroke-linecap="round"/>'
+  // Center gem (diamond)
+  + '<path d="M50 36 L60 52 L50 72 L40 52 Z" fill="url(#gm'+uid+')" stroke="'+c.edge+'" stroke-width="1.5"/>'
+  + '<path d="M50 40 L55 52 L50 64 L45 52 Z" fill="#ffffff" opacity="0.6"/>'
+  // bottom fangs
+  + '<path d="M40 96 L46 110 L50 100 L54 110 L60 96 Z" fill="url(#mg'+uid+')" stroke="'+c.edge+'" stroke-width="2"/>'
+  + '</svg>';
+  return s;
+}
+
 function tourGetTier(rankPosition){
   if(rankPosition <= 2) return {
     key:'challenger', name:'THÁCH ĐẤU', short:'Thách Đấu',
@@ -5547,9 +5612,9 @@ function tourGetTier(rankPosition){
   };
   if(rankPosition <= 4) return {
     key:'master', name:'CAO THỦ', short:'Cao Thủ',
-    icon:'👑', color:'#e87dff', color2:'#a020f0',
-    glow:'rgba(200,90,240,.5)',
-    grad:'linear-gradient(135deg,#f5d0ff,#e87dff,#a020f0)'
+    icon:'👑', color:'#ff7d8a', color2:'#c81028',
+    glow:'rgba(220,60,80,.5)',
+    grad:'linear-gradient(135deg,#ffd0d6,#ff5a6a,#c81028)'
   };
   if(rankPosition <= 6) return {
     key:'platinum', name:'BẠCH KIM', short:'Bạch Kim',
@@ -5559,9 +5624,9 @@ function tourGetTier(rankPosition){
   };
   return {
     key:'iron', name:'ĐỒNG NÁT', short:'Đồng Nát',
-    icon:'🔩', color:'#9a8a7a', color2:'#5a4a3a',
-    glow:'rgba(120,100,80,.4)',
-    grad:'linear-gradient(135deg,#a8988a,#7a6a5a,#4a3a2a)'
+    icon:'🔩', color:'#c89878', color2:'#7a5230',
+    glow:'rgba(180,130,90,.45)',
+    grad:'linear-gradient(135deg,#e8c8a8,#c89878,#7a5230)'
   };
 }
 
@@ -5601,10 +5666,10 @@ function tourRenderEloRanking(){
   if(r2){
     var tier2 = tourGetTier(2);
     podHtml += '<div class="elo-podium-spot rank2">';
-    podHtml += '<div class="elo-podium-crown">🥈</div>';
+    podHtml += '<div class="elo-podium-emblem" style="filter:drop-shadow(0 0 8px '+tier2.glow+');">'+tourTierEmblem(tier2.key, 38)+'</div>';
     podHtml += '<div class="elo-podium-avatar" style="border-color:'+tier2.color+';box-shadow:0 0 14px '+tier2.glow+';">'+initial(r2.name)+'</div>';
     podHtml += '<div class="elo-podium-name">'+r2.name+'</div>';
-    podHtml += '<div class="tour-tier-badge" style="background:'+tier2.grad+';color:#1a1408;box-shadow:0 0 10px '+tier2.glow+';">'+tier2.icon+' '+tier2.short+'</div>';
+    podHtml += '<div class="tour-tier-badge" style="background:'+tier2.grad+';color:#1a1408;box-shadow:0 0 10px '+tier2.glow+';">'+tier2.short+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r2.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">II</div>';
     podHtml += '</div>';
@@ -5617,9 +5682,10 @@ function tourRenderEloRanking(){
     var tier1 = tourGetTier(1);
     podHtml += '<div class="elo-podium-spot rank1">';
     podHtml += '<div class="elo-podium-crown">👑</div>';
+    podHtml += '<div class="elo-podium-emblem big" style="filter:drop-shadow(0 0 12px '+tier1.glow+');">'+tourTierEmblem(tier1.key, 48)+'</div>';
     podHtml += '<div class="elo-podium-avatar" style="border-color:'+tier1.color+';box-shadow:0 0 18px '+tier1.glow+';">'+initial(r1.name)+'</div>';
     podHtml += '<div class="elo-podium-name">'+r1.name+'</div>';
-    podHtml += '<div class="tour-tier-badge" style="background:'+tier1.grad+';color:#1a1408;box-shadow:0 0 12px '+tier1.glow+';">'+tier1.icon+' '+tier1.short+'</div>';
+    podHtml += '<div class="tour-tier-badge" style="background:'+tier1.grad+';color:#1a1408;box-shadow:0 0 12px '+tier1.glow+';">'+tier1.short+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r1.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">I</div>';
     podHtml += '</div>';
@@ -5631,10 +5697,10 @@ function tourRenderEloRanking(){
   if(r3){
     var tier3 = tourGetTier(3);
     podHtml += '<div class="elo-podium-spot rank3">';
-    podHtml += '<div class="elo-podium-crown">🥉</div>';
+    podHtml += '<div class="elo-podium-emblem" style="filter:drop-shadow(0 0 8px '+tier3.glow+');">'+tourTierEmblem(tier3.key, 38)+'</div>';
     podHtml += '<div class="elo-podium-avatar" style="border-color:'+tier3.color+';box-shadow:0 0 14px '+tier3.glow+';">'+initial(r3.name)+'</div>';
     podHtml += '<div class="elo-podium-name">'+r3.name+'</div>';
-    podHtml += '<div class="tour-tier-badge" style="background:'+tier3.grad+';color:#fff;box-shadow:0 0 10px '+tier3.glow+';">'+tier3.icon+' '+tier3.short+'</div>';
+    podHtml += '<div class="tour-tier-badge" style="background:'+tier3.grad+';color:#fff;box-shadow:0 0 10px '+tier3.glow+';">'+tier3.short+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r3.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">III</div>';
     podHtml += '</div>';
@@ -5657,7 +5723,7 @@ function tourRenderEloRanking(){
       var tier = tourGetTier(rank);
       listHtml += '<div class="elo-row" style="border-left:3px solid '+tier.color+';">';
       listHtml += '<div class="elo-row-rank">#'+rank+'</div>';
-      listHtml += '<div class="elo-tier-icon" title="'+tier.name+'" style="color:'+tier.color+';text-shadow:0 0 6px '+tier.glow+';">'+tier.icon+'</div>';
+      listHtml += '<div class="elo-tier-icon" title="'+tier.name+'" style="filter:drop-shadow(0 0 4px '+tier.glow+');">'+tourTierEmblem(tier.key, 26)+'</div>';
       listHtml += '<div class="elo-row-name">'+r.name+'<div class="elo-row-tier-label" style="color:'+tier.color+';">'+tier.short+'</div></div>';
       listHtml += '<div class="elo-row-stats">'+r.games+' giải · '+r.wins+' 🏆</div>';
       listHtml += '<div class="elo-row-elo">'+r.elo+'</div>';
@@ -5667,6 +5733,22 @@ function tourRenderEloRanking(){
   }
   
   listCount.textContent = ratings.length + ' người · ' + tourLoadHistory().filter(function(t){ return t.phase === 'done'; }).length + ' giải';
+  
+  // Render tier legend with mini emblems
+  var legendEl = document.getElementById('elo-tier-legend');
+  if(legendEl){
+    var tiers = [
+      { t: tourGetTier(1), range: '#1-2' },
+      { t: tourGetTier(3), range: '#3-4' },
+      { t: tourGetTier(5), range: '#5-6' },
+      { t: tourGetTier(7), range: '#7+' }
+    ];
+    legendEl.innerHTML = tiers.map(function(x){
+      return '<span class="elo-tier-chip" style="color:'+x.t.color+';border-color:'+x.t.color2+';background:rgba(255,255,255,.03);">'
+        + '<span class="elo-tier-chip-emblem">'+tourTierEmblem(x.t.key, 16)+'</span>'
+        + x.t.short + ' · ' + x.range + '</span>';
+    }).join('');
+  }
 }
 
 function tourTodayStr(){
