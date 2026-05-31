@@ -7160,21 +7160,28 @@ function tourShowHistory(){
     html += '<button class="del-btn" onclick="tourDeleteHistory('+idx+')">Xóa</button>';
     html += '</div>';
     
-    // P&L rows for all participants
-    if(t.winners && t.winners.length){
-      var allW = t.winners.slice().sort(function(a,b){ return a.place - b.place; });
+    // P&L rows for all participants including losers
+    if(t.participants && t.participants.length){
+      var allW = (t.winners || []).slice().sort(function(a,b){ return a.place - b.place; });
+      var winnerIds = allW.map(function(w){ return w.memberId; });
+      var losers = t.participants.filter(function(p){
+        return !winnerIds.some(function(id){ return id === p.id; });
+      });
+      var fullList = allW.concat(losers.map(function(p, li){
+        return { name: p.name, memberId: p.id, place: allW.length + li + 1, prize: 0, net: -t.buyin };
+      }));
       html += '<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;">';
-      allW.forEach(function(w, wi){
+      fullList.forEach(function(w, wi){
         var net = (w.net !== undefined) ? w.net : (w.prize - t.buyin);
-        var netStr = net > 0 ? ('+' + tourFormatVnd(net)) : ('-' + tourFormatVnd(Math.abs(net)));
-        var netColor = net > 0 ? '#6dbf80' : '#d07070';
-        var medal = w.place <= medals.length ? medals[w.place-1] : ('#'+w.place);
+        var netStr = net > 0 ? ('+' + tourFormatVnd(net)) : net < 0 ? ('-' + tourFormatVnd(Math.abs(net))) : '±0đ';
+        var netColor = net > 0 ? '#6dbf80' : net < 0 ? '#d07070' : 'var(--text3)';
+        var medal = w.place === 1 ? '🥇' : w.place === 2 ? '🥈' : w.place === 3 ? '🥉' : '💀';
         var isWinner = w.place <= slots;
-        html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;'+(wi < allW.length-1 ? 'border-bottom:1px solid var(--border2);' : '')+'">';
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;' + (wi < fullList.length-1 ? 'border-bottom:1px solid var(--border2);' : '') + '">';
         html += '<div style="font-size:14px;width:22px;text-align:center;">' + medal + '</div>';
-        html += '<div style="flex:1;font-size:12px;font-weight:600;color:var(--text);">' + w.name + '</div>';
-        if(isWinner) html += '<div style="font-size:9px;color:var(--gold);margin-right:4px;">' + tourFormatVnd(w.prize) + '</div>';
-        html += '<div style="font-size:12px;font-weight:800;color:'+netColor+';">' + netStr + '</div>';
+        html += '<div style="flex:1;font-size:12px;font-weight:600;color:' + (net >= 0 ? 'var(--text)' : 'var(--text2)') + ';">' + w.name + '</div>';
+        if(isWinner && w.prize > 0) html += '<div style="font-size:9px;color:var(--gold);margin-right:4px;">' + tourFormatVnd(w.prize) + '</div>';
+        html += '<div style="font-size:12px;font-weight:800;color:' + netColor + ';">' + netStr + '</div>';
         html += '</div>';
       });
       html += '</div>';
