@@ -3185,6 +3185,14 @@ table.players tr:last-child td{border-bottom:none;}
       <div class="backup-row">
         <button class="btn-backup btn-export" onclick="showExportModal()">📤 Xuất dữ liệu</button>
         <button class="btn-backup btn-import" onclick="showImportModal()">📥 Nhập dữ liệu</button>
+        <div class="card">
+  <div class="card-title" style="color:#d07070;">⚠️ Vùng nguy hiểm</div>
+  <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;">
+    Xoá toàn bộ lịch sử buổi chơi và dữ liệu bảng xếp hạng. <b style="color:#d07070;">Tên hội viên sẽ được giữ lại</b>, nhưng mọi số liệu thắng/thua/lịch sử đều bị xoá vĩnh viễn.
+  </div>
+  <button class="btn-red" onclick="resetLeaderboard()" style="font-size:12px;padding:11px;background:rgba(192,80,80,.12);">🗑 Reset Bảng Xếp Hạng</button>
+</div>
+
       </div>
     </div>
   </div>
@@ -4677,6 +4685,22 @@ function renameMember(id){
 function deleteMember(id){
   var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
   if(confirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.')){saveMembers(members.filter(function(x){return x.id!==id;}));showMemberListView();renderMemberList();}
+}
+function resetLeaderboard(){
+  var members = getMembers();
+  if(!members.length){ alert('Chưa có hội viên nào!'); return; }
+  var names = members.map(function(m){ return '• ' + m.name; }).join('\n');
+  if(!confirm('⚠️ RESET BẢNG XẾP HẠNG\n\nCác hội viên sau sẽ ĐƯỢC GIỮ LẠI tên:\n' + names + '\n\nNhưng toàn bộ lịch sử thắng/thua và dữ liệu buổi chơi sẽ bị XOÁ VĨNH VIỄN.\n\nXác nhận reset?')) return;
+  if(!confirm('⚠️ Xác nhận lần 2: Bạn CHẮC CHẮN muốn xoá hết dữ liệu bảng xếp hạng?\n\nThao tác này KHÔNG THỂ hoàn tác!')) return;
+  var resetMembers = members.map(function(m){
+    return { id: m.id, name: m.name, history: [] };
+  });
+  _originalSetItem.call(localStorage, 'pk_members', JSON.stringify(resetMembers));
+  _originalSetItem.call(localStorage, 'pk_sessions', JSON.stringify([]));
+  pushDataToFirebase();
+  updateGlobalDatalist();
+  renderMemberList();
+  alert('✅ Đã reset xong! Tên hội viên được giữ lại, toàn bộ lịch sử đã xoá.');
 }
 
 function showAddMemberModal(){document.getElementById('addMemberModal').style.display='flex';setTimeout(function(){document.getElementById('newMemberName').focus();},100);}
