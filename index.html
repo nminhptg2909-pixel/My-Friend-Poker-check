@@ -232,17 +232,15 @@ table.players tr:last-child td{border-bottom:none;}
 }
 
 /* Badge DEV cho Doctor Minh - khung đặc biệt */
-.hb-dev {
-  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
-  color: #00ffff;
-  border: 1px solid rgba(0, 255, 255, 0.5);
-  text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 0 0 12px rgba(0, 255, 255, 0.4);
-  font-weight: 800;
-  letter-spacing: 1px;
-  position: relative;
-  overflow: hidden;
-  animation: devGlow 3s ease-in-out infinite;
+.hb-captain {
+  background: linear-gradient(135deg, rgba(0,100,180,0.2), rgba(0,50,120,0.3));
+  color: #60b8ff;
+  border: 1px solid rgba(0,150,255,0.4);
+  text-shadow: 0 0 5px rgba(0,150,255,0.4);
+  font-weight: 700;
+  letter-spacing: 0.3px;
 }
+
 @keyframes devGlow {
   0%, 100% { box-shadow: 0 0 5px rgba(0,255,255,0.3), inset 0 0 5px rgba(0,255,255,0.1); }
   50% { box-shadow: 0 0 12px rgba(0,255,255,0.6), inset 0 0 8px rgba(0,255,255,0.2); }
@@ -4499,14 +4497,15 @@ function renderHof(){
     var badgesHtml = '';
     var s = streakMap[r.name] || {type: 'none', count: 0, latestDiff: 0};
     
-    // Check Doctor Minh - badge DEV
+        // Check Thuyền Trưởng - badge DEV
     var nameLower = (r.name || '').toLowerCase().trim();
-    var isDev = (nameLower === 'doctor minh' || nameLower === 'dr minh' || nameLower === 'dr. minh');
+    var isDev = (nameLower === 'thuyền trưởng' || nameLower === 'thuyen truong' || nameLower === 'thuyentruong');
     var isDealer = (nameLower === 'doctor hùng' || nameLower === 'doctor hung' || nameLower === 'dr hùng' || nameLower === 'dr hung' || nameLower === 'dr. hùng' || nameLower === 'dr. hung');
     
     if (isDev) badgesHtml += '<span class="h-badge hb-dev">⚡ DEV / FOUNDER</span>';
+    if (isDev) badgesHtml += '<span class="h-badge hb-captain">⚓ Thuyền trưởng luôn chìm cùng con tàu của mình</span>';
     if (isDealer) badgesHtml += '<span class="h-badge hb-dealer">🎴 DEALER</span>';
-    
+
     // Badge người được donate nhiều nhất (loại trừ trường hợp Doctor Minh tự donate cho mình)
     if (r.name === mostDonatedName && maxDonateCount > 0) {
       badgesHtml += '<span class="h-badge hb-donatemost">🌹 Được Donate ('+maxDonateCount+')</span>';
@@ -5102,16 +5101,12 @@ function processDonation(donorMemberId, donorName){
   var members = getMembers();
   var DONATE_VALUE = 5000; // 100 chip × 50đ = 5.000đ
   
-  // Tìm Doctor Minh (case-insensitive, match "doctor minh" hoặc "dr minh")
+    // Tìm Thuyền Trưởng (case-insensitive)
   var minh = members.find(function(m){
     var n = (m.name || '').toLowerCase().trim();
-    return n === 'doctor minh' || n === 'dr minh' || n === 'dr. minh';
+    return n === 'thuyền trưởng' || n === 'thuyen truong' || n === 'thuyentruong';
   });
-  
-  if(!minh){
-    return {success: false, message: 'Không tìm thấy Doctor Minh trong danh sách hội viên — donate vô hiệu (vẫn được tỷ lệ ưu đãi)'};
-  }
-  
+
   // Date format: dd/mm/yyyy theo giờ VN
   var now = new Date();
   var vn = new Date(now.getTime() + (now.getTimezoneOffset() + 7*60) * 60000);
