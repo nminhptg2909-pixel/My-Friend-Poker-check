@@ -5536,7 +5536,7 @@ function tourComputeEloFromHistory(){
     });
   });
   
-  // Convert to array, round elo
+   // Convert to array, round elo
   var arr = Object.keys(ratings).map(function(id){
     var r = ratings[id];
     return {
@@ -5545,9 +5545,11 @@ function tourComputeEloFromHistory(){
       elo: Math.round(r.elo),
       games: r.games,
       wins: r.wins,
-      podiums: r.podiums
+      podiums: r.podiums,
+      lastDelta: Math.round(r.lastDelta || 0) // <-- Dòng mới thêm vào
     };
   });
+
   
   // Sort by elo desc, tie-breaker: wins desc, then podiums desc, then games desc
   arr.sort(function(a,b){
