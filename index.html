@@ -7375,63 +7375,123 @@ function tourShowHistory(){
   tourHideAllPanels();
   document.getElementById('tour-history').style.display = '';
   
-  var hist = tourLoadHistory();
+  var allTours = JSON.parse(localStorage.getItem('pk_tournaments')||'[]');
+  var hist = [];
+  
+  // Lọc các giải đã xong và giữ lại index gốc để nút Xóa hoạt động chính xác
+  allTours.forEach(function(t, i){
+     if(t.phase === 'done'){
+         t._originalIndex = i; 
+         hist.push(t);
+     }
+  });
+  
   var el = document.getElementById('tour-history-list');
   if(hist.length === 0){
     el.innerHTML = '<div class="empty" style="padding:20px 0;">Chưa có giải nào kết thúc.</div>';
     return;
   }
   
-  var html = '';
+  // Bước 1: Quét lại lịch sử để tính chính xác điểm +/- ELO của từng ván
+  var eloMap = {}; 
+  var eloDiffsByTour = {}; 
+  
   hist.forEach(function(t, idx){
-    var winner = t.winners && t.winners[0] ? t.winners[0] : null;
-    var modeIcon = t.mode === 'event' ? '⚡' : (t.mode === 'session' ? '🏆' : '🏆');
+     var tourDiffs = {};
+     var participants = t.participants || [];
+     var allW = (t.winners || []).slice().sort(function(a,b){ return a.place - b.place; });
+     var winnerIds = allW.map(function(w){ return w.memberId; });
+     var losers = participants.filter(function(p){ return !winnerIds.includes(p.id); });
+     
+     var rankedPlayers = allW.map(function(w){ return { id: w.memberId, place: w.place }; })
+        .concat(losers.map(function(p, i){ return { id: p.id, place: allW.length + i + 1 }; }));
+        
+     // Khởi tạo 1500 ELO nếu là tay chơi mới
+     rankedPlayers.forEach(function(p){ if(!eloMap[p.id]) eloMap[p.id] = 1500; });
+     
+     // Thuật toán Multi-player ELO
+     var K = 32, N = rankedPlayers.length;
+     if(N > 1) {
+         rankedPlayers.forEach(function(p1){
+            var S = 0, E = 0;
+            rankedPlayers.forEach(function(p2){
+               if(p1.id === p2.id) return;
+               var R1 = eloMap[p1.id], R2 = eloMap[p2.id];
+               E += 1 / (1 + Math.pow(10, (R2 - R1) / 400));
+               S += (p1.place < p2.place) ? 1 : ((p1.place === p2.place) ? 0.5 : 0);
+            });
+            tourDiffs[p1.id] = Math.round(K * (S - E) / (N - 1));
+         });
+         // Cộng dồn điểm vào eloMap để tính cho ván tiếp theo
+         rankedPlayers.forEach(function(p){ eloMap[p.id] += tourDiffs[p.id]; });
+     } else {
+         rankedPlayers.forEach(function(p){ tourDiffs[p.id] = 0; });
+     }
+     
+     // Lưu lại mảng biến động cho giải này
+     t._tempId = t.id || ('tour_' + idx); 
+     eloDiffsByTour[t._tempId] = tourDiffs;
+  });
+  
+  // Bước 2: Render UI (Đảo ngược mảng để trận mới nhất lên đỉnh)
+  var displayHist = hist.slice().reverse();
+  var html = '';
+  
+  displayHist.forEach(function(t){
+    var modeIcon = t.mode === 'event' ? '⚡' : '🏆';
     var modeName = t.mode === 'event' ? 'EVENT DAY' : (t.mode === 'session' ? 'SESSION' : '');
-    var slots = t.payoutSlots || tourPayoutSlotsForSeats(t.seatsPerTable || 8);
-    var medals = ['🥇','🥈','🥉','🏅','🎖️'];
+    var slots = t.payoutSlots || 3;
     
     html += '<div style="margin-bottom:12px;">';
-    
-    // Header row with name + delete
     html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">';
     html += '<div style="flex:1;">';
     html += '<div class="tour-history-name">' + modeIcon + ' ' + t.name + '</div>';
-    html += '<div class="tour-history-meta">' + (modeName ? modeName + ' · ' : '') + t.date + ' · ' + t.participants.length + ' người · Buy-in: ' + tourFormatVnd(t.buyin) + '</div>';
+    html += '<div class="tour-history-meta">' + (modeName ? modeName + ' · ' : '') + t.date + ' · ' + (t.participants||[]).length + ' người · Buy-in: ' + tourFormatVnd(t.buyin) + '</div>';
     html += '</div>';
-    html += '<button class="del-btn" onclick="tourDeleteHistory('+idx+')">Xóa</button>';
+    html += '<button class="del-btn" style="color:var(--red); border:1px solid rgba(208,112,112,0.4); background:transparent; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer;" onclick="tourDeleteHistory('+t._originalIndex+')">Xóa</button>';
     html += '</div>';
     
-    // P&L rows for all participants including losers
     if(t.participants && t.participants.length){
       var allW = (t.winners || []).slice().sort(function(a,b){ return a.place - b.place; });
       var winnerIds = allW.map(function(w){ return w.memberId; });
-      var losers = t.participants.filter(function(p){
-        return !winnerIds.some(function(id){ return id === p.id; });
-      });
+      var losers = t.participants.filter(function(p){ return !winnerIds.includes(p.id); });
       var fullList = allW.concat(losers.map(function(p, li){
         return { name: p.name, memberId: p.id, place: allW.length + li + 1, prize: 0, net: -t.buyin };
       }));
+      
       html += '<div style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;overflow:hidden;">';
+      
       fullList.forEach(function(w, wi){
         var net = (w.net !== undefined) ? w.net : (w.prize - t.buyin);
         var netStr = net > 0 ? ('+' + tourFormatVnd(net)) : net < 0 ? ('-' + tourFormatVnd(Math.abs(net))) : '±0đ';
         var netColor = net > 0 ? '#6dbf80' : net < 0 ? '#d07070' : 'var(--text3)';
         var medal = w.place === 1 ? '🥇' : w.place === 2 ? '🥈' : w.place === 3 ? '🥉' : '💀';
         var isWinner = w.place <= slots;
+        
+        // Gọi dữ liệu ELO Diff đã tính ra
+        var pDiff = eloDiffsByTour[t._tempId][w.memberId] || 0;
+        var diffSign = pDiff > 0 ? '+' : '';
+        var diffColor = pDiff > 0 ? '#6dbf80' : (pDiff < 0 ? '#d07070' : 'var(--text2)');
+        var diffBg = pDiff > 0 ? 'rgba(109,191,128,0.1)' : (pDiff < 0 ? 'rgba(208,112,112,0.1)' : 'var(--bg)');
+        var eloDiffBadge = '<span style="font-size:10px; font-weight:800; color:' + diffColor + '; background:' + diffBg + '; padding:2px 5px; border-radius:4px; margin-left:6px; border:1px solid ' + diffColor + '60;">' + diffSign + pDiff + ' ELO</span>';
+
         html += '<div style="display:flex;align-items:center;gap:8px;padding:7px 10px;' + (wi < fullList.length-1 ? 'border-bottom:1px solid var(--border2);' : '') + '">';
         html += '<div style="font-size:14px;width:22px;text-align:center;">' + medal + '</div>';
-        html += '<div style="flex:1;font-size:12px;font-weight:600;color:' + (net >= 0 ? 'var(--text)' : 'var(--text2)') + ';">' + w.name + '</div>';
+        
+        // Tên + Badge ELO cộng trừ
+        html += '<div style="flex:1;font-size:12px;font-weight:600;color:' + (net >= 0 ? 'var(--text)' : 'var(--text2)') + ';">' + w.name + eloDiffBadge + '</div>';
+        
         if(isWinner && w.prize > 0) html += '<div style="font-size:9px;color:var(--gold);margin-right:4px;">' + tourFormatVnd(w.prize) + '</div>';
         html += '<div style="font-size:12px;font-weight:800;color:' + netColor + ';">' + netStr + '</div>';
         html += '</div>';
       });
       html += '</div>';
     }
-    
     html += '</div>';
   });
   el.innerHTML = html;
 }
+
 
 
 function tourDeleteHistory(idx) {
