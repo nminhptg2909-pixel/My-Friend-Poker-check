@@ -7314,8 +7314,19 @@ function tourRenderResult(){
                : '<span style="color:var(--text3);">±0</span>';
     html += '<div class="' + cls + '">';
     html += '<div class="tour-prize-medal">' + (medals[w.place-1] || ('#'+w.place)) + '</div>';
-    html += '<div class="tour-prize-info">';
-    html += '<div class="tour-prize-name">' + w.name + '</div>';
+        html += '<div class="tour-prize-info">';
+    
+    // Tìm điểm ELO của người này và tạo badge hiển thị
+    var playerElo = eloStats.find(function(e){ return e.memberId === w.memberId || e.name === w.name; });
+    var eloText = '';
+    if(playerElo && playerElo.lastDelta !== undefined) {
+      var sign = playerElo.lastDelta > 0 ? '+' : '';
+      var color = playerElo.lastDelta > 0 ? '#6dbf80' : (playerElo.lastDelta < 0 ? '#d07070' : 'var(--text3)');
+      eloText = ' <span style="font-size:9px; font-weight:800; color:'+color+'; margin-left:6px; background:rgba(255,255,255,0.1); padding:2px 5px; border-radius:4px;">' + sign + playerElo.lastDelta + ' ELO</span>';
+    }
+    
+    html += '<div class="tour-prize-name">' + w.name + eloText + '</div>';
+
     if(isWinner){
       html += '<div class="tour-prize-amount">Hạng '+w.place+' · ' + tourFormatVnd(w.prize) + ' prize · bỏ ra ' + tourFormatVnd(t.buyin) + '</div>';
     } else {
@@ -7333,7 +7344,17 @@ function tourRenderResult(){
   if(unranked.length){
     html += '<div style="margin-top:16px;padding:12px;background:linear-gradient(135deg,#1a1014,#0e1014);border:1px solid rgba(192,80,80,.3);border-radius:9px;">';
     html += '<div style="font-size:10px;color:#ff8080;letter-spacing:2px;font-weight:800;margin-bottom:8px;text-align:center;">😢 RA VỀ TAY KHÔNG</div>';
-    html += '<div style="font-size:11px;color:var(--text2);line-height:1.7;text-align:center;">' + unranked.map(function(p){ return p.name; }).join(' · ') + '</div>';
+        html += '<div style="font-size:11px;color:var(--text2);line-height:1.7;text-align:center;">' + unranked.map(function(p){ 
+      var pElo = eloStats.find(function(e){ return e.memberId === p.id || e.name === p.name; });
+      var eTxt = '';
+      if(pElo && pElo.lastDelta) {
+         var sign = pElo.lastDelta > 0 ? '+' : '';
+         var color = pElo.lastDelta > 0 ? '#6dbf80' : '#ff8080';
+         eTxt = ' <span style="color:'+color+'; font-weight:800; font-size:10px;">(' + sign + pElo.lastDelta + ' ELO)</span>';
+      }
+      return p.name + eTxt; 
+    }).join(' · ') + '</div>';
+
     html += '<div style="font-size:10px;color:var(--text3);margin-top:8px;text-align:center;">Mỗi người mất <b style="color:#ff9090;">' + tourFormatVnd(t.buyin) + '</b></div>';
     html += '</div>';
   }
