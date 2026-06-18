@@ -7276,10 +7276,12 @@ function tourRenderResult(){
   var t = tourLoadActive();
   if(!t || !t.winners) return;
   
-  var prizePool = t.buyin * t.participants.length;
+    var prizePool = t.buyin * t.participants.length;
   var champion = t.winners.find(function(w){ return w.place === 1; });
+  var eloStats = tourComputeEloFromHistory(); // <-- Lấy dữ liệu ELO
   
   var html = '';
+
   
   // Champion hero
   if(champion){
