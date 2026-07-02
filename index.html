@@ -2947,7 +2947,16 @@ table.players tr:last-child td{border-bottom:none;}
     <button class="btn-gold" onclick="confirmTransfer()">Xác nhận giao dịch</button>
   </div>
 </div>
-
+function tourDeleteHistory(idx) {
+    if (!confirm('Bạn có chắc chắn muốn xóa lịch sử giải đấu này không?')) return;
+    
+    var hist = tourLoadHistory();
+    if (idx > -1 && idx < hist.length) {
+        hist.splice(idx, 1); // Xóa giải đấu khỏi mảng
+        tourSaveHistory(hist); // Lưu lại mảng mới
+        tourShowHistory(); // Vẽ lại danh sách sau khi xóa
+    }
+}
 <script>
 // ==========================================
 // 1. CẤU HÌNH & KHỞI TẠO FIREBASE
