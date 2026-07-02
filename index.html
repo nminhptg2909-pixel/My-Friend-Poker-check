@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script>
+// Tự động xóa dữ liệu cũ của tất cả người dùng khi họ mở phiên bản mới này
+if (!localStorage.getItem('da_reset_data_v1')) {
+    localStorage.removeItem('pk_sessions');
+    localStorage.removeItem('garini_active_game');
+    localStorage.removeItem('garini_saved_games');
+    localStorage.removeItem('pk_tournaments');
+    localStorage.removeItem('pk_active_tour');
+    localStorage.setItem('da_reset_data_v1', 'true');
+}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🏸 CẦU LÔNG CLUB Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -3355,6 +3366,13 @@ function saveNewTable() {
     var rateVnd = parseInt(document.getElementById('setupRateVnd').value) || 100000;
     var rateChip = parseInt(document.getElementById('setupRateChip').value) || 2000;
     if(rateVnd <= 0 || rateChip <= 0) { alert('Buy-in và Stack phải lớn hơn 0!'); return; }
+    
+    // --- THÊM ĐOẠN NÀY ĐỂ ĐÁNH SỐ BÀN ---
+    var sessions = JSON.parse(localStorage.getItem('pk_sessions') || '[]');
+    var nextCashNum = sessions.length + 1;
+    activeGame.name = "CASH#" + nextCashNum;
+    // ------------------------------------
+
     activeGame.players = [];
     activeGame.date = document.getElementById('setupSessionDate').value;
     activeGame.rateVnd = rateVnd;
@@ -3689,8 +3707,9 @@ function saveSessionToHistory(){
     m.history.unshift({date: displayDate, buyin: r.buyin, cashout: r.cashout, diff: r.diff});
   });
 
-  sessions.unshift({
+ sessions.unshift({
       id: Date.now(), 
+      name: activeGame.name || ("CASH#" + (sessions.length + 1)), // <-- THÊM DÒNG NÀY
       date: displayDate, 
       roomFee: 0,
       settled: {},
@@ -5335,11 +5354,18 @@ function tourBackToMain(){
 }
 
 /* ============= SETUP ============= */
-function tourShowSetup(){
+function tourShowSetup() {
   tourHideAllPanels();
   document.getElementById('tour-setup').style.display = '';
+  
+  // Tự động đếm số giải đấu trong lịch sử để tạo số thứ tự tăng dần
+  var hist = JSON.parse(localStorage.getItem('pk_tournaments') || '[]');
+  var nextTourNum = hist.length + 1;
+  document.getElementById('tourName').value = "TOUR#" + nextTourNum;
+  
   var dateInput = document.getElementById('tourDate');
   if(!dateInput.value) dateInput.value = tourTodayStr();
+}
   // Reset to event mode default
   tourSelectMode('event');
   // Bind input listeners for live rules update
