@@ -5534,28 +5534,28 @@ function tourRenderReg(){
   }
 }
 
-function tourToggleReg(memberId){
-  var t = tourLoadActive();
-  if(!t || t.phase !== 'reg') return;
-  
-  var maxP = t.maxPlayers || 12;
-  var members = getMembers();
-  var m = members.find(function(x){ return x.id === memberId; });
-  if(!m) return;
-  
-  var idx = t.participants.findIndex(function(p){ return p.id === memberId; });
-  if(idx >= 0){
-    t.participants.splice(idx, 1);
-  } else {
-    if(t.participants.length >= maxP){
-      alert('Đủ ' + maxP + ' người rồi. Bỏ chọn người khác nếu muốn đổi.');
-      return;
+function tourToggleReg(playerId) {
+    // 1. Đảm bảo biến registrations luôn tồn tại (Sửa lỗi undefined)
+    if (typeof registrations === 'undefined' || !Array.isArray(registrations)) {
+        registrations = [];
     }
-    t.participants.push({ id: m.id, name: m.name });
-  }
-  tourSaveActive(t);
-  tourRenderReg();
+
+    // 2. Logic tìm kiếm an toàn
+    var idx = registrations.findIndex(function(p) { return p.id === playerId; });
+    
+    if (idx > -1) {
+        registrations.splice(idx, 1); // Xóa nếu đã có
+    } else {
+        registrations.push({ id: playerId }); // Thêm mới
+    }
+    
+    // 3. Lưu và cập nhật giao diện
+    localStorage.setItem('pk_registrations', JSON.stringify(registrations));
+    if (typeof renderTournamentList === 'function') {
+        renderTournamentList(); 
+    }
 }
+
 
 /* ============= DRAW ANIMATION ============= */
 function tourShuffle(arr){
