@@ -6143,6 +6143,16 @@ function tourShowHistory(){
   
   var html = '';
   hist.forEach(function(t, idx){
+    // ... trong hàm tourShowHistory()
+html += '<div class="tour-history-item" onclick="tourViewHistoryDetail('+idx+')">';
+html += '<div>';
+// ... giữ nguyên phần tên giải và thông tin ...
+html += '</div>';
+
+// Thêm nút xóa tại đây
+html += '<button class="del-btn" style="padding:4px 8px; font-size:10px; margin-left:10px;" onclick="event.stopPropagation(); tourDeleteHistory('+idx+')">Xóa</button>';
+
+html += '</div>';
     var winner = t.winners && t.winners[0] ? t.winners[0] : null;
     var modeIcon = t.mode === 'event' ? '⚡' : (t.mode === 'session' ? '🏆' : '🏆');
     var modeName = t.mode === 'event' ? 'EVENT DAY' : (t.mode === 'session' ? 'SESSION' : '');
