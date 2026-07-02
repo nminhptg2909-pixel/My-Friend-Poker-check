@@ -3,13 +3,20 @@
 <head>
   <script>
 // Tự động xóa dữ liệu cũ của tất cả người dùng khi họ mở phiên bản mới này
+i<script>
+// Tự động xóa dữ liệu cũ
 if (!localStorage.getItem('da_reset_data_v1')) {
     localStorage.removeItem('pk_sessions');
     localStorage.removeItem('garini_active_game');
     localStorage.removeItem('garini_saved_games');
     localStorage.removeItem('pk_tournaments');
     localStorage.removeItem('pk_active_tour');
+    
+    // Đánh dấu đã xóa ngay lập tức
     localStorage.setItem('da_reset_data_v1', 'true');
+    
+    // KHÔNG dùng location.reload() ở đây để tránh lặp vô hạn
+    console.log("Dữ liệu cũ đã được dọn dẹp.");
 }
 </script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
