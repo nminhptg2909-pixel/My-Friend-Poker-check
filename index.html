@@ -2947,6 +2947,7 @@ table.players tr:last-child td{border-bottom:none;}
     <button class="btn-gold" onclick="confirmTransfer()">Xác nhận giao dịch</button>
   </div>
 </div>
+
 <script>
 // ==========================================
 // 1. CẤU HÌNH & KHỞI TẠO FIREBASE
@@ -5533,7 +5534,7 @@ function tourRenderReg(){
   }
 }
 
-function tourToggleReg(playerId) {
+function tourToggleReg(memberId){
   var t = tourLoadActive();
   if(!t || t.phase !== 'reg') return;
   
@@ -6142,16 +6143,6 @@ function tourShowHistory(){
   
   var html = '';
   hist.forEach(function(t, idx){
-    // ... trong hàm tourShowHistory()
-html += '<div class="tour-history-item" onclick="tourViewHistoryDetail('+idx+')">';
-html += '<div>';
-// ... giữ nguyên phần tên giải và thông tin ...
-html += '</div>';
-
-// Thêm nút xóa tại đây
-html += '<button class="del-btn" style="padding:4px 8px; font-size:10px; margin-left:10px;" onclick="event.stopPropagation(); tourDeleteHistory('+idx+')">Xóa</button>';
-
-html += '</div>';
     var winner = t.winners && t.winners[0] ? t.winners[0] : null;
     var modeIcon = t.mode === 'event' ? '⚡' : (t.mode === 'session' ? '🏆' : '🏆');
     var modeName = t.mode === 'event' ? 'EVENT DAY' : (t.mode === 'session' ? 'SESSION' : '');
@@ -6343,16 +6334,6 @@ function renderBillResult(personMap, dayCount){
   });
 
   document.getElementById('billResultList').innerHTML = h || '<div class="empty">Không có dữ liệu người chơi trong các ngày đã chọn.</div>';
-}
-    function tourDeleteHistory(idx) {
-    if (!confirm('Bạn có chắc chắn muốn xóa lịch sử giải đấu này không?')) return;
-    
-    var hist = tourLoadHistory();
-    if (idx > -1 && idx < hist.length) {
-        hist.splice(idx, 1); // Xóa giải đấu khỏi mảng
-        tourSaveHistory(hist); // Lưu lại mảng mới
-        tourShowHistory(); // Vẽ lại danh sách sau khi xóa
-    }
 }
 </script>
 </body>
