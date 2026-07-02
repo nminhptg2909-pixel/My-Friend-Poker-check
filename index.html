@@ -5533,7 +5533,18 @@ function tourRenderReg(){
   }
 }
 
-function tourToggleReg(memberId){
+function tourToggleReg(playerId) {
+    // Thêm dòng kiểm tra an toàn này vào đầu hàm
+    if (typeof registrations === 'undefined' || !registrations) {
+        registrations = []; // Khởi tạo lại nếu nó bị mất
+    }
+
+    // Sau đó mới thực hiện logic tìm kiếm
+    var idx = registrations.findIndex(function(p) { return p.id === playerId; });
+    
+    // ... phần logic còn lại của bạn ...
+}
+  
   var t = tourLoadActive();
   if(!t || t.phase !== 'reg') return;
   
