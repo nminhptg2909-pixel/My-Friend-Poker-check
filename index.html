@@ -2556,21 +2556,16 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
-<!-- EVENT DAY rules -->
-<div id="rules-event" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
-  📋 <b style="color:var(--gold2);">Luật EVENT DAY:</b><br>
-  • <b id="rules-event-count">8</b> người, 1 bàn duy nhất<br>
-  • Đánh tới cuối, chốt top 3 luôn<br>
-  • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3
+<div id="rules-event" style="margin-top:12px;font-size:11px;color:var(--text2);line-height:1.6;display:none;">
+  <b style="color:var(--gold);">Luật Event Day:</b><br>
+  • Tối đa <b id="rules-event-count" style="color:var(--gold2);">8</b> người/bàn. Chơi 1 lèo tới khi tìm ra Top 3.<br>
+  • Prize: <b id="rules-event-prize" style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3.
 </div>
 
-<!-- SESSION EVENT rules -->
-<div id="rules-session" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
-  📋 <b style="color:var(--gold2);">Luật SESSION EVENT:</b><br>
-  • <b id="rules-session-count">12</b> người chia <b>2 bàn</b> (random)<br>
-  • Vòng bảng <b id="rules-session-days">2</b> ngày: mỗi ngày Top 1 = 3đ, Top 2 = 2đ, Top 3 = 1đ<br>
-  • Top 3 mỗi bàn (theo tổng điểm) → 6 người vào Final<br>
-  • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3 final
+<div id="rules-session" style="margin-top:12px;font-size:11px;color:var(--text2);line-height:1.6;display:none;">
+  <b style="color:var(--gold);">Luật Session Event:</b><br>
+  • Vòng bảng: <b id="rules-session-count" style="color:var(--gold2);">12</b> người chia 2 bàn. Chơi trong <b id="rules-session-days" style="color:var(--gold2);">2</b> ngày.<br>
+  • Prize: <b id="rules-session-prize" style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3 final.
 </div>
 
 <button class="tour-btn-primary" onclick="tourCreateAndOpenReg()">› TIẾP TỤC</button>
