@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="vi">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -2250,8 +2251,11 @@ table.players tr:last-child td{border-bottom:none;}
 .elo-actions-label::after{right:0;}
 
 </style>
+
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-app-compat.js"></script>
+
 <script src="https://www.gstatic.com/firebasejs/10.9.0/firebase-database-compat.js"></script>
+
 </head>
 <body>
 <canvas id="confetti-canvas"></canvas>
@@ -2370,15 +2374,18 @@ table.players tr:last-child td{border-bottom:none;}
         <span class="cal">📅</span> <strong id="activeDateDisplay"></strong>
       </div>
       <div id="activePlayerList"></div>
-      
-      <div style="display:flex;gap:8px;margin-top:16px;">
-        <button class="btn-gold" onclick="openAddSinglePlayerModal()" style="margin-top:0;flex:1;">+ Thêm người</button>
-        <button class="btn-red" onclick="resetAll()" style="margin-top:0;flex:1;background:var(--bg3);">Hủy bàn</button>
-      </div>
-      <button class="btn-green" onclick="showTab('result')" style="width:100%;margin-top:8px;">› Tính kết quả</button>
-      
-      <button class="btn-outline-gold" onclick="suspendActiveGame()">⏸ Cất tạm bàn này đi</button>
-    </div>
+
+```
+  <div style="display:flex;gap:8px;margin-top:16px;">
+    <button class="btn-gold" onclick="openAddSinglePlayerModal()" style="margin-top:0;flex:1;">+ Thêm người</button>
+    <button class="btn-red" onclick="resetAll()" style="margin-top:0;flex:1;background:var(--bg3);">Hủy bàn</button>
+  </div>
+  <button class="btn-green" onclick="showTab('result')" style="width:100%;margin-top:8px;">› Tính kết quả</button>
+  
+  <button class="btn-outline-gold" onclick="suspendActiveGame()">⏸ Cất tạm bàn này đi</button>
+</div>
+```
+
   </div>
 
   <div id="savedGamesSection" style="display:none; margin-top:16px;"></div>
@@ -2397,31 +2404,34 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="card" id="summaryCard" style="display:none">
       <div class="card-title">Tổng kết ván</div>
       <div class="pot-info">Tổng pot: <span id="totalPot">0 chip</span></div>
-      
-      <div style="background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:12px; font-size:12px; margin-bottom:14px; display:flex; flex-direction:column; gap:6px;">
-        <div style="display:flex; justify-content:space-between;">
-          <span style="color:var(--text3); font-weight:500;">Tổng tiền Dương (+):</span>
-          <span id="sumPositive" style="color:#6dbf80; font-weight:700;">+0 chip</span>
-        </div>
-        <div style="display:flex; justify-content:space-between;">
-          <span style="color:var(--text3); font-weight:500;">Tổng tiền Âm (-):</span>
-          <span id="sumNegative" style="color:#d07070; font-weight:700;">-0 chip</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border2); padding-top:6px; margin-top:2px;">
-          <span style="color:var(--gold); font-weight:600;">Chênh lệch:</span>
-          <span id="sumDelta" style="font-weight:800; color:var(--text);">0 chip</span>
-        </div>
-      </div>
 
-      <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
-      <div id="summaryList"></div>
-      <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
+```
+  <div style="background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:12px; font-size:12px; margin-bottom:14px; display:flex; flex-direction:column; gap:6px;">
+    <div style="display:flex; justify-content:space-between;">
+      <span style="color:var(--text3); font-weight:500;">Tổng tiền Dương (+):</span>
+      <span id="sumPositive" style="color:#6dbf80; font-weight:700;">+0 chip</span>
     </div>
+    <div style="display:flex; justify-content:space-between;">
+      <span style="color:var(--text3); font-weight:500;">Tổng tiền Âm (-):</span>
+      <span id="sumNegative" style="color:#d07070; font-weight:700;">-0 chip</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; border-top:1px dashed var(--border2); padding-top:6px; margin-top:2px;">
+      <span style="color:var(--gold); font-weight:600;">Chênh lệch:</span>
+      <span id="sumDelta" style="font-weight:800; color:var(--text);">0 chip</span>
+    </div>
+  </div>
 
-    <div class="card">
-      <div class="card-title">💰 Lịch sử Donate</div>
-      <div id="donateHistoryList"><div class="empty">Chưa có ai donate cả</div></div>
-    </div>
+  <div id="sessionDateDisplay" style="font-size:11px;color:var(--gold);margin-bottom:8px;opacity:.8;"></div>
+  <div id="summaryList"></div>
+  <button class="btn-green" onclick="saveSessionToHistory()" style="margin-top:12px;">✅ Hoàn tất & Lưu vào Lịch sử</button>
+</div>
+
+<div class="card">
+  <div class="card-title">💰 Lịch sử Donate</div>
+  <div id="donateHistoryList"><div class="empty">Chưa có ai donate cả</div></div>
+</div>
+```
+
   </div>
   <div id="sessionHistoryView" style="display:none">
     <button class="back-btn" onclick="hideSessionHistory()">‹ Quay lại Cash Out</button>
@@ -2433,163 +2443,187 @@ table.players tr:last-child td{border-bottom:none;}
 </div>
 
 <!-- ============== TOURNAMENT TAB ============== -->
+
 <div class="page" id="tab-tour">
 
   <!-- EMPTY STATE: ELO Ranking + Tạo giải -->
+
   <div class="card" id="tour-empty" style="display:none;">
-    
-    <!-- ELO RANKING HERO -->
-    <div class="elo-hero-wrap">
-      <div class="elo-hero-eyebrow">◆ PRESTIGE LEADERBOARD ◆</div>
-      <div class="elo-hero-title">RANKING</div>
-      <div class="elo-hero-sub">ELO RATING SYSTEM</div>
-      <div class="elo-hero-divider">◆ ◆ ◆</div>
-      
-      <div id="elo-podium-wrap"></div>
-      
-      <div class="elo-list">
-        <div class="elo-list-header">
-          <div class="elo-list-title">⚔ XẾP HẠNG</div>
-          <div class="elo-list-count" id="elo-list-count"></div>
-        </div>
-        <div id="elo-list-body"></div>
-      </div>
+
+```
+<!-- ELO RANKING HERO -->
+<div class="elo-hero-wrap">
+  <div class="elo-hero-eyebrow">◆ PRESTIGE LEADERBOARD ◆</div>
+  <div class="elo-hero-title">RANKING</div>
+  <div class="elo-hero-sub">ELO RATING SYSTEM</div>
+  <div class="elo-hero-divider">◆ ◆ ◆</div>
+  
+  <div id="elo-podium-wrap"></div>
+  
+  <div class="elo-list">
+    <div class="elo-list-header">
+      <div class="elo-list-title">⚔ XẾP HẠNG</div>
+      <div class="elo-list-count" id="elo-list-count"></div>
     </div>
-    
-    <!-- ACTION BUTTONS -->
-    <div class="elo-actions-wrap">
-      <div class="elo-actions-label">◆ GIẢI ĐẤU ◆</div>
-      <button class="tour-btn-primary" onclick="tourShowSetup()">+ TẠO GIẢI MỚI</button>
-      <button class="btn-green" id="tour-history-btn" onclick="tourShowHistory()" style="margin-top:8px;">📜 Lịch Sử Giải</button>
-    </div>
+    <div id="elo-list-body"></div>
+  </div>
+</div>
+
+<!-- ACTION BUTTONS -->
+<div class="elo-actions-wrap">
+  <div class="elo-actions-label">◆ GIẢI ĐẤU ◆</div>
+  <button class="tour-btn-primary" onclick="tourShowSetup()">+ TẠO GIẢI MỚI</button>
+  <button class="btn-green" id="tour-history-btn" onclick="tourShowHistory()" style="margin-top:8px;">📜 Lịch Sử Giải</button>
+</div>
+```
+
   </div>
 
   <!-- SETUP: nhập thông tin giải -->
+
   <div class="card" id="tour-setup" style="display:none;">
     <div class="card-title">⚙️ Thiết lập giải đấu</div>
-    
-    <div style="color:var(--gold);font-size:10.5px;letter-spacing:1.5px;font-weight:800;margin-bottom:6px;">CHỌN THỂ THỨC</div>
-    <div class="tour-mode-grid">
-      <div class="tour-mode-card selected" id="mode-card-event" onclick="tourSelectMode('event')">
-        <div class="tour-mode-icon">⚡</div>
-        <div class="tour-mode-title">EVENT DAY</div>
-        <div class="tour-mode-desc">Đánh trong 1 ngày · 8-10 người · 1 bàn duy nhất, top 3 ăn giải luôn</div>
-        <div class="tour-mode-badge">QUY MÔ NHỎ</div>
-      </div>
-      <div class="tour-mode-card" id="mode-card-session" onclick="tourSelectMode('session')">
-        <div class="tour-mode-icon">🏆</div>
-        <div class="tour-mode-title">SESSION EVENT</div>
-        <div class="tour-mode-desc">Nhiều ngày · 2 bàn (6-8 người/bàn) · Vòng bảng tích điểm → Final table</div>
-        <div class="tour-mode-badge">QUY MÔ LỚN</div>
-      </div>
-    </div>
-    
-    <div class="form-row" style="margin-top:16px;margin-bottom:12px;">
-      <label style="min-width:80px;color:var(--gold);font-size:11px;">Tên giải:</label>
-      <input type="text" id="tourName" placeholder="VD: Cup Cầu Lông T11" style="flex:1;">
-    </div>
-    
-    <div class="form-row" style="margin-bottom:12px;">
-      <label style="min-width:80px;color:var(--gold);font-size:11px;">Ngày bắt đầu:</label>
-      <input type="text" id="tourDate" placeholder="dd/mm/yyyy" style="flex:1;">
-    </div>
-    
-    <div class="form-row" style="margin-bottom:12px;">
-      <label style="min-width:80px;color:var(--gold);font-size:11px;">Buy-in:</label>
-      <input type="number" id="tourBuyin" placeholder="200000" min="0" style="flex:1;">
-      <span style="color:var(--text3);font-size:11px;">VND</span>
-    </div>
-    
-    <!-- EVENT DAY fields -->
-    <div id="setup-event-fields">
-      <div class="form-row" style="margin-bottom:12px;">
-        <label style="min-width:80px;color:var(--gold);font-size:11px;">Số người:</label>
-        <input type="number" id="tourMaxPlayers" value="8" min="4" max="10" style="flex:1;">
-        <span style="color:var(--text3);font-size:11px;">(4-10)</span>
-      </div>
-    </div>
-    
-    <!-- SESSION EVENT fields -->
-    <div id="setup-session-fields" style="display:none;">
-      <div class="form-row" style="margin-bottom:12px;">
-        <label style="min-width:80px;color:var(--gold);font-size:11px;">Số ngày bảng:</label>
-        <input type="number" id="tourGroupDays" value="2" min="1" max="5" style="flex:1;">
-        <span style="color:var(--text3);font-size:11px;">+ 1 ngày Final</span>
-      </div>
-      <div class="form-row" style="margin-bottom:12px;">
-        <label style="min-width:80px;color:var(--gold);font-size:11px;">Người/bàn:</label>
-        <input type="number" id="tourSeatsPerTable" value="6" min="6" max="8" style="flex:1;">
-        <span style="color:var(--text3);font-size:11px;">(6-8) × 2 bàn</span>
-      </div>
-    </div>
-    
-    <!-- EVENT DAY rules -->
-    <div id="rules-event" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
-      📋 <b style="color:var(--gold2);">Luật EVENT DAY:</b><br>
-      • <b id="rules-event-count">8</b> người, 1 bàn duy nhất<br>
-      • Đánh tới cuối, chốt top 3 luôn<br>
-      • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3
-    </div>
-    
-    <!-- SESSION EVENT rules -->
-    <div id="rules-session" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
-      📋 <b style="color:var(--gold2);">Luật SESSION EVENT:</b><br>
-      • <b id="rules-session-count">12</b> người chia <b>2 bàn</b> (random)<br>
-      • Vòng bảng <b id="rules-session-days">2</b> ngày: mỗi ngày Top 1 = 3đ, Top 2 = 2đ, Top 3 = 1đ<br>
-      • Top 3 mỗi bàn (theo tổng điểm) → 6 người vào Final<br>
-      • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3 final
-    </div>
-    
-    <button class="tour-btn-primary" onclick="tourCreateAndOpenReg()">› TIẾP TỤC</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy</button>
+
+```
+<div style="color:var(--gold);font-size:10.5px;letter-spacing:1.5px;font-weight:800;margin-bottom:6px;">CHỌN THỂ THỨC</div>
+<div class="tour-mode-grid">
+  <div class="tour-mode-card selected" id="mode-card-event" onclick="tourSelectMode('event')">
+    <div class="tour-mode-icon">⚡</div>
+    <div class="tour-mode-title">EVENT DAY</div>
+    <div class="tour-mode-desc">Đánh trong 1 ngày · 8-10 người · 1 bàn duy nhất, top 3 ăn giải luôn</div>
+    <div class="tour-mode-badge">QUY MÔ NHỎ</div>
+  </div>
+  <div class="tour-mode-card" id="mode-card-session" onclick="tourSelectMode('session')">
+    <div class="tour-mode-icon">🏆</div>
+    <div class="tour-mode-title">SESSION EVENT</div>
+    <div class="tour-mode-desc">Nhiều ngày · 2 bàn (6-8 người/bàn) · Vòng bảng tích điểm → Final table</div>
+    <div class="tour-mode-badge">QUY MÔ LỚN</div>
+  </div>
+</div>
+
+<div class="form-row" style="margin-top:16px;margin-bottom:12px;">
+  <label style="min-width:80px;color:var(--gold);font-size:11px;">Tên giải:</label>
+  <input type="text" id="tourName" placeholder="VD: Cup Cầu Lông T11" style="flex:1;">
+</div>
+
+<div class="form-row" style="margin-bottom:12px;">
+  <label style="min-width:80px;color:var(--gold);font-size:11px;">Ngày bắt đầu:</label>
+  <input type="text" id="tourDate" placeholder="dd/mm/yyyy" style="flex:1;">
+</div>
+
+<div class="form-row" style="margin-bottom:12px;">
+  <label style="min-width:80px;color:var(--gold);font-size:11px;">Buy-in:</label>
+  <input type="number" id="tourBuyin" placeholder="200000" min="0" style="flex:1;">
+  <span style="color:var(--text3);font-size:11px;">VND</span>
+</div>
+
+<!-- EVENT DAY fields -->
+<div id="setup-event-fields">
+  <div class="form-row" style="margin-bottom:12px;">
+    <label style="min-width:80px;color:var(--gold);font-size:11px;">Số người:</label>
+    <input type="number" id="tourMaxPlayers" value="8" min="4" max="10" style="flex:1;">
+    <span style="color:var(--text3);font-size:11px;">(4-10)</span>
+  </div>
+</div>
+
+<!-- SESSION EVENT fields -->
+<div id="setup-session-fields" style="display:none;">
+  <div class="form-row" style="margin-bottom:12px;">
+    <label style="min-width:80px;color:var(--gold);font-size:11px;">Số ngày bảng:</label>
+    <input type="number" id="tourGroupDays" value="2" min="1" max="5" style="flex:1;">
+    <span style="color:var(--text3);font-size:11px;">+ 1 ngày Final</span>
+  </div>
+  <div class="form-row" style="margin-bottom:12px;">
+    <label style="min-width:80px;color:var(--gold);font-size:11px;">Người/bàn:</label>
+    <input type="number" id="tourSeatsPerTable" value="6" min="6" max="8" style="flex:1;">
+    <span style="color:var(--text3);font-size:11px;">(6-8) × 2 bàn</span>
+  </div>
+</div>
+
+<!-- EVENT DAY rules -->
+<div id="rules-event" style="background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
+  📋 <b style="color:var(--gold2);">Luật EVENT DAY:</b><br>
+  • <b id="rules-event-count">8</b> người, 1 bàn duy nhất<br>
+  • Đánh tới cuối, chốt top 3 luôn<br>
+  • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3
+</div>
+
+<!-- SESSION EVENT rules -->
+<div id="rules-session" style="display:none;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:10px;margin:12px 0;font-size:11px;color:var(--text2);line-height:1.7;">
+  📋 <b style="color:var(--gold2);">Luật SESSION EVENT:</b><br>
+  • <b id="rules-session-count">12</b> người chia <b>2 bàn</b> (random)<br>
+  • Vòng bảng <b id="rules-session-days">2</b> ngày: mỗi ngày Top 1 = 3đ, Top 2 = 2đ, Top 3 = 1đ<br>
+  • Top 3 mỗi bàn (theo tổng điểm) → 6 người vào Final<br>
+  • Prize: <b style="color:var(--gold2);">50% / 30% / 20%</b> cho top 3 final
+</div>
+
+<button class="tour-btn-primary" onclick="tourCreateAndOpenReg()">› TIẾP TỤC</button>
+<button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy</button>
+```
+
   </div>
 
   <!-- REGISTRATION: đăng ký người chơi -->
+
   <div class="card" id="tour-reg" style="display:none;">
     <div class="card-title" id="tour-reg-title">📝 Đăng ký giải</div>
-    
-    <div class="tour-info-bar" id="tour-reg-info"></div>
-    
-    <div class="tour-counter" id="tour-reg-counter">
-      <span class="tour-counter-num" id="tour-reg-num-wrap"><span id="tour-reg-count">0</span> / 12</span>
-      <span class="tour-counter-label">người đã đăng ký</span>
-    </div>
-    
-    <div id="tour-reg-list"></div>
-    
-    <button class="tour-btn-primary" id="tour-draw-btn" onclick="tourDoTheDraw()" disabled>🎲 BỐC THĂM CHIA BÀN</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy giải</button>
+
+```
+<div class="tour-info-bar" id="tour-reg-info"></div>
+
+<div class="tour-counter" id="tour-reg-counter">
+  <span class="tour-counter-num" id="tour-reg-num-wrap"><span id="tour-reg-count">0</span> / 12</span>
+  <span class="tour-counter-label">người đã đăng ký</span>
+</div>
+
+<div id="tour-reg-list"></div>
+
+<button class="tour-btn-primary" id="tour-draw-btn" onclick="tourDoTheDraw()" disabled>🎲 BỐC THĂM CHIA BÀN</button>
+<button class="btn-edit" style="width:100%;margin-top:6px;text-align:center;" onclick="openTourEditInfoModal()">✏ Sửa bàn</button>
+<button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Hủy giải</button>
+```
+
   </div>
 
   <!-- DRAW ANIMATION -->
+
   <div class="card" id="tour-draw" style="display:none;">
     <div class="card-title">🎲 Đang bốc thăm...</div>
     <div id="tour-draw-stage"></div>
   </div>
 
   <!-- VÒNG LOẠI -->
+
   <div class="card" id="tour-rounds" style="display:none;">
     <div class="card-title" id="tour-rounds-title">🃏 Vòng Loại</div>
     <div class="tour-info-bar" id="tour-rounds-info"></div>
-    
-    <div id="tour-tables"></div>
-    
-    <button class="tour-btn-primary" id="tour-go-final" onclick="tourGoToFinal()" disabled style="margin-top:12px;">› VÀO VÒNG FINAL</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+
+```
+<div id="tour-tables"></div>
+
+<button class="tour-btn-primary" id="tour-go-final" onclick="tourGoToFinal()" disabled style="margin-top:12px;">› VÀO VÒNG FINAL</button>
+<button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+```
+
   </div>
 
   <!-- FINAL -->
+
   <div class="card" id="tour-final" style="display:none;">
     <div class="card-title">👑 Final Table</div>
     <div class="tour-info-bar" id="tour-final-info"></div>
-    
-    <div id="tour-final-content"></div>
-    
-    <button class="tour-btn-primary" id="tour-finish-btn" onclick="tourFinish()" disabled style="margin-top:12px;">🏆 CHỐT KẾT QUẢ</button>
-    <button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+
+```
+<div id="tour-final-content"></div>
+
+<button class="tour-btn-primary" id="tour-finish-btn" onclick="tourFinish()" disabled style="margin-top:12px;">🏆 CHỐT KẾT QUẢ</button>
+<button class="btn-green" onclick="tourBackToMain()" style="margin-top:6px;">← Tạm dừng</button>
+```
+
   </div>
 
   <!-- RESULT -->
+
   <div class="card" id="tour-result" style="display:none;">
     <div class="card-title">🏆 Kết Quả Giải</div>
     <div id="tour-result-content"></div>
@@ -2597,6 +2631,7 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 
   <!-- HISTORY -->
+
   <div class="card" id="tour-history" style="display:none;">
     <div class="card-title">📜 Lịch Sử Các Giải</div>
     <div id="tour-history-list"></div>
@@ -2614,88 +2649,91 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="hof-suits"><span>♥</span><span>◆</span><span>♣</span><span>♠</span></div>
   </div>
   <div class="hof-body">
-    
-    <div class="filter-tabs">
-      <div class="f-tab active" id="fTabAll" onclick="switchFilterTab('all')">🏆 Tất cả</div>
-      <div class="f-tab" id="fTabCal" onclick="switchFilterTab('cal')">📅 Xem Lịch</div>
-      <div class="f-tab" id="fTabRange" onclick="switchFilterTab('range')">🗓 Theo ngày</div>
-    </div>
 
-    <div id="filterViewCal" class="cal-wrapper" style="display:none;">
-      <div class="cal-header">
-        <button onclick="changeCalMonth(-1)">‹</button>
-        <span id="calMonthYearLabel">Tháng 4 / 2026</span>
-        <button onclick="changeCalMonth(1)">›</button>
-      </div>
-      <div class="cal-grid">
-        <div class="cal-wd">T2</div><div class="cal-wd">T3</div><div class="cal-wd">T4</div><div class="cal-wd">T5</div><div class="cal-wd">T6</div><div class="cal-wd">T7</div><div class="cal-wd">CN</div>
-      </div>
-      <div class="cal-grid" id="calDaysGrid"></div>
-      <button class="btn-outline-gold" style="font-size:10px; margin-top:12px; padding:8px;" onclick="applyHofFilter('month')">📊 Thống kê trọn tháng này</button>
-    </div>
+```
+<div class="filter-tabs">
+  <div class="f-tab active" id="fTabAll" onclick="switchFilterTab('all')">🏆 Tất cả</div>
+  <div class="f-tab" id="fTabCal" onclick="switchFilterTab('cal')">📅 Xem Lịch</div>
+  <div class="f-tab" id="fTabRange" onclick="switchFilterTab('range')">🗓 Theo ngày</div>
+</div>
 
-    <div id="filterViewRange" class="cal-wrapper" style="display:none;">
-      <div class="form-row">
-        <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Từ ngày</span><input type="date" id="rangeStart" style="width:100%;font-size:12px;"></div>
-        <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Đến ngày</span><input type="date" id="rangeEnd" style="width:100%;font-size:12px;"></div>
-      </div>
-      <button class="btn-green" style="font-size:11px; padding:9px; margin-top:8px;" onclick="applyHofFilter('range')">Lọc Dữ Liệu</button>
-    </div>
+<div id="filterViewCal" class="cal-wrapper" style="display:none;">
+  <div class="cal-header">
+    <button onclick="changeCalMonth(-1)">‹</button>
+    <span id="calMonthYearLabel">Tháng 4 / 2026</span>
+    <button onclick="changeCalMonth(1)">›</button>
+  </div>
+  <div class="cal-grid">
+    <div class="cal-wd">T2</div><div class="cal-wd">T3</div><div class="cal-wd">T4</div><div class="cal-wd">T5</div><div class="cal-wd">T6</div><div class="cal-wd">T7</div><div class="cal-wd">CN</div>
+  </div>
+  <div class="cal-grid" id="calDaysGrid"></div>
+  <button class="btn-outline-gold" style="font-size:10px; margin-top:12px; padding:8px;" onclick="applyHofFilter('month')">📊 Thống kê trọn tháng này</button>
+</div>
 
-    <div class="hof-subtabs" id="hofSubTabs" style="display:none;">
-      <div class="hof-subtab active" id="hofSubTabWin" onclick="switchHofSubTab('win')">🏡 Hội Tỉ Phú</div>
-      <div class="hof-subtab" id="hofSubTabLoss" onclick="switchHofSubTab('loss')">🎪 Gánh Xiếc</div>
-    </div>
+<div id="filterViewRange" class="cal-wrapper" style="display:none;">
+  <div class="form-row">
+    <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Từ ngày</span><input type="date" id="rangeStart" style="width:100%;font-size:12px;"></div>
+    <div style="flex:1;"><span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Đến ngày</span><input type="date" id="rangeEnd" style="width:100%;font-size:12px;"></div>
+  </div>
+  <button class="btn-green" style="font-size:11px; padding:9px; margin-top:8px;" onclick="applyHofFilter('range')">Lọc Dữ Liệu</button>
+</div>
 
-    <div id="greenTownSection" class="theme-section theme-green" style="display:none;">
-      <div class="theme-header">🏡 THỊ TRẤN TỈ PHÚ 🌳</div>
-      <div id="hofListWin"></div>
-    </div>
+<div class="hof-subtabs" id="hofSubTabs" style="display:none;">
+  <div class="hof-subtab active" id="hofSubTabWin" onclick="switchHofSubTab('win')">🏡 Hội Tỉ Phú</div>
+  <div class="hof-subtab" id="hofSubTabLoss" onclick="switchHofSubTab('loss')">🎪 Gánh Xiếc</div>
+</div>
 
-    <div id="circusSection" class="theme-section theme-circus" style="display:none;">
-      <div class="theme-header">🎪 RẠP XIẾC TRUNG ƯƠNG 🤡</div>
-      <div id="hofListLoss"></div>
-    </div>
+<div id="greenTownSection" class="theme-section theme-green" style="display:none;">
+  <div class="theme-header">🏡 THỊ TRẤN TỈ PHÚ 🌳</div>
+  <div id="hofListWin"></div>
+</div>
 
-    <div id="hofEmptyMsg" class="hof-empty" style="display:none;">
-        Chưa có dữ liệu cho khoảng thời gian này.<br>
-        <span style="font-size:24px;display:block;margin-top:10px;opacity:0.3;">📭</span>
-    </div>
-    
-    <div id="hofStats" style="display:none;">
-      <div class="hof-stats">
-        <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
-        <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
-      </div>
-      
-      <div class="hof-legend">
-        <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
-        <div class="legend-grid">
-          <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
-          <div class="legend-item"><span class="h-badge hb-donatemost">🌹 Được Donate</span> <span>Người <strong>được donate nhiều nhất</strong> trong hội 💸</span></div>
-          <div class="legend-item"><span class="h-badge hb-dev">⚡ DEV</span> <span>Người sáng tạo & phát triển sòng này — <strong>Doctor Minh</strong>. Khung riêng, không đụng hàng 🛠️</span></div>
-          <div class="legend-item"><span class="h-badge hb-dealer">🎴 DEALER</span> <span>Người chia bài cho cả hội — <strong>Doctor Hùng</strong>. Tay nghề thì tốt, thi thoảng chia lỗi 🤷</span></div>
-          <div class="legend-item"><span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
-          <div class="legend-item">
-            <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
-              <span class="h-badge hb-hot">🔥 Win x2</span>
-              <span class="h-badge hb-cold">🧊 Lose x2</span>
-            </div>
-            <span>Đang có chuỗi <strong>thắng/thua 2 buổi liên tiếp</strong>.</span>
-          </div>
-          <div class="legend-item"><span class="h-badge hb-god">🌟 Bất bại</span> <span>Đang có chuỗi <strong>thắng từ 3 buổi liên tiếp</strong> trở lên. Đánh đâu thắng đó.</span></div>
-          <div class="legend-item"><span class="h-badge hb-lidon">🥊 Vua lì đòn</span> <span>Đang có chuỗi <strong>thua từ 3 buổi liên tiếp</strong> trở lên. Tinh thần thép, thua không nản!</span></div>
-          <div class="legend-item"><span class="h-badge hb-baothu">💣 Báo Thủ</span> <span>Người <strong>mua vào nhiều chip nhất</strong> hội. Chơi khô máu không màng ngày mai.</span></div>
-          <div class="legend-item"><span class="h-badge hb-atm">🏧 Cây ATM</span> <span>Người <strong>lỗ đậm nhất</strong>. Nhà tài trợ kim cương, cỗ máy bơm tiền cho anh em.</span></div>
-          <div class="legend-item"><span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span> <span>Cày cuốc vã mồ hôi hột xong chốt sổ <strong>huề vốn</strong> (hoặc xê dịch nhỏ hơn 50k).</span></div>
-          <div class="legend-item"><span class="h-badge hb-shark">🦈 Cá Mập</span> <span>Bỏ ra ít vốn nhưng mang về lợi nhuận cực khủng (<strong>Tỷ suất sinh lời cao nhất</strong>).</span></div>
-          <div class="legend-item"><span class="h-badge hb-thocay">⛏️ Thợ Cày</span> <span>Gương mặt vàng trong làng chuyên cần, <strong>tham gia nhiều buổi nhất</strong>.</span></div>
+<div id="circusSection" class="theme-section theme-circus" style="display:none;">
+  <div class="theme-header">🎪 RẠP XIẾC TRUNG ƯƠNG 🤡</div>
+  <div id="hofListLoss"></div>
+</div>
+
+<div id="hofEmptyMsg" class="hof-empty" style="display:none;">
+    Chưa có dữ liệu cho khoảng thời gian này.<br>
+    <span style="font-size:24px;display:block;margin-top:10px;opacity:0.3;">📭</span>
+</div>
+
+<div id="hofStats" style="display:none;">
+  <div class="hof-stats">
+    <div class="hof-stat"><div class="hof-stat-label">Tổng Pot</div><div class="hof-stat-val" id="hofTotalPot">—</div></div>
+    <div class="hof-stat"><div class="hof-stat-label">Người chơi</div><div class="hof-stat-val" id="hofPlayerCount">—</div></div>
+    <div class="hof-stat"><div class="hof-stat-label">Lời nhất</div><div class="hof-stat-val green" id="hofBigWin">—</div></div>
+    <div class="hof-stat"><div class="hof-stat-label">Lỗ nhất</div><div class="hof-stat-val red" id="hofBigLoss">—</div></div>
+  </div>
+  
+  <div class="hof-legend">
+    <div class="legend-title"><span>📖</span> Từ điển Danh hiệu</div>
+    <div class="legend-grid">
+      <div class="legend-item"><span class="h-badge hb-jackpot">🎰 Jackpot</span> <span>Thắng đậm từ <strong>500.000 chip trở lên</strong> ở buổi chơi gần nhất. Đỉnh cao!</span></div>
+      <div class="legend-item"><span class="h-badge hb-donatemost">🌹 Được Donate</span> <span>Người <strong>được donate nhiều nhất</strong> trong hội 💸</span></div>
+      <div class="legend-item"><span class="h-badge hb-dev">⚡ DEV</span> <span>Người sáng tạo & phát triển sòng này — <strong>Doctor Minh</strong>. Khung riêng, không đụng hàng 🛠️</span></div>
+      <div class="legend-item"><span class="h-badge hb-dealer">🎴 DEALER</span> <span>Người chia bài cho cả hội — <strong>Doctor Hùng</strong>. Tay nghề thì tốt, thi thoảng chia lỗi 🤷</span></div>
+      <div class="legend-item"><span class="h-badge hb-donkey">🐴🤡 Sinh Viên 2-7</span> <span>Biệt hiệu dành cho người bị anh em vote là chơi ngáo, hay bluff láo, call ngu... Sẽ đeo mác này đến khi có nạn nhân mới!</span></div>
+      <div class="legend-item">
+        <div style="display:flex;flex-direction:column;gap:4px;flex-shrink:0;min-width:65px;">
+          <span class="h-badge hb-hot">🔥 Win x2</span>
+          <span class="h-badge hb-cold">🧊 Lose x2</span>
         </div>
+        <span>Đang có chuỗi <strong>thắng/thua 2 buổi liên tiếp</strong>.</span>
       </div>
-
+      <div class="legend-item"><span class="h-badge hb-god">🌟 Bất bại</span> <span>Đang có chuỗi <strong>thắng từ 3 buổi liên tiếp</strong> trở lên. Đánh đâu thắng đó.</span></div>
+      <div class="legend-item"><span class="h-badge hb-lidon">🥊 Vua lì đòn</span> <span>Đang có chuỗi <strong>thua từ 3 buổi liên tiếp</strong> trở lên. Tinh thần thép, thua không nản!</span></div>
+      <div class="legend-item"><span class="h-badge hb-baothu">💣 Báo Thủ</span> <span>Người <strong>mua vào nhiều chip nhất</strong> hội. Chơi khô máu không màng ngày mai.</span></div>
+      <div class="legend-item"><span class="h-badge hb-atm">🏧 Cây ATM</span> <span>Người <strong>lỗ đậm nhất</strong>. Nhà tài trợ kim cương, cỗ máy bơm tiền cho anh em.</span></div>
+      <div class="legend-item"><span class="h-badge hb-hoa">🧘‍♂️ Hòa Đại Nhân</span> <span>Cày cuốc vã mồ hôi hột xong chốt sổ <strong>huề vốn</strong> (hoặc xê dịch nhỏ hơn 50k).</span></div>
+      <div class="legend-item"><span class="h-badge hb-shark">🦈 Cá Mập</span> <span>Bỏ ra ít vốn nhưng mang về lợi nhuận cực khủng (<strong>Tỷ suất sinh lời cao nhất</strong>).</span></div>
+      <div class="legend-item"><span class="h-badge hb-thocay">⛏️ Thợ Cày</span> <span>Gương mặt vàng trong làng chuyên cần, <strong>tham gia nhiều buổi nhất</strong>.</span></div>
     </div>
+  </div>
+
+</div>
+```
+
   </div>
 </div>
 
@@ -2753,16 +2791,27 @@ table.players tr:last-child td{border-bottom:none;}
       <button class="btn-gold" style="margin-top:12px;" onclick="showAddMemberModal()">+ Thêm hội viên mới</button>
     </div>
 
-    <div class="card">
-      <div class="card-title">💾 Sao lưu dữ liệu</div>
-      <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">
-        Xuất toàn bộ dữ liệu hội viên + lịch sử để lưu trữ hoặc chuyển sang thiết bị khác.
-      </div>
-      <div class="backup-row">
-        <button class="btn-backup btn-export" onclick="showExportModal()">📤 Xuất dữ liệu</button>
-        <button class="btn-backup btn-import" onclick="showImportModal()">📥 Nhập dữ liệu</button>
-      </div>
-    </div>
+```
+<div class="card">
+  <div class="card-title">💾 Sao lưu dữ liệu</div>
+  <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:4px;">
+    Xuất toàn bộ dữ liệu hội viên + lịch sử để lưu trữ hoặc chuyển sang thiết bị khác.
+  </div>
+  <div class="backup-row">
+    <button class="btn-backup btn-export" onclick="showExportModal()">📤 Xuất dữ liệu</button>
+    <button class="btn-backup btn-import" onclick="showImportModal()">📥 Nhập dữ liệu</button>
+  </div>
+</div>
+
+<div class="card" style="border-color:rgba(200,60,60,.35);">
+  <div class="card-title" style="color:var(--red);">⚠️ Khu vực nguy hiểm</div>
+  <div style="font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:10px;">
+    Xoá vĩnh viễn toàn bộ Lịch sử Cash Game + Lịch sử Tournament + Hall of Fame. Không thể khôi phục (trừ khi đã Xuất dữ liệu trước đó). Sau khi xoá, số đếm Cash#/Tour# sẽ bắt đầu lại từ 1.
+  </div>
+  <button class="btn-red" style="margin:0;" onclick="deleteAllHistory()">🗑️ Xoá toàn bộ lịch sử</button>
+</div>
+```
+
   </div>
 </div>
 
@@ -2786,44 +2835,89 @@ table.players tr:last-child td{border-bottom:none;}
   </div>
 </div>
 
+<div class="modal-overlay" id="customConfirmModal" style="display:none;" onclick="closeCustomConfirmOutside(event)">
+  <div class="modal-box" style="max-width:360px;">
+    <div class="modal-title" id="customConfirmTitle">Xác nhận</div>
+    <div id="customConfirmMsg" style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:18px;white-space:pre-line;"></div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn-edit" style="flex:1;margin:0;" onclick="closeCustomConfirm(false)">Huỷ</button>
+      <button class="btn-red" style="flex:1;margin:0;" id="customConfirmOkBtn" onclick="closeCustomConfirm(true)">Xác nhận</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tourEditInfoModal" style="display:none;" onclick="closeTourEditInfoOutside(event)">
+  <div class="modal-box">
+    <div class="modal-title">✏ Sửa thông tin bàn <span class="modal-close" onclick="closeTourEditInfoModal()">✕</span></div>
+    <div class="form-row" style="flex-direction:column;gap:10px;">
+      <div>
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Tên giải</span>
+        <input type="text" id="tourEditName" style="width:100%;">
+      </div>
+      <div>
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Ngày</span>
+        <input type="text" id="tourEditDate" placeholder="dd/mm/yyyy" style="width:100%;">
+      </div>
+      <div>
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Buy-in (VNĐ)</span>
+        <input type="number" id="tourEditBuyin" style="width:100%;">
+      </div>
+      <div id="tourEditEventFields">
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Số người (4-10)</span>
+        <input type="number" id="tourEditMaxPlayers" min="4" max="10" style="width:100%;">
+      </div>
+      <div id="tourEditSessionFields" style="display:none;">
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Số người mỗi bàn (6-8)</span>
+        <input type="number" id="tourEditSeatsPerTable" min="6" max="8" style="width:100%;margin-bottom:8px;">
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Số ngày vòng bảng (1-5)</span>
+        <input type="number" id="tourEditGroupDays" min="1" max="5" style="width:100%;">
+      </div>
+    </div>
+    <button class="btn-gold" style="margin-top:14px;" onclick="saveTourEditInfo()">💾 Lưu thay đổi</button>
+  </div>
+</div>
+
 <div class="modal-overlay" id="thuChiModal" style="display:none" onclick="closeThuChiOutside(event)">
   <div class="modal-box">
     <div class="modal-title">DAVID NỘP - Quản lý Thu / Chi <span class="modal-close" onclick="closeThuChiModal()">✕</span></div>
-    
-    <div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Cấn trừ tiền phòng (nếu có) và theo dõi tiến độ nộp/trả tiền.</div>
-    
-    <div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;">
-      <div class="form-row" style="margin-bottom:10px;">
-        <div style="flex:1;">
-          <span style="font-size:10px;color:var(--gold);font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Tổng tiền phòng</span>
-          <input type="number" id="tcRoomFee" placeholder="Ví dụ: 150000" style="width:100%;font-size:14px;color:var(--gold2);font-weight:bold;">
-        </div>
-        <button class="btn-gold" style="width:auto;margin-top:0;padding:0 15px; align-self: flex-end; height:37px;" onclick="applyRoomFee()">Chia khoản</button>
-      </div>
-      <div class="form-row" style="margin-bottom:0;">
-        <div style="flex:1;">
-          <span style="font-size:10px;color:var(--text3);font-weight:600;display:block;margin-bottom:4px;">NGƯỜI ĐÃ TRẢ TIỀN PHÒNG</span>
-          <select id="tcRoomFeePayer" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600; border:1px solid var(--border); border-radius:8px; background:var(--bg4); color:var(--text); font-family:var(--font); outline:none;" onchange="applyRoomFee()">
-            <option value="">-- Không có ai --</option>
-          </select>
-        </div>
-      </div>
-    </div>
 
-    <div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px dashed rgba(232, 65, 24, 0.4);margin-bottom:15px;">
-      <div class="form-row" style="margin-bottom:0;">
-        <div style="flex:1;">
-          <span style="font-size:10px;color:#e84118;font-weight:700;display:block;margin-bottom:4px;letter-spacing:0.5px;">🐴🤡 VOTE SINH VIÊN 2-7 (CHƠI NGÁO)</span>
-          <select id="tcDonkeyVote" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600; border:1px solid var(--border); border-radius:8px; background:var(--bg4); color:var(--text); font-family:var(--font); outline:none;" onchange="applyRoomFee()">
-            <option value="">-- Không vote ai --</option>
-          </select>
-        </div>
-      </div>
+```
+<div style="font-size:11px;color:var(--text3);margin-bottom:12px;">Cấn trừ tiền phòng (nếu có) và theo dõi tiến độ nộp/trả tiền.</div>
+
+<div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px solid var(--border);margin-bottom:10px;">
+  <div class="form-row" style="margin-bottom:10px;">
+    <div style="flex:1;">
+      <span style="font-size:10px;color:var(--gold);font-weight:700;display:block;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px;">Tổng tiền phòng</span>
+      <input type="number" id="tcRoomFee" placeholder="Ví dụ: 150000" style="width:100%;font-size:14px;color:var(--gold2);font-weight:bold;">
     </div>
-    
-    <div id="tcListsContainer" style="max-height:45vh;overflow-y:auto;padding-right:4px;"></div>
-    
-    <button class="btn-green" onclick="closeThuChiModal()" style="margin-top:15px;">Hoàn tất</button>
+    <button class="btn-gold" style="width:auto;margin-top:0;padding:0 15px; align-self: flex-end; height:37px;" onclick="applyRoomFee()">Chia khoản</button>
+  </div>
+  <div class="form-row" style="margin-bottom:0;">
+    <div style="flex:1;">
+      <span style="font-size:10px;color:var(--text3);font-weight:600;display:block;margin-bottom:4px;">NGƯỜI ĐÃ TRẢ TIỀN PHÒNG</span>
+      <select id="tcRoomFeePayer" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600; border:1px solid var(--border); border-radius:8px; background:var(--bg4); color:var(--text); font-family:var(--font); outline:none;" onchange="applyRoomFee()">
+        <option value="">-- Không có ai --</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div style="background:var(--bg3);padding:12px;border-radius:8px;border:1px dashed rgba(232, 65, 24, 0.4);margin-bottom:15px;">
+  <div class="form-row" style="margin-bottom:0;">
+    <div style="flex:1;">
+      <span style="font-size:10px;color:#e84118;font-weight:700;display:block;margin-bottom:4px;letter-spacing:0.5px;">🐴🤡 VOTE SINH VIÊN 2-7 (CHƠI NGÁO)</span>
+      <select id="tcDonkeyVote" style="width:100%; padding:8px 10px; font-size:13px; font-weight:600; border:1px solid var(--border); border-radius:8px; background:var(--bg4); color:var(--text); font-family:var(--font); outline:none;" onchange="applyRoomFee()">
+        <option value="">-- Không vote ai --</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div id="tcListsContainer" style="max-height:45vh;overflow-y:auto;padding-right:4px;"></div>
+
+<button class="btn-green" onclick="closeThuChiModal()" style="margin-top:15px;">Hoàn tất</button>
+```
+
   </div>
 </div>
 
@@ -2832,44 +2926,47 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="modal-title">🧮 Đếm Chip Cash Out <span class="modal-close" onclick="closeCalcChipsModal()">✕</span></div>
     <div style="font-size:11px;color:var(--text3);margin-bottom:12px;" id="calcChipsPlayerName"></div>
     <input type="hidden" id="calcChipsPlayerIdx">
-    
-    <div style="max-height:45vh;overflow-y:auto;padding-right:4px;">
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">2000 chip:</label>
-        <input type="number" id="cc_2000" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">1000 chip:</label>
-        <input type="number" id="cc_1000" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">500 chip:</label>
-        <input type="number" id="cc_500" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">200 chip:</label>
-        <input type="number" id="cc_200" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">100 chip:</label>
-        <input type="number" id="cc_100" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">20 chip:</label>
-        <input type="number" id="cc_20" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-      <div class="form-row" style="margin-bottom:8px;">
-        <label style="min-width:100px; color:var(--gold);">10 chip:</label>
-        <input type="number" id="cc_10" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
-      </div>
-    </div>
-    
-    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;text-align:center;">
-      <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Tổng cộng</div>
-      <div style="font-size:20px;font-weight:800;color:var(--gold2);" id="calcChipsTotalDisplay">0 chip</div>
-    </div>
-    
-    <button class="btn-green" onclick="confirmCalcChips()" style="margin-top:15px;">💾 Xác nhận & Lưu</button>
+
+```
+<div style="max-height:45vh;overflow-y:auto;padding-right:4px;">
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">2000 chip:</label>
+    <input type="number" id="cc_2000" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">1000 chip:</label>
+    <input type="number" id="cc_1000" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">500 chip:</label>
+    <input type="number" id="cc_500" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">200 chip:</label>
+    <input type="number" id="cc_200" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">100 chip:</label>
+    <input type="number" id="cc_100" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">20 chip:</label>
+    <input type="number" id="cc_20" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+  <div class="form-row" style="margin-bottom:8px;">
+    <label style="min-width:100px; color:var(--gold);">10 chip:</label>
+    <input type="number" id="cc_10" placeholder="0" min="0" value="" style="flex:1;" oninput="calcSumChips()">
+  </div>
+</div>
+
+<div style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;margin-top:12px;text-align:center;">
+  <div style="font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Tổng cộng</div>
+  <div style="font-size:20px;font-weight:800;color:var(--gold2);" id="calcChipsTotalDisplay">0 chip</div>
+</div>
+
+<button class="btn-green" onclick="confirmCalcChips()" style="margin-top:15px;">💾 Xác nhận & Lưu</button>
+```
+
   </div>
 </div>
 
@@ -2933,18 +3030,21 @@ table.players tr:last-child td{border-bottom:none;}
     <div class="modal-title">🤝 Sang tay Chip <span class="modal-close" onclick="closeTransferModal()">✕</span></div>
     <div style="font-size:12px; margin-bottom:12px; color:var(--text2);" id="transferSellerName"></div>
     <input type="hidden" id="transferSellerIdx">
-    
-    <div class="form-row" style="margin-bottom:12px;">
-      <label style="min-width:70px; color:var(--gold);">Bán cho:</label>
-      <select id="transferBuyerSelect" style="flex:1; padding:10px; border-radius:8px; background:var(--bg3); color:var(--text); border:1px solid var(--border); outline:none; font-family:var(--font);"></select>
-    </div>
-    
-    <div class="form-row" style="margin-bottom:16px;">
-      <label style="min-width:70px; color:var(--gold);">Số Hand:</label>
-      <input type="number" id="transferHands" value="1" min="1" style="flex:1; padding:10px; font-size:14px; text-align:center;">
-    </div>
-    
-    <button class="btn-gold" onclick="confirmTransfer()">Xác nhận giao dịch</button>
+
+```
+<div class="form-row" style="margin-bottom:12px;">
+  <label style="min-width:70px; color:var(--gold);">Bán cho:</label>
+  <select id="transferBuyerSelect" style="flex:1; padding:10px; border-radius:8px; background:var(--bg3); color:var(--text); border:1px solid var(--border); outline:none; font-family:var(--font);"></select>
+</div>
+
+<div class="form-row" style="margin-bottom:16px;">
+  <label style="min-width:70px; color:var(--gold);">Số Hand:</label>
+  <input type="number" id="transferHands" value="1" min="1" style="flex:1; padding:10px; font-size:14px; text-align:center;">
+</div>
+
+<button class="btn-gold" onclick="confirmTransfer()">Xác nhận giao dịch</button>
+```
+
   </div>
 </div>
 
@@ -3272,11 +3372,18 @@ function suspendActiveGame() {
 
 function resumeSavedGame(idx) {
     if(activeGame && activeGame.players && activeGame.players.length > 0) {
-        if(!confirm("CẢNH BÁO: Bạn đang có một bàn trên màn hình.\nBàn hiện tại sẽ tự động được cất xuống dưới để nhường chỗ cho bàn bạn vừa chọn.\nTiếp tục?")) return;
-        var sList = loadSavedGames();
-        activeGame.tableName = "Bàn cất tạm lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
-        sList.push(activeGame);
-        saveSavedGames(sList);
+        customConfirm("CẢNH BÁO: Bạn đang có một bàn trên màn hình.\nBàn hiện tại sẽ tự động được cất xuống dưới để nhường chỗ cho bàn bạn vừa chọn.\nTiếp tục?", function(){
+            var sList = loadSavedGames();
+            activeGame.tableName = "Bàn cất tạm lúc " + new Date().toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'});
+            sList.push(activeGame);
+            saveSavedGames(sList);
+            var saved = loadSavedGames();
+            activeGame = saved.splice(idx, 1)[0];
+            saveSavedGames(saved);
+            saveActiveGameToLocal();
+            renderGameTab();
+        });
+        return;
     }
     var saved = loadSavedGames();
     activeGame = saved.splice(idx, 1)[0];
@@ -3286,11 +3393,12 @@ function resumeSavedGame(idx) {
 }
 
 function deleteSavedGame(idx) {
-    if(!confirm("Xoá bàn đang cất tạm này? Mọi dữ liệu buy-in của bàn này sẽ biến mất vĩnh viễn.")) return;
-    var saved = loadSavedGames();
-    saved.splice(idx, 1);
-    saveSavedGames(saved);
-    renderGameTab();
+    customConfirm("Xoá bàn đang cất tạm này? Mọi dữ liệu buy-in của bàn này sẽ biến mất vĩnh viễn.", function(){
+        var saved = loadSavedGames();
+        saved.splice(idx, 1);
+        saveSavedGames(saved);
+        renderGameTab();
+    });
 }
 
 function showSetupNumPlayers() {
@@ -3303,6 +3411,34 @@ function getGameRate() {
         vnd: (activeGame && activeGame.rateVnd) || 100000,
         chip: (activeGame && activeGame.rateChip) || 2000
     };
+}
+function getNextCounter(type) {
+    var counters = {};
+    try { counters = JSON.parse(localStorage.getItem('pk_counters')) || {}; } catch(e){}
+    var n = (counters[type] || 0) + 1;
+    counters[type] = n;
+    localStorage.setItem('pk_counters', JSON.stringify(counters));
+    return n;
+}
+
+/* ============== HỘP THOẠI XÁC NHẬN RIÊNG (thay cho confirm() gốc) ==============
+   Lý do: window.confirm() bị chặn hoặc tự động huỷ trong 1 số webview app
+   (Zalo, Messenger, Facebook in-app browser...), khiến nút bấm "không phản ứng gì". */
+var _customConfirmCallback = null;
+function customConfirm(message, onYes, okText){
+  document.getElementById('customConfirmMsg').textContent = message;
+  document.getElementById('customConfirmOkBtn').textContent = okText || 'Xác nhận';
+  document.getElementById('customConfirmModal').style.display = 'flex';
+  _customConfirmCallback = onYes;
+}
+function closeCustomConfirm(result){
+  document.getElementById('customConfirmModal').style.display = 'none';
+  var cb = _customConfirmCallback;
+  _customConfirmCallback = null;
+  if(result && cb) cb();
+}
+function closeCustomConfirmOutside(e){
+  if(e.target === document.getElementById('customConfirmModal')) closeCustomConfirm(false);
 }
 function loadRatePref() {
     try { return JSON.parse(localStorage.getItem('garini_rate_pref')) || {vnd:100000, chip:2000}; }
@@ -3444,20 +3580,20 @@ function rebuy(i) {
 }
 
 function delActivePlayer(i) {
-    if(confirm('Xoá '+activeGame.players[i].name+' khỏi bàn chơi này?')) {
+    customConfirm('Xoá '+activeGame.players[i].name+' khỏi bàn chơi này?', function(){
         activeGame.players.splice(i, 1);
         saveActiveGameToLocal();
         renderGameTab();
-    }
+    });
 }
 
 function resetAll() {
-    if(confirm('Bạn có chắc chắn muốn hủy bỏ hoàn toàn bàn chơi hiện tại? (Sẽ không thể khôi phục)')) {
+    customConfirm('Bạn có chắc chắn muốn hủy bỏ hoàn toàn bàn chơi hiện tại? (Sẽ không thể khôi phục)', function(){
         activeGame = {date: '', players: []};
         localStorage.removeItem('garini_active_game');
         document.getElementById('summaryCard').style.display='none';
         renderGameTab();
-    }
+    });
 }
 
 function openAddSinglePlayerModal() {
@@ -3691,6 +3827,7 @@ function saveSessionToHistory(){
 
   sessions.unshift({
       id: Date.now(), 
+      cashNumber: getNextCounter('cash'),
       date: displayDate, 
       roomFee: 0,
       settled: {},
@@ -3727,7 +3864,7 @@ function renderSessionHistory(){
   sessions.forEach(function(s,idx){
     h+='<div style="margin-bottom:12px;border:1px solid var(--border2);border-radius:8px;padding:12px;background:var(--bg3);">';
     h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;border-bottom:1px solid var(--border2);padding-bottom:8px;">';
-    h+='<span style="color:var(--gold2);font-weight:700;font-size:13px;">📅 '+s.date+'</span>';
+    h+='<span style="color:var(--gold2);font-weight:700;font-size:13px;">'+(s.cashNumber?('Cash#'+s.cashNumber+' · '):'')+'📅 '+s.date+'</span>';
     h+='<div>';
     h+='<button class="btn-edit" style="color:#6dbf80; border-color:rgba(74,140,92,.4); background:rgba(74,140,92,.1); margin-right:6px;" onclick="openThuChiModal('+idx+')">💰 Thu/Chi</button>';
     h+='<button class="btn-edit" onclick="openEditSessionHistory('+idx+')">✏ Sửa</button>';
@@ -3923,7 +4060,7 @@ function closeEditSessionModal(){ document.getElementById('editSessionModal').st
 function closeEditSessionOutside(e){ if(e.target===document.getElementById('editSessionModal'))closeEditSessionModal(); }
 
 function deleteSessionHistory(idx){
-  if(confirm('Xóa lịch sử bàn chơi này? Tiền tổng của các hội viên trong bàn cũng sẽ được trừ đi.')){
+  customConfirm('Xóa lịch sử bàn chơi này? Tiền tổng của các hội viên trong bàn cũng sẽ được trừ đi.', function(){
     var sessions=JSON.parse(localStorage.getItem('pk_sessions')||'[]');
     var del=sessions[idx];
     if(del){
@@ -3936,7 +4073,7 @@ function deleteSessionHistory(idx){
     }
     sessions.splice(idx,1);localStorage.setItem('pk_sessions',JSON.stringify(sessions));
     renderSessionHistory(); renderCalendarUI(); renderHof();
-  }
+  });
 }
 
 /* ==================== HOF FILTER & CALENDAR ==================== */
@@ -4364,7 +4501,7 @@ function renameMember(id){
 
 function deleteMember(id){
   var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
-  if(confirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.')){saveMembers(members.filter(function(x){return x.id!==id;}));showMemberListView();renderMemberList();}
+  customConfirm('Xoá hội viên '+m.name+'? Toàn bộ lịch sử sẽ mất.', function(){saveMembers(members.filter(function(x){return x.id!==id;}));showMemberListView();renderMemberList();});
 }
 
 function showAddMemberModal(){document.getElementById('addMemberModal').style.display='flex';setTimeout(function(){document.getElementById('newMemberName').focus();},100);}
@@ -4413,6 +4550,29 @@ function showImportModal(){
   document.getElementById('importModal').style.display = 'flex';
   setTimeout(function(){ document.getElementById('importText').focus(); }, 200);
 }
+
+function deleteAllHistory(){
+  customConfirm('⚠️ XOÁ TOÀN BỘ LỊCH SỬ?\n\nSẽ xoá vĩnh viễn:\n• Toàn bộ Lịch sử Cash Game\n• Toàn bộ Lịch sử Tournament\n• Toàn bộ Hall of Fame (ELO tự về 0 vì tính từ Tournament)\n\nHội viên và Chip/Buy-in KHÔNG bị xoá.\nHành động này KHÔNG THỂ khôi phục!', function(){
+    customConfirm('Xác nhận lần cuối: bạn CHẮC CHẮN muốn xoá hết chứ?', function(){
+      // Xoá lịch sử Cash Game
+      localStorage.setItem('pk_sessions', '[]');
+
+      // Xoá lịch sử Tournament
+      localStorage.setItem('pk_tournaments', '[]');
+
+      // Xoá lịch sử (Hall of Fame) trong từng hội viên, giữ lại hội viên
+      var members = getMembers();
+      members.forEach(function(m){ m.history = []; });
+      saveMembers(members);
+
+      // Reset số đếm Cash#/Tour# về lại từ đầu
+      localStorage.setItem('pk_counters', JSON.stringify({cash:0, tour:0}));
+
+      alert('✅ Đã xoá toàn bộ lịch sử. Lần lưu tiếp theo sẽ bắt đầu lại từ Cash#1 / Tour#1.');
+      renderMemberList();
+    });
+  });
+}
 function closeImportModal(){document.getElementById('importModal').style.display='none';}
 function closeImportOutside(e){if(e.target===document.getElementById('importModal'))closeImportModal();}
 
@@ -4422,14 +4582,15 @@ function doImport(){
   try {
     var data = JSON.parse(raw);
     if(!data.pk_members && !data.pk_sessions) throw new Error('Sai định dạng');
-    if(!confirm('⚠️ Dữ liệu hiện tại sẽ bị GHI ĐÈ hoàn toàn!\n\nXác nhận khôi phục?')) return;
-    if(data.pk_members) localStorage.setItem('pk_members', JSON.stringify(data.pk_members));
-    if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
-    if(data.garini_saved_games) localStorage.setItem('garini_saved_games', JSON.stringify(data.garini_saved_games));
-    if(data.garini_active_game) localStorage.setItem('garini_active_game', JSON.stringify(data.garini_active_game));
-    if(data.pk_fortune_history) localStorage.setItem('pk_fortune_history', JSON.stringify(data.pk_fortune_history));
-    closeImportModal(); updateGlobalDatalist(); renderMemberList(); loadActiveGameFromLocal();
-    alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
+    customConfirm('⚠️ Dữ liệu hiện tại sẽ bị GHI ĐÈ hoàn toàn!\n\nXác nhận khôi phục?', function(){
+      if(data.pk_members) localStorage.setItem('pk_members', JSON.stringify(data.pk_members));
+      if(data.pk_sessions) localStorage.setItem('pk_sessions', JSON.stringify(data.pk_sessions));
+      if(data.garini_saved_games) localStorage.setItem('garini_saved_games', JSON.stringify(data.garini_saved_games));
+      if(data.garini_active_game) localStorage.setItem('garini_active_game', JSON.stringify(data.garini_active_game));
+      if(data.pk_fortune_history) localStorage.setItem('pk_fortune_history', JSON.stringify(data.pk_fortune_history));
+      closeImportModal(); updateGlobalDatalist(); renderMemberList(); loadActiveGameFromLocal();
+      alert('✅ Khôi phục thành công! Dữ liệu đã được nạp lại.');
+    });
   } catch(e) { alert('❌ Dữ liệu không hợp lệ!\nHãy đảm bảo paste đúng đoạn JSON đã xuất từ app.'); }
 }
 
@@ -5318,15 +5479,78 @@ function renderTourTab(){
   else if(active.phase === 'done') tourRenderResult();
 }
 
+/* ============= SỬA THÔNG TIN BÀN (khi đang ở màn Đăng ký) ============= */
+function openTourEditInfoModal(){
+  var t = tourLoadActive();
+  if(!t) return;
+  document.getElementById('tourEditName').value = t.name;
+  document.getElementById('tourEditDate').value = t.date;
+  document.getElementById('tourEditBuyin').value = t.buyin;
+  var isEvent = t.mode === 'event';
+  document.getElementById('tourEditEventFields').style.display = isEvent ? '' : 'none';
+  document.getElementById('tourEditSessionFields').style.display = isEvent ? 'none' : '';
+  if(isEvent){
+    document.getElementById('tourEditMaxPlayers').value = t.maxPlayers;
+  } else {
+    document.getElementById('tourEditSeatsPerTable').value = t.seatsPerTable;
+    document.getElementById('tourEditGroupDays').value = t.groupDays;
+  }
+  document.getElementById('tourEditInfoModal').style.display = 'flex';
+}
+function closeTourEditInfoModal(){ document.getElementById('tourEditInfoModal').style.display = 'none'; }
+function closeTourEditInfoOutside(e){ if(e.target === document.getElementById('tourEditInfoModal')) closeTourEditInfoModal(); }
+
+function saveTourEditInfo(){
+  var t = tourLoadActive();
+  if(!t) return;
+
+  var name = document.getElementById('tourEditName').value.trim();
+  var date = document.getElementById('tourEditDate').value.trim();
+  var buyin = parseInt(document.getElementById('tourEditBuyin').value) || 0;
+  if(!name){ alert('Nhập tên giải đi má'); return; }
+  if(!date){ alert('Nhập ngày'); return; }
+  if(buyin <= 0){ alert('Buy-in phải lớn hơn 0'); return; }
+
+  t.name = name;
+  t.date = date;
+  t.buyin = buyin;
+
+  if(t.mode === 'event'){
+    var maxPlayers = parseInt(document.getElementById('tourEditMaxPlayers').value) || 8;
+    if(maxPlayers < 4 || maxPlayers > 10){ alert('EVENT DAY: số người phải từ 4 đến 10'); return; }
+    if(maxPlayers < t.participants.length){
+      alert('⚠️ Đang có ' + t.participants.length + ' người đã đăng ký, không thể giảm xuống dưới số đó.');
+      return;
+    }
+    t.maxPlayers = maxPlayers;
+    t.seatsPerTable = maxPlayers;
+  } else {
+    var seatsPerTable = parseInt(document.getElementById('tourEditSeatsPerTable').value) || 6;
+    var groupDays = parseInt(document.getElementById('tourEditGroupDays').value) || 2;
+    if(seatsPerTable < 6 || seatsPerTable > 8){ alert('SESSION EVENT: số người mỗi bàn phải từ 6 đến 8'); return; }
+    if(groupDays < 1 || groupDays > 5){ alert('Số ngày vòng bảng phải từ 1 đến 5'); return; }
+    var newMax = seatsPerTable * 2;
+    if(newMax < t.participants.length){
+      alert('⚠️ Đang có ' + t.participants.length + ' người đã đăng ký, không thể giảm xuống dưới số đó.');
+      return;
+    }
+    t.seatsPerTable = seatsPerTable;
+    t.groupDays = groupDays;
+    t.maxPlayers = newMax;
+  }
+
+  tourSaveActive(t);
+  closeTourEditInfoModal();
+  tourRenderReg();
+}
+
 function tourBackToMain(){
   var active = tourLoadActive();
   if(active && active.phase === 'reg'){
-    if(confirm('Hủy giải đấu này?')){
+    customConfirm('Hủy giải đấu này?', function(){
       tourSaveActive(null);
       renderTourTab();
-    } else {
-      tourRenderReg();
-    }
+    });
     return;
   }
   tourHideAllPanels();
@@ -5431,7 +5655,7 @@ function tourCreateAndOpenReg(){
   
   var members = getMembers();
   if(members.length < maxPlayers){
-    if(!confirm('Hội chỉ có ' + members.length + ' thành viên, cần ít nhất ' + maxPlayers + ' người. Vẫn tạo giải?')) return;
+    alert('⚠️ Hội chỉ có ' + members.length + ' thành viên, cần ít nhất ' + maxPlayers + ' người. Vẫn tiếp tục tạo giải, bạn có thể bổ sung hội viên sau.');
   }
   
   var tour = {
@@ -5534,28 +5758,28 @@ function tourRenderReg(){
   }
 }
 
-function tourToggleReg(playerId) {
-    // 1. Đảm bảo biến registrations luôn tồn tại (Sửa lỗi undefined)
-    if (typeof registrations === 'undefined' || !Array.isArray(registrations)) {
-        registrations = [];
+function tourToggleReg(memberId){
+  var t = tourLoadActive();
+  if(!t || t.phase !== 'reg') return;
+  
+  var maxP = t.maxPlayers || 12;
+  var members = getMembers();
+  var m = members.find(function(x){ return x.id === memberId; });
+  if(!m) return;
+  
+  var idx = t.participants.findIndex(function(p){ return p.id === memberId; });
+  if(idx >= 0){
+    t.participants.splice(idx, 1);
+  } else {
+    if(t.participants.length >= maxP){
+      alert('Đủ ' + maxP + ' người rồi. Bỏ chọn người khác nếu muốn đổi.');
+      return;
     }
-
-    // 2. Logic tìm kiếm an toàn
-    var idx = registrations.findIndex(function(p) { return p.id === playerId; });
-    
-    if (idx > -1) {
-        registrations.splice(idx, 1); // Xóa nếu đã có
-    } else {
-        registrations.push({ id: playerId }); // Thêm mới
-    }
-    
-    // 3. Lưu và cập nhật giao diện
-    localStorage.setItem('pk_registrations', JSON.stringify(registrations));
-    if (typeof renderTournamentList === 'function') {
-        renderTournamentList(); 
-    }
+    t.participants.push({ id: m.id, name: m.name });
+  }
+  tourSaveActive(t);
+  tourRenderReg();
 }
-
 
 /* ============= DRAW ANIMATION ============= */
 function tourShuffle(arr){
@@ -5737,6 +5961,7 @@ function tourFinishEventDay(){
   t.winners = winners;
   t.phase = 'done';
   t.finishedAt = Date.now();
+  t.tourNumber = getNextCounter('tour');
   tourSaveActive(t);
   
   var history = tourLoadHistory();
@@ -6051,6 +6276,7 @@ function tourFinish(){
   t.winners = winners;
   t.phase = 'done';
   t.finishedAt = Date.now();
+  t.tourNumber = getNextCounter('tour');
   tourSaveActive(t);
   
   var history = tourLoadHistory();
@@ -6124,9 +6350,10 @@ function tourRenderResult(){
 }
 
 function tourArchiveAndReset(){
-  if(!confirm('Đóng giải đấu này? (Đã lưu vào lịch sử)')) return;
-  tourSaveActive(null);
-  renderTourTab();
+  customConfirm('Đóng giải đấu này? (Đã lưu vào lịch sử)', function(){
+    tourSaveActive(null);
+    renderTourTab();
+  });
 }
 
 /* ============= HISTORY ============= */
@@ -6148,7 +6375,7 @@ function tourShowHistory(){
     var modeName = t.mode === 'event' ? 'EVENT DAY' : (t.mode === 'session' ? 'SESSION' : '');
     html += '<div class="tour-history-item" onclick="tourViewHistoryDetail('+idx+')">';
     html += '<div>';
-    html += '<div class="tour-history-name">' + modeIcon + ' ' + t.name + '</div>';
+    html += '<div class="tour-history-name">' + modeIcon + ' ' + (t.tourNumber?('Tour#'+t.tourNumber+' · '):'') + t.name + '</div>';
     html += '<div class="tour-history-meta">' + (modeName ? modeName + ' · ' : '') + t.date + ' · ' + t.participants.length + ' người</div>';
     html += '</div>';
     if(winner){
@@ -6181,7 +6408,7 @@ function billGetAllSessions(){
   cash.forEach(function(s, idx){
     items.push({
       type: 'cash', idx: idx, date: s.date,
-      label: '💵 Cash Game',
+      label: '💵 ' + (s.cashNumber ? ('Cash#'+s.cashNumber) : 'Cash Game'),
       sub: (s.results ? s.results.length : 0) + ' người chơi',
       sortKey: billDateSortKey(s.date)
     });
@@ -6189,7 +6416,7 @@ function billGetAllSessions(){
   tours.forEach(function(t, idx){
     items.push({
       type: 'tour', idx: idx, date: t.date,
-      label: '🏆 ' + t.name,
+      label: '🏆 ' + (t.tourNumber ? ('Tour#'+t.tourNumber+' · ') : '') + t.name,
       sub: t.participants.length + ' người · Pool ' + tourFormatVnd(t.buyin * t.participants.length),
       sortKey: billDateSortKey(t.date)
     });
@@ -6270,7 +6497,7 @@ function computeBill(){
         var hands = r.realHands != null ? r.realHands : Math.round(r.buyin / 2000);
         var chips = r.realChips != null ? r.realChips : (hands * gRate.chip);
         personMap[key].entries.push({
-          date: s.date, type: 'cash',
+          date: s.date, type: 'cash', cashNumber: s.cashNumber,
           hands: hands, chips: chips, rateVnd: gRate.vnd, rateChip: gRate.chip,
           rawDiff: r.diff, feeShare: (feePerPerson > 0 && !isPayer) ? feePerPerson : 0, isFeePayer: isPayer,
           diff: netDiff
@@ -6288,7 +6515,7 @@ function computeBill(){
         if(!personMap[key]) personMap[key] = { name: p.name, total: 0, entries: [] };
         personMap[key].total += diff;
         personMap[key].entries.push({
-          date: t.date, type: 'tour', tourName: t.name,
+          date: t.date, type: 'tour', tourName: (t.tourNumber?('Tour#'+t.tourNumber+' · '):'')+t.name,
           buyin: t.buyin, prize: prize, place: win ? win.place : null,
           diff: diff
         });
@@ -6322,7 +6549,8 @@ function renderBillResult(personMap, dayCount){
         var feeNote = '';
         if(e.feeShare > 0) feeNote = ' · đã trừ '+fmtAbs(e.feeShare)+' tiền phòng';
         else if(e.isFeePayer) feeNote = ' · đã ứng tiền phòng nên miễn trừ';
-        h += '<div class="bill-entry-row"><span>📅 '+e.date+' <span class="bill-entry-detail">(Cash · '+e.hands+' hand · '+e.chips.toLocaleString('vi-VN')+' chip'+feeNote+')</span></span>'
+        var cashLbl = e.cashNumber ? ('Cash#'+e.cashNumber+' · ') : '';
+        h += '<div class="bill-entry-row"><span>📅 '+e.date+' <span class="bill-entry-detail">('+cashLbl+e.hands+' hand · '+e.chips.toLocaleString('vi-VN')+' chip'+feeNote+')</span></span>'
            + '<span class="'+eCls+'">'+eIcon+' '+fmtAbs(Math.abs(e.diff))+'</span></div>';
       } else {
         var placeTxt = e.place ? (['🥇','🥈','🥉'][e.place-1] + ' Top '+e.place) : 'Không vào Top 3';
@@ -6336,5 +6564,6 @@ function renderBillResult(personMap, dayCount){
   document.getElementById('billResultList').innerHTML = h || '<div class="empty">Không có dữ liệu người chơi trong các ngày đã chọn.</div>';
 }
 </script>
+
 </body>
 </html>
