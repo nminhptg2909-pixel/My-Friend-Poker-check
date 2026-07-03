@@ -2529,12 +2529,21 @@ table.players tr:last-child td{border-bottom:none;}
 </div>
 
 <!-- THÊM ĐOẠN NÀY -->
-<div class="form-row" style="margin-bottom:12px;">
-  <label style="min-width:80px;color:var(--gold);font-size:11px;">Tỉ lệ thưởng:</label>
-  <div style="display:flex; gap:4px; flex:1;">
-    <input type="number" id="tourPrize1" value="50" min="0" max="100" style="padding:6px; font-size:12px; text-align:center;" oninput="tourUpdateRulesPreview()">
-    <input type="number" id="tourPrize2" value="30" min="0" max="100" style="padding:6px; font-size:12px; text-align:center;" oninput="tourUpdateRulesPreview()">
-    <input type="number" id="tourPrize3" value="20" min="0" max="100" style="padding:6px; font-size:12px; text-align:center;" oninput="tourUpdateRulesPreview()">
+<div class="form-row" style="margin-bottom:12px; align-items: center;">
+  <label style="min-width:80px; color:var(--gold); font-size:11px;">Thưởng (%):</label>
+  <div style="display:flex; gap:8px; flex:1;">
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+      <span style="font-size:10px; color:var(--text2); margin-bottom:4px;">🥇 Top 1</span>
+      <input type="number" id="tourPrize1" value="50" min="0" max="100" style="width:100%; padding:6px; font-size:12px; text-align:center; box-sizing:border-box;" oninput="tourUpdateRulesPreview()">
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+      <span style="font-size:10px; color:var(--text2); margin-bottom:4px;">🥈 Top 2</span>
+      <input type="number" id="tourPrize2" value="30" min="0" max="100" style="width:100%; padding:6px; font-size:12px; text-align:center; box-sizing:border-box;" oninput="tourUpdateRulesPreview()">
+    </div>
+    <div style="display:flex; flex-direction:column; align-items:center; flex:1;">
+      <span style="font-size:10px; color:var(--text2); margin-bottom:4px;">🥉 Top 3</span>
+      <input type="number" id="tourPrize3" value="20" min="0" max="100" style="width:100%; padding:6px; font-size:12px; text-align:center; box-sizing:border-box;" oninput="tourUpdateRulesPreview()">
+    </div>
   </div>
 </div>
     
