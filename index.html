@@ -2522,7 +2522,22 @@ table.players tr:last-child td{border-bottom:none;}
     <span style="color:var(--text3);font-size:11px;">(4-10)</span>
   </div>
 </div>
+<div class="form-row" style="margin-bottom:12px;">
+  <label style="min-width:80px;color:var(--gold);font-size:11px;">Buy-in:</label>
+  <input type="number" id="tourBuyin" placeholder="200000" min="0" style="flex:1;">
+  <span style="color:var(--text3);font-size:11px;">VND</span>
+</div>
 
+<!-- THÊM ĐOẠN NÀY -->
+<div class="form-row" style="margin-bottom:12px;">
+  <label style="min-width:80px;color:var(--gold);font-size:11px;">Tỉ lệ thưởng:</label>
+  <div style="display:flex; gap:4px; flex:1;">
+    <input type="number" id="tourPrize1" value="50" min="0" max="100" style="padding:6px; font-size:12px; text-align:center;" oninput="tourUpdateRulesPreview()">
+    <input type="number" id="tourPrize2" value="30" min="0" max="100" style="padding:6px; font-size:12px; text-align:center;" oninput="tourUpdateRulesPreview()">
+    <input type="number" id="tourPrize3" value="20" min="0" max="100" style="padding:6px; font-size:12px; text-align:center;" oninput="tourUpdateRulesPreview()">
+  </div>
+</div>
+    
 <!-- SESSION EVENT fields -->
 <div id="setup-session-fields" style="display:none;">
   <div class="form-row" style="margin-bottom:12px;">
