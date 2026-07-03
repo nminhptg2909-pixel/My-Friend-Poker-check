@@ -3089,6 +3089,7 @@ function pushDataToFirebase() {
             return;
         }
 
+        const ts = Date.now();
         const data = {
             members: membersList,
             sessions: sessionsList,
@@ -3097,8 +3098,9 @@ function pushDataToFirebase() {
             fortuneHistory: JSON.parse(localStorage.getItem('pk_fortune_history') || '[]'),
             activeTournament: JSON.parse(localStorage.getItem('pk_active_tour') || 'null'),
             tournaments: JSON.parse(localStorage.getItem('pk_tournaments') || '[]'),
-            timestamp: Date.now()
+            timestamp: ts
         };
+        window._lastPushedTs = ts;
         db.ref(ROOM_REF).set(data).catch(function(err) {
             console.warn('[Firebase] Push thất bại:', err);
         });
@@ -3109,6 +3111,12 @@ db.ref(ROOM_REF).on('value', (snapshot) => {
     const data = snapshot.val();
     if (!data) return;
     firebaseReady = true;
+
+    // Nếu đây chỉ là "tiếng vọng" của chính dữ liệu mình vừa gửi lên (Firebase luôn
+    // báo lại 'value' ngay sau khi mình .set()), thì bỏ qua, không render lại giao diện.
+    // Nếu không chặn chỗ này, mỗi lần bấm chọn (checkbox, nút...) sẽ bị Firebase
+    // render lại đúng lúc tay đang chạm màn hình → cảm giác bấm "không ăn".
+    if (data.timestamp && data.timestamp === window._lastPushedTs) return;
 
     try {
         if(data.members) _originalSetItem.call(localStorage, 'pk_members', JSON.stringify(data.members));
