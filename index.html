@@ -6634,10 +6634,21 @@ function renderBillResult(personMap, dayCount){
   });
 
   document.getElementById('billResultList').innerHTML = h || '<div class="empty">Không có dữ liệu người chơi trong các ngày đã chọn.</div>';
-}
-  function goToTournament() {
-    alert("Hàm goToTournament đã được kích hoạt thành công!");
-    // Bạn có thể viết logic xử lý của bạn ở đây
+function goToTournament() {
+    // Ẩn màn hình chọn chế độ (Home)
+    document.getElementById('tab-home').classList.remove('show');
+    
+    // Hiển thị phần Tournament
+    // Lưu ý: Đảm bảo id của phần Tournament trong HTML của bạn khớp với id này
+    var tourTab = document.getElementById('tab-tour'); 
+    if (tourTab) {
+        tourTab.style.display = 'block';
+        tourTab.classList.add('show');
+    }
+    
+    // Hiện thanh backbar nếu cần
+    var backBar = document.getElementById('modeBackBar');
+    if (backBar) backBar.style.display = 'flex';
 }
 </script>
 
