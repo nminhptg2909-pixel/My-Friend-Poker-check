@@ -98,6 +98,14 @@ body>*{position:relative;z-index:1;}
 .mode-card-fortune{border-color:rgba(180,120,210,.3);}
 .mode-card-fortune .mode-card-title{color:#cf9fe8;}
 .mode-card-fortune:active{border-color:#cf9fe8;box-shadow:0 0 20px rgba(180,120,210,.2);}
+.mode-card-weekly{
+  border-color:rgba(245,224,154,.45);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(245,224,154,.18),transparent 48%),
+    linear-gradient(135deg,#1f1709 0%,#111318 100%);
+}
+.mode-card-weekly .mode-card-title{color:var(--gold3);}
+.mode-card-weekly:active{border-color:var(--gold3);box-shadow:0 0 24px rgba(245,224,154,.28);}
 
 .mode-card-bill{
   grid-column:1 / -1;
@@ -108,6 +116,161 @@ body>*{position:relative;z-index:1;}
 .mode-card-bill .mode-card-icon{font-size:24px;margin-bottom:0;}
 .mode-card-bill .mode-card-title{margin-bottom:0;color:var(--gold2);}
 .mode-card-bill:active{border-color:var(--gold3);box-shadow:0 0 20px rgba(245,224,154,.25);}
+
+.weekly-board{
+  border-radius:14px;
+  border:1px solid rgba(245,224,154,.36);
+  background:
+    radial-gradient(circle at 50% -8%,rgba(245,224,154,.2),transparent 38%),
+    linear-gradient(180deg,#1d170b 0%,#0f1116 100%);
+  box-shadow:0 12px 34px rgba(0,0,0,.48), inset 0 1px 0 rgba(245,224,154,.18);
+  overflow:hidden;
+}
+.weekly-guild-header{
+  padding:18px 16px 12px;
+  text-align:center;
+  background:linear-gradient(180deg,rgba(245,224,154,.12),transparent);
+  border-bottom:1px solid rgba(245,224,154,.14);
+}
+.weekly-guild-title{
+  font-size:19px;
+  font-weight:900;
+  letter-spacing:.8px;
+  color:#f7e7b0;
+  text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 18px rgba(245,224,154,.32);
+  line-height:1.18;
+}
+.weekly-range{
+  font-size:10.5px;
+  color:rgba(255,255,255,.56);
+  margin-top:4px;
+  line-height:1.5;
+}
+.weekly-banner{
+  margin:12px;
+  min-height:114px;
+  border-radius:12px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(245,224,154,.28);
+  background:
+    radial-gradient(circle at 50% 25%,rgba(255,255,255,.2),transparent 18%),
+    linear-gradient(135deg,#6c551d 0%,#d8b949 46%,#6a4a12 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+.weekly-banner::before{
+  content:'';
+  position:absolute;
+  inset:-30px;
+  background:
+    linear-gradient(60deg,transparent 30%,rgba(255,255,255,.18) 31%,transparent 42%),
+    repeating-linear-gradient(120deg,rgba(255,255,255,.08) 0 1px,transparent 1px 20px);
+  opacity:.7;
+}
+.weekly-crown{position:relative;font-size:34px;filter:drop-shadow(0 0 14px rgba(255,245,190,.65));}
+.weekly-champ-label{
+  position:relative;
+  font-size:9px;
+  font-weight:900;
+  color:#3a2605;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  margin-top:3px;
+}
+.weekly-champ-name{
+  position:relative;
+  font-size:19px;
+  font-weight:900;
+  color:#fff8da;
+  text-shadow:0 2px 0 rgba(80,45,0,.45),0 0 14px rgba(255,255,255,.35);
+  margin-top:2px;
+}
+.weekly-champ-sub{
+  position:relative;
+  margin-top:4px;
+  padding:4px 10px;
+  border-radius:999px;
+  background:rgba(40,25,0,.25);
+  color:#fff4bf;
+  font-size:10px;
+  font-weight:800;
+}
+.weekly-table-head{
+  display:grid;
+  grid-template-columns:52px 1fr 74px;
+  gap:8px;
+  margin:0 12px 7px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(245,224,154,.16);
+  color:#f5e09a;
+  font-size:9px;
+  font-weight:900;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+}
+.weekly-list{display:flex;flex-direction:column;gap:6px;padding:0 12px 12px;}
+.weekly-row{
+  display:grid;
+  grid-template-columns:52px 1fr 74px;
+  gap:8px;
+  align-items:center;
+  min-height:58px;
+  padding:8px 10px;
+  border-radius:10px;
+  border:1px solid rgba(245,224,154,.12);
+  background:linear-gradient(90deg,rgba(255,250,220,.08),rgba(255,255,255,.025));
+}
+.weekly-row.top1{background:linear-gradient(90deg,rgba(245,191,62,.18),rgba(255,255,255,.04));border-color:rgba(245,224,154,.36);}
+.weekly-row.top2{background:linear-gradient(90deg,rgba(210,220,240,.14),rgba(255,255,255,.035));border-color:rgba(210,220,240,.24);}
+.weekly-row.top3{background:linear-gradient(90deg,rgba(220,135,80,.13),rgba(255,255,255,.032));border-color:rgba(220,135,80,.22);}
+.weekly-rank{
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:11px;
+  background:#1d2028;
+  border:1px solid rgba(245,224,154,.22);
+  color:var(--gold2);
+  font-size:15px;
+  font-weight:900;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
+}
+.weekly-row.top1 .weekly-rank{background:linear-gradient(135deg,#f5d06c,#8a5b13);color:#fff7c8;}
+.weekly-row.top2 .weekly-rank{background:linear-gradient(135deg,#e5eefc,#68788f);color:#fff;}
+.weekly-row.top3 .weekly-rank{background:linear-gradient(135deg,#e9a56f,#7a4320);color:#fff2df;}
+.weekly-name{
+  font-size:14px;
+  font-weight:900;
+  color:var(--text);
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.weekly-meta{
+  font-size:9.5px;
+  color:var(--text3);
+  margin-top:3px;
+  line-height:1.45;
+}
+.weekly-points{
+  text-align:right;
+  font-size:15px;
+  font-weight:900;
+  color:#f5e09a;
+  white-space:nowrap;
+}
+.weekly-net{display:block;font-size:9.5px;margin-top:3px;}
+.weekly-actions{display:flex;gap:8px;padding:0 12px 13px;}
+.weekly-actions .btn-edit,.weekly-actions .btn-green,.weekly-actions .btn-gold{
+  flex:1;margin:0;width:auto;text-align:center;padding:9px 9px;font-size:10px;
+}
+.weekly-empty{padding:18px 12px 26px;text-align:center;color:var(--text3);font-size:12px;font-style:italic;}
 
 /* ============== BILL TAB ============== */
 .bill-session-row{
@@ -568,6 +731,46 @@ table.players tr:last-child td{border-bottom:none;}
 .pill-red{background:var(--red-lt);color:#d07070;border:1px solid rgba(192,80,80,.2);}
 .pill-gray{background:rgba(255,255,255,.05);color:var(--text3);border:1px solid var(--border2);}
 .member-arrow{color:var(--text3);font-size:18px;}
+
+.rank-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  width:fit-content;
+  padding:3px 8px;
+  border-radius:999px;
+  border:1px solid var(--rank-border);
+  background:linear-gradient(135deg,var(--rank-bg1),var(--rank-bg2));
+  color:var(--rank-text);
+  font-size:9.5px;
+  font-weight:900;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+  box-shadow:0 0 12px var(--rank-glow);
+  white-space:nowrap;
+}
+.rank-badge .rank-icon{font-size:10px;filter:drop-shadow(0 0 5px var(--rank-glow));}
+.rank-challenger{--rank-bg1:rgba(180,28,28,.45);--rank-bg2:rgba(245,196,77,.2);--rank-border:rgba(255,190,80,.65);--rank-text:#ffe08a;--rank-glow:rgba(245,120,70,.34);}
+.rank-diamond{--rank-bg1:rgba(36,176,220,.32);--rank-bg2:rgba(180,245,255,.12);--rank-border:rgba(95,220,255,.55);--rank-text:#9eefff;--rank-glow:rgba(95,220,255,.28);}
+.rank-platinum{--rank-bg1:rgba(128,96,210,.32);--rank-bg2:rgba(230,220,255,.14);--rank-border:rgba(198,176,255,.5);--rank-text:#ded0ff;--rank-glow:rgba(175,130,255,.25);}
+.rank-gold{--rank-bg1:rgba(200,168,75,.28);--rank-bg2:rgba(245,224,154,.1);--rank-border:rgba(245,224,154,.48);--rank-text:#f5e09a;--rank-glow:rgba(245,224,154,.22);}
+.rank-silver{--rank-bg1:rgba(180,190,205,.22);--rank-bg2:rgba(255,255,255,.07);--rank-border:rgba(205,215,230,.34);--rank-text:#d6e0ef;--rank-glow:rgba(190,205,225,.16);}
+.rank-bronze{--rank-bg1:rgba(190,112,52,.28);--rank-bg2:rgba(230,158,96,.09);--rank-border:rgba(220,140,80,.4);--rank-text:#e8a878;--rank-glow:rgba(220,130,70,.18);}
+.rank-rookie{--rank-bg1:rgba(92,130,110,.22);--rank-bg2:rgba(255,255,255,.04);--rank-border:rgba(120,170,145,.28);--rank-text:#a8d6bd;--rank-glow:rgba(120,170,145,.13);}
+.member-rank-line{display:flex;align-items:center;gap:7px;margin-top:5px;flex-wrap:wrap;}
+.member-elo-mini{font-size:10px;color:var(--text3);font-weight:700;}
+.rank-progress-card{
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:10px;
+  padding:12px;
+  margin-bottom:12px;
+}
+.rank-progress-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;}
+.rank-progress-elo{font-size:18px;font-weight:900;color:var(--gold3);white-space:nowrap;}
+.rank-progress-bar{height:7px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;border:1px solid var(--border2);}
+.rank-progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--rank-bg1),var(--rank-text));box-shadow:0 0 12px var(--rank-glow);}
+.rank-progress-note{font-size:10px;color:var(--text3);margin-top:7px;line-height:1.45;}
 
 /* PROFILE */
 .profile-header{background:linear-gradient(135deg,rgba(50,36,6,.9),rgba(20,15,4,.95));border:1px solid var(--border);border-radius:12px;padding:20px 16px;margin-bottom:12px;display:flex;align-items:center;gap:16px;position:relative;overflow:hidden;}
@@ -2320,6 +2523,11 @@ table.players tr:last-child td{border-bottom:none;}
   text-overflow:ellipsis;
   white-space:nowrap;
 }
+.elo-row-main{flex:1;min-width:0;}
+.elo-row-main .elo-row-name{display:block;}
+.elo-row-main .rank-badge{margin-top:4px;font-size:8.5px;padding:2px 7px;}
+.elo-podium-tier{margin-bottom:5px;}
+.elo-podium-tier .rank-badge{font-size:8px;padding:2px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;}
 .elo-row-stats{
   font-size:9px;
   color:var(--text3);
@@ -2399,14 +2607,29 @@ table.players tr:last-child td{border-bottom:none;}
       <div class="mode-card-title">HỘI VIÊN</div>
       <div class="mode-card-sub">Danh sách hội viên<br>Sao lưu dữ liệu</div>
     </div>
-    <div class="mode-card mode-card-fortune" onclick="goToFortune()">
-      <div class="mode-card-icon">🔮</div>
-      <div class="mode-card-title">BÓI QUẺ</div>
-      <div class="mode-card-sub">Bói quẻ poker<br>Lịch sử bói</div>
+    <div class="mode-card mode-card-weekly" onclick="goToWeeklyRanking()">
+      <div class="mode-card-icon">🏅</div>
+      <div class="mode-card-title">BXH TUẦN</div>
+      <div class="mode-card-sub">Vinh danh tuần<br>Top Tournament</div>
     </div>
     <div class="mode-card mode-card-bill" onclick="goToBill()">
       <div class="mode-card-icon">🧾</div>
       <div class="mode-card-title">RA BILL</div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="tab-weekly">
+  <div class="weekly-board">
+    <div class="weekly-guild-header">
+      <div class="weekly-guild-title">SNAP CALL CLUB - WEEKLY LEADERBOARD</div>
+      <div class="weekly-range" id="homeWeeklyRange">Đang tải dữ liệu tuần...</div>
+    </div>
+    <div id="homeWeeklyRanking"><div class="weekly-empty">Chưa có dữ liệu tournament tuần này.</div></div>
+    <div class="weekly-actions">
+      <button class="btn-edit" onclick="homeWeeklyChange(-1)">‹ Tuần trước</button>
+      <button class="btn-gold" onclick="downloadWeeklyChampionImage()">📥 Tải hình</button>
+      <button class="btn-green" onclick="homeWeeklyChange(1)">Tuần sau ›</button>
     </div>
   </div>
 </div>
@@ -3506,7 +3729,7 @@ function updateGlobalDatalist() {
 
 function showTab(t){
   document.getElementById('tab-home').className = 'page';
-  ['game','result','tour','hof','fortune','members','bill'].forEach(function(id){
+  ['game','result','tour','hof','fortune','members','bill','weekly'].forEach(function(id){
     var el = document.getElementById('tab-'+id);
     if(el) el.className='page'+(t===id?' show':'');
   });
@@ -3531,17 +3754,19 @@ function showTab(t){
   if(t==='fortune') renderFortuneTab();
   if(t==='members'){showMemberListView();renderMemberList();}
   if(t==='bill') renderBillTab();
+  if(t==='weekly') renderHomeWeeklyRanking();
 }
 
 /* ============== HOME / MODE NAVIGATION ============== */
 function goHome(){
   document.getElementById('tab-home').className = 'page show';
-  ['game','result','tour','hof','fortune','members','bill'].forEach(function(id){
+  ['game','result','tour','hof','fortune','members','bill','weekly'].forEach(function(id){
     var el = document.getElementById('tab-'+id);
     if(el) el.className = 'page';
   });
   document.getElementById('cashTabs').style.display = 'none';
   document.getElementById('modeBackBar').style.display = 'none';
+  renderHomeWeeklyRanking();
 }
 function goToCash(){
   document.getElementById('modeBackBar').style.display = 'flex';
@@ -3555,6 +3780,10 @@ function goToMembers(){
   document.getElementById('modeBackBar').style.display = 'flex';
   showTab('members');
 }
+function goToWeeklyRanking(){
+  document.getElementById('modeBackBar').style.display = 'flex';
+  showTab('weekly');
+}
 function goToFortune(){
   document.getElementById('modeBackBar').style.display = 'flex';
   showTab('fortune');
@@ -3562,6 +3791,424 @@ function goToFortune(){
 function goToBill(){
   document.getElementById('modeBackBar').style.display = 'flex';
   showTab('bill');
+}
+
+var homeWeeklyOffset = 0;
+
+function homeWeeklyChange(delta){
+  homeWeeklyOffset += delta;
+  renderHomeWeeklyRanking();
+}
+
+function homeWeeklyPad(n){
+  return String(n).padStart(2, '0');
+}
+
+function homeWeeklyFormatDate(d){
+  return homeWeeklyPad(d.getDate()) + '/' + homeWeeklyPad(d.getMonth() + 1) + '/' + d.getFullYear();
+}
+
+function homeWeeklyParseDate(dateStr){
+  if(!dateStr) return null;
+  var p = String(dateStr).trim().split('/');
+  if(p.length === 3){
+    var dd = parseInt(p[0], 10);
+    var mm = parseInt(p[1], 10) - 1;
+    var yy = parseInt(p[2], 10);
+    var d = new Date(yy, mm, dd);
+    if(d && d.getFullYear() === yy && d.getMonth() === mm && d.getDate() === dd) return d;
+  }
+  var iso = new Date(dateStr);
+  return isNaN(iso.getTime()) ? null : iso;
+}
+
+function homeWeeklyWeekRange(offset){
+  var today = new Date();
+  today.setHours(0, 0, 0, 0);
+  var day = today.getDay();
+  var mondayOffset = day === 0 ? -6 : 1 - day;
+  var start = new Date(today);
+  start.setDate(today.getDate() + mondayOffset + (offset * 7));
+  var end = new Date(start);
+  end.setDate(start.getDate() + 6);
+  end.setHours(23, 59, 59, 999);
+  return { start: start, end: end };
+}
+
+function homeWeeklyPlacePoints(place){
+  if(place === 1) return 10;
+  if(place === 2) return 7;
+  if(place === 3) return 5;
+  if(place === 4) return 3;
+  return 1;
+}
+
+function homeWeeklyGetPlace(t, memberId){
+  if(t.placements && t.placements.length){
+    var placement = t.placements.find(function(p){ return p.memberId === memberId; });
+    if(placement && placement.place) return placement.place;
+  }
+  if(t.winners && t.winners.length){
+    var winner = t.winners.find(function(w){ return w.memberId === memberId; });
+    if(winner && winner.place) return winner.place;
+  }
+  return 99;
+}
+
+function homeWeeklyBuildStats(range){
+  var tours = tourLoadHistory().filter(function(t){
+    if(!t || t.phase !== 'done' || !t.participants || !t.participants.length) return false;
+    var d = homeWeeklyParseDate(t.date);
+    return d && d >= range.start && d <= range.end;
+  });
+  var map = {};
+  tours.forEach(function(t){
+    var winnersById = {};
+    var eloDeltas = (typeof tourComputeEloDeltasForTournament === 'function') ? tourComputeEloDeltasForTournament(t) : {};
+    (t.winners || []).forEach(function(w){ winnersById[w.memberId] = w; });
+    t.participants.forEach(function(p){
+      var key = p.id || ('n_' + p.name);
+      if(!map[key]){
+        map[key] = { memberId: p.id, name: p.name, games: 0, wins: 0, podiums: 0, points: 0, net: 0, eloDelta: 0 };
+      }
+      var row = map[key];
+      var place = homeWeeklyGetPlace(t, p.id);
+      var win = winnersById[p.id] || null;
+      var prize = win ? win.prize : 0;
+      var spent = tourPlayerSpent(t, p.id);
+      row.games += 1;
+      row.points += homeWeeklyPlacePoints(place);
+      row.net += prize - spent;
+      row.eloDelta += eloDeltas[p.id] || 0;
+      if(place === 1) row.wins += 1;
+      if(place >= 1 && place <= 3) row.podiums += 1;
+    });
+  });
+  var eloMap = buildEloRatingMap();
+  var arr = Object.keys(map).map(function(k){
+    map[k].eloDelta = Math.round(map[k].eloDelta);
+    var rating = eloMap[map[k].memberId] || eloMap['name:' + (map[k].name || '').toLowerCase().trim()] || null;
+    map[k].totalElo = rating ? rating.elo : 1500;
+    map[k].rankInfo = getEloRankInfo(map[k].totalElo);
+    return map[k];
+  });
+  arr.sort(function(a,b){
+    if(b.points !== a.points) return b.points - a.points;
+    if(b.wins !== a.wins) return b.wins - a.wins;
+    if(b.podiums !== a.podiums) return b.podiums - a.podiums;
+    if(b.net !== a.net) return b.net - a.net;
+    return b.games - a.games;
+  });
+  return { tours: tours, rows: arr };
+}
+
+function renderHomeWeeklyRanking(){
+  var listEl = document.getElementById('homeWeeklyRanking');
+  var rangeEl = document.getElementById('homeWeeklyRange');
+  if(!listEl || !rangeEl || typeof tourLoadHistory !== 'function') return;
+
+  var range = homeWeeklyWeekRange(homeWeeklyOffset);
+  var data = homeWeeklyBuildStats(range);
+  var label = homeWeeklyOffset === 0 ? 'Tuần này' : (homeWeeklyOffset === -1 ? 'Tuần trước' : (homeWeeklyOffset === 1 ? 'Tuần sau' : (homeWeeklyOffset < 0 ? Math.abs(homeWeeklyOffset) + ' tuần trước' : homeWeeklyOffset + ' tuần sau')));
+  rangeEl.textContent = label + ' · ' + homeWeeklyFormatDate(range.start) + ' - ' + homeWeeklyFormatDate(range.end) + ' · ' + data.tours.length + ' giải đã chốt';
+
+  if(!data.rows.length){
+    listEl.innerHTML = '<div class="weekly-banner"><div class="weekly-crown">🏆</div><div class="weekly-champ-label">Rank Reward</div><div class="weekly-champ-name">Chưa có nhà vô địch</div><div class="weekly-champ-sub">Chốt tournament để mở bảng tuần</div></div><div class="weekly-empty">Chưa có dữ liệu tournament trong tuần đang chọn.</div>';
+    return;
+  }
+
+  var champ = data.rows[0];
+  var html = '<div class="weekly-banner">';
+  html += '<div class="weekly-crown">🏆</div>';
+  html += '<div class="weekly-champ-label">Weekly Champion</div>';
+  html += '<div class="weekly-champ-name">' + champ.name + '</div>';
+  html += '<div class="weekly-champ-sub">' + champ.rankInfo.name + ' · ' + champ.totalElo + ' ELO · ' + (champ.eloDelta >= 0 ? '+' : '') + champ.eloDelta + ' tuần này</div>';
+  html += '</div>';
+  html += '<div class="weekly-table-head"><span>Ranking</span><span>Reward</span><span>ELO</span></div>';
+  html += '<div class="weekly-list">';
+  data.rows.slice(0, 8).forEach(function(r, idx){
+    var rank = idx + 1;
+    var medal = rank === 1 ? '🥇' : (rank === 2 ? '🥈' : (rank === 3 ? '🥉' : '#' + rank));
+    var topClass = rank <= 3 ? (' top' + rank) : '';
+    html += '<div class="weekly-row' + topClass + '">';
+    html += '<div class="weekly-rank">' + medal + '</div>';
+    html += '<div><div class="weekly-name">' + r.name + '</div>';
+    html += '<div class="weekly-meta">' + r.rankInfo.name + ' · ' + r.points + ' điểm · ' + r.games + ' giải</div></div>';
+    html += '<div class="weekly-points">' + r.totalElo + '<span class="weekly-net">' + (r.eloDelta >= 0 ? '+' : '') + r.eloDelta + ' ELO</span></div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  listEl.innerHTML = html;
+}
+
+function weeklyCanvasRoundRect(ctx, x, y, w, h, r){
+  var rr = Math.min(r, w / 2, h / 2);
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.lineTo(x + w - rr, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + rr);
+  ctx.lineTo(x + w, y + h - rr);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - rr, y + h);
+  ctx.lineTo(x + rr, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - rr);
+  ctx.lineTo(x, y + rr);
+  ctx.quadraticCurveTo(x, y, x + rr, y);
+  ctx.closePath();
+}
+
+function weeklyCanvasFillRound(ctx, x, y, w, h, r, fill){
+  weeklyCanvasRoundRect(ctx, x, y, w, h, r);
+  ctx.fillStyle = fill;
+  ctx.fill();
+}
+
+function weeklyCanvasStrokeRound(ctx, x, y, w, h, r, stroke, lineWidth){
+  weeklyCanvasRoundRect(ctx, x, y, w, h, r);
+  ctx.strokeStyle = stroke;
+  ctx.lineWidth = lineWidth || 1;
+  ctx.stroke();
+}
+
+function weeklyCanvasFitText(ctx, text, x, y, maxWidth, fontSize, weight, color, align){
+  var size = fontSize;
+  ctx.textAlign = align || 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = color;
+  do {
+    ctx.font = (weight || '800') + ' ' + size + 'px Arial, sans-serif';
+    if(ctx.measureText(text).width <= maxWidth || size <= 12) break;
+    size -= 1;
+  } while(size > 12);
+  ctx.fillText(text, x, y);
+}
+
+function weeklyCanvasFitSerif(ctx, text, x, y, maxWidth, fontSize, weight, color, align){
+  var size = fontSize;
+  ctx.textAlign = align || 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = color;
+  do {
+    ctx.font = (weight || '700') + ' ' + size + 'px Georgia, Times New Roman, serif';
+    if(ctx.measureText(text).width <= maxWidth || size <= 13) break;
+    size -= 1;
+  } while(size > 13);
+  ctx.fillText(text, x, y);
+}
+
+function weeklyCanvasRankTitle(rank){
+  if(rank === 1) return 'WEEKLY CHAMPION';
+  if(rank === 2) return 'DIAMOND SEAT';
+  if(rank === 3) return 'PLATINUM SEAT';
+  if(rank === 4) return 'GOLD SEAT';
+  if(rank === 5) return 'SILVER SEAT';
+  if(rank === 6) return 'BRONZE SEAT';
+  return 'HONOR SEAT';
+}
+
+function weeklyCanvasCardGradient(ctx, x, y, w, h, rank){
+  var g = ctx.createLinearGradient(x, y, x + w, y + h);
+  if(rank === 1){
+    g.addColorStop(0, '#6b4d12'); g.addColorStop(.48, '#d4a83c'); g.addColorStop(1, '#32210a');
+  } else if(rank === 2){
+    g.addColorStop(0, '#414b62'); g.addColorStop(.52, '#9fb0c8'); g.addColorStop(1, '#222631');
+  } else if(rank === 3){
+    g.addColorStop(0, '#6b3418'); g.addColorStop(.52, '#c67b42'); g.addColorStop(1, '#29150a');
+  } else {
+    var palettes = [
+      ['#5d6477','#9ca8bd','#2b303c'],
+      ['#4c3b78','#8b73c8','#251c44'],
+      ['#2f706c','#7ec9c2','#193a38'],
+      ['#7b5b24','#d5a651','#352411'],
+      ['#30343d','#6f7480','#15171c']
+    ];
+    var p = palettes[(rank - 4) % palettes.length];
+    g.addColorStop(0, p[0]); g.addColorStop(.55, p[1]); g.addColorStop(1, p[2]);
+  }
+  return g;
+}
+
+function weeklyCanvasDrawOrnament(ctx, cx, cy, scale, color){
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.scale(scale, scale);
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(0, -34);
+  ctx.lineTo(28, 0);
+  ctx.lineTo(0, 34);
+  ctx.lineTo(-28, 0);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, -18);
+  ctx.lineTo(15, 0);
+  ctx.lineTo(0, 18);
+  ctx.lineTo(-15, 0);
+  ctx.closePath();
+  ctx.stroke();
+  ctx.restore();
+}
+
+function weeklyCanvasLeaderboardRow(ctx, row, rank, x, y, w, h){
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(x + 28, y);
+  ctx.lineTo(x + w - 28, y);
+  ctx.quadraticCurveTo(x + w - 12, y, x + w - 12, y + 15);
+  ctx.lineTo(x + w + 12, y + h / 2);
+  ctx.lineTo(x + w - 12, y + h - 15);
+  ctx.quadraticCurveTo(x + w - 12, y + h, x + w - 28, y + h);
+  ctx.lineTo(x + 28, y + h);
+  ctx.quadraticCurveTo(x + 12, y + h, x + 12, y + h - 15);
+  ctx.lineTo(x - 12, y + h / 2);
+  ctx.lineTo(x + 12, y + 15);
+  ctx.quadraticCurveTo(x + 12, y, x + 28, y);
+  ctx.closePath();
+  var fill = ctx.createLinearGradient(x, y, x + w, y);
+  fill.addColorStop(0, 'rgba(20,24,38,.88)');
+  fill.addColorStop(.45, 'rgba(34,39,58,.9)');
+  fill.addColorStop(1, 'rgba(10,12,20,.9)');
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.strokeStyle = rank === 1 ? '#f8d98a' : 'rgba(225,180,108,.9)';
+  ctx.lineWidth = rank === 1 ? 2.4 : 1.6;
+  ctx.stroke();
+  ctx.restore();
+
+  var rankText = rank < 10 ? '0' + rank : String(rank);
+  ctx.fillStyle = rank === 1 ? '#f8d98a' : '#d8b574';
+  ctx.font = '900 22px Georgia, Times New Roman, serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(rankText, x + 54, y + h / 2);
+
+  weeklyCanvasFitSerif(ctx, row.name.toUpperCase(), x + 112, y + 31, 260, 21, '900', '#f7f0dc', 'left');
+  ctx.font = '700 12px Arial, sans-serif';
+  ctx.fillStyle = 'rgba(245,224,154,.78)';
+  ctx.textAlign = 'left';
+  ctx.fillText(row.rankInfo.name + ' · ' + row.points + ' điểm tuần', x + 114, y + 51);
+  ctx.fillStyle = 'rgba(255,255,255,.52)';
+  ctx.fillText(row.games + ' giải · ' + row.wins + ' vô địch · ' + row.podiums + ' top 3', x + 114, y + 63);
+
+  ctx.textAlign = 'right';
+  ctx.fillStyle = 'rgba(245,224,154,.7)';
+  ctx.font = '700 14px Georgia, Times New Roman, serif';
+  ctx.fillText('ELO', x + w - 150, y + h / 2 + 6);
+  ctx.fillStyle = '#f7c980';
+  ctx.font = '900 34px Georgia, Times New Roman, serif';
+  ctx.fillText(String(row.totalElo), x + w - 52, y + h / 2 - 2);
+  var eloText = (row.eloDelta >= 0 ? '+' : '') + row.eloDelta + ' ELO';
+  ctx.fillStyle = row.eloDelta >= 0 ? '#8ff0ad' : '#ff9a9a';
+  ctx.font = '800 12px Arial, sans-serif';
+  ctx.fillText(eloText, x + w - 52, y + h / 2 + 20);
+}
+
+function downloadWeeklyChampionImage(){
+  var range = homeWeeklyWeekRange(homeWeeklyOffset);
+  var data = homeWeeklyBuildStats(range);
+  if(!data.rows.length){
+    alert('Tuần này chưa có dữ liệu để tải hình.');
+    return;
+  }
+
+  var canvas = document.createElement('canvas');
+  canvas.width = 900;
+  canvas.height = 1180;
+  var ctx = canvas.getContext('2d');
+
+  ctx.fillStyle = '#0a101d';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  var bg = ctx.createRadialGradient(450, 500, 50, 450, 500, 690);
+  bg.addColorStop(0, 'rgba(39,47,78,.88)');
+  bg.addColorStop(.52, 'rgba(12,18,32,.94)');
+  bg.addColorStop(1, '#050812');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'rgba(255,255,255,.025)';
+  for(var stripe = -260; stripe < 900; stripe += 160){
+    ctx.beginPath();
+    ctx.moveTo(stripe, 0);
+    ctx.lineTo(stripe + 110, 0);
+    ctx.lineTo(stripe + 520, 1180);
+    ctx.lineTo(stripe + 410, 1180);
+    ctx.closePath();
+    ctx.fill();
+  }
+
+  var ring = ctx.createLinearGradient(0, 0, 900, 1180);
+  ring.addColorStop(0, '#8f5d22');
+  ring.addColorStop(.24, '#ffdf91');
+  ring.addColorStop(.5, '#c18a3b');
+  ring.addColorStop(.76, '#ffdf91');
+  ring.addColorStop(1, '#6e4318');
+  ctx.strokeStyle = ring;
+  ctx.lineWidth = 12;
+  ctx.beginPath();
+  ctx.arc(450, 585, 558, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(255,222,145,.65)';
+  ctx.beginPath();
+  ctx.arc(450, 585, 520, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(255,222,145,.28)';
+  ctx.beginPath();
+  ctx.arc(450, 585, 440, 0, Math.PI * 2);
+  ctx.stroke();
+  weeklyCanvasDrawOrnament(ctx, 73, 633, 1.05, 'rgba(255,222,145,.7)');
+  weeklyCanvasDrawOrnament(ctx, 827, 633, 1.05, 'rgba(255,222,145,.7)');
+  weeklyCanvasDrawOrnament(ctx, 792, 300, .7, 'rgba(255,222,145,.55)');
+
+  ctx.textAlign = 'center';
+  ctx.shadowColor = 'rgba(245,224,154,.28)';
+  ctx.shadowBlur = 20;
+  var titleG = ctx.createLinearGradient(140, 112, 760, 242);
+  titleG.addColorStop(0, '#b68a2e');
+  titleG.addColorStop(.28, '#f5e09a');
+  titleG.addColorStop(.5, '#fff8d4');
+  titleG.addColorStop(.72, '#f5e09a');
+  titleG.addColorStop(1, '#9c7224');
+  ctx.fillStyle = titleG;
+  ctx.font = '900 38px Georgia, Times New Roman, serif';
+  ctx.fillText('SNAP CALL CLUB', 450, 110);
+  ctx.font = '900 51px Georgia, Times New Roman, serif';
+  ctx.fillText('WEEKLY', 450, 176);
+  ctx.fillStyle = '#f7f0dc';
+  ctx.font = '900 49px Georgia, Times New Roman, serif';
+  ctx.fillText('LEADERBOARD', 450, 236);
+  ctx.shadowBlur = 0;
+  ctx.strokeStyle = 'rgba(245,224,154,.38)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(260, 260);
+  ctx.lineTo(640, 260);
+  ctx.stroke();
+  ctx.font = '700 22px Arial, sans-serif';
+  ctx.fillStyle = '#cdbb86';
+  ctx.fillText(homeWeeklyFormatDate(range.start) + ' - ' + homeWeeklyFormatDate(range.end), 450, 296);
+
+  var rows = data.rows.slice(0, 10);
+  var startX = 150, startY = 342, rowW = 600, rowH = 66, gapY = 8;
+  rows.forEach(function(row, idx){
+    weeklyCanvasLeaderboardRow(ctx, row, idx + 1, startX, startY + idx * (rowH + gapY), rowW, rowH);
+  });
+
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#f7f0dc';
+  ctx.font = '700 22px Georgia, Times New Roman, serif';
+  ctx.fillText('(BY WEEKLY POINTS)', 450, 1088);
+  ctx.fillStyle = 'rgba(255,255,255,.38)';
+  ctx.font = '700 14px Arial, sans-serif';
+  ctx.fillText('Generated by SNAP CALL CLUB Tracker', 450, 1130);
+
+  var link = document.createElement('a');
+  var stamp = homeWeeklyFormatDate(range.start).replace(/\//g, '') + '-' + homeWeeklyFormatDate(range.end).replace(/\//g, '');
+  link.download = 'snap-call-weekly-leaderboard-' + stamp + '.png';
+  link.href = canvas.toDataURL('image/png');
+  link.click();
 }
 
 function switchHofSubTab(tabId) {
@@ -4699,18 +5346,81 @@ function renderHof(){
 /* ==================== MEMBERS TAB LOGIC ==================== */
 function showMemberListView(){document.getElementById('memberDetailView').style.display='none';document.getElementById('memberListView').style.display='block';}
 
+function getEloRankTiers(){
+  return [
+    { key:'challenger', name:'Thách Đấu', min:1650, icon:'♛' },
+    { key:'diamond', name:'Kim Cương', min:1600, icon:'◆' },
+    { key:'platinum', name:'Bạch Kim', min:1550, icon:'✦' },
+    { key:'gold', name:'Vàng', min:1500, icon:'●' },
+    { key:'silver', name:'Bạc', min:1450, icon:'◇' },
+    { key:'bronze', name:'Đồng', min:1400, icon:'◈' },
+    { key:'rookie', name:'Tập Sự', min:0, icon:'•' }
+  ];
+}
+
+function getEloRankInfo(elo){
+  var tiers = getEloRankTiers();
+  var score = Math.round(elo || 1500);
+  var tier = tiers[tiers.length - 1];
+  var idx = tiers.length - 1;
+  for(var i=0; i<tiers.length; i++){
+    if(score >= tiers[i].min){
+      tier = tiers[i];
+      idx = i;
+      break;
+    }
+  }
+  var next = idx > 0 ? tiers[idx - 1] : null;
+  var base = tier.min || 1300;
+  var target = next ? next.min : tier.min;
+  var progress = next ? Math.max(0, Math.min(100, Math.round(((score - base) / Math.max(target - base, 1)) * 100))) : 100;
+  return {
+    key: tier.key,
+    name: tier.name,
+    icon: tier.icon,
+    elo: score,
+    next: next,
+    needed: next ? Math.max(next.min - score, 0) : 0,
+    progress: progress
+  };
+}
+
+function eloRankBadgeHtml(info){
+  return '<span class="rank-badge rank-' + info.key + '"><span class="rank-icon">' + info.icon + '</span>' + info.name + '</span>';
+}
+
+function buildEloRatingMap(){
+  var map = {};
+  if(typeof tourComputeEloFromHistory !== 'function') return map;
+  tourComputeEloFromHistory().forEach(function(r){
+    if(r.memberId) map[r.memberId] = r;
+    if(r.name) map['name:' + r.name.toLowerCase().trim()] = r;
+  });
+  return map;
+}
+
+function memberEloFromMap(member, eloMap){
+  var fallback = { memberId: member.id, name: member.name, elo: 1500, games: 0, wins: 0, podiums: 0 };
+  if(!member) return fallback;
+  return eloMap[member.id] || eloMap['name:' + (member.name || '').toLowerCase().trim()] || fallback;
+}
+
 function renderMemberList(){
   var el=document.getElementById('memberListEl'),members=getMembers();
   if(!members.length){el.innerHTML='<div class="empty">Chưa có hội viên nào</div>';return;}
+  var eloMap = buildEloRatingMap();
   el.innerHTML=members.map(function(m){
     var hist=m.history||[],totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
     var wins=hist.filter(function(h){return h.diff>0;}).length;
     var winRate=hist.length>0?Math.round(wins/hist.length*100):0;
     var diffCls=totalDiff>0?'pill-green':totalDiff<0?'pill-red':'pill-gray';
     var diffTxt=totalDiff>0?'+'+fmtAbs(totalDiff):totalDiff<0?'-'+fmtAbs(Math.abs(totalDiff)):'±0';
+    var eloInfo = memberEloFromMap(m, eloMap);
+    var rankInfo = getEloRankInfo(eloInfo.elo);
     return '<div class="member-list-item" onclick="showMemberDetail(\''+m.id+'\')">'
       +'<div class="member-avatar">'+memberAvatarHtml(m)+'</div>'
       +'<div class="member-meta"><div class="member-name">'+m.name+'</div>'
+      +'<div class="member-rank-line">'+eloRankBadgeHtml(rankInfo)+'<span class="member-elo-mini">'+rankInfo.elo+' ELO · '+eloInfo.games+' giải</span></div>'
       +'<div class="member-stats-row"><span class="stat-pill pill-gold">'+hist.length+' buổi</span>'
       +'<span class="stat-pill '+diffCls+'">'+diffTxt+'</span>'
       +(hist.length>0?'<span class="stat-pill pill-gray">WR '+winRate+'%</span>':'')
@@ -4720,6 +5430,9 @@ function renderMemberList(){
 
 function showMemberDetail(id){
   var members=getMembers(),m=members.find(function(x){return x.id===id;});if(!m)return;
+  var eloInfo = memberEloFromMap(m, buildEloRatingMap());
+  var rankInfo = getEloRankInfo(eloInfo.elo);
+  var nextText = rankInfo.next ? ('Còn ' + rankInfo.needed + ' ELO nữa lên ' + rankInfo.next.name) : 'Đang ở cấp cao nhất';
   var hist=m.history||[],totalDiff=hist.reduce(function(s,h){return s+h.diff;},0);
   var wins=hist.filter(function(h){return h.diff>0;}).length,losses=hist.filter(function(h){return h.diff<0;}).length;
   var winRate=hist.length>0?Math.round(wins/hist.length*100):0,since=hist.length>0?hist[hist.length-1].date:'—';
@@ -4732,7 +5445,10 @@ function showMemberDetail(id){
   }).join('');
   var html='<button class="back-btn" onclick="showMemberListView();renderMemberList();">‹ Danh sách</button>'
     +'<div class="profile-header"><div class="profile-avatar-lg">'+memberAvatarHtml(m, true)+'</div>'
-    +'<div><div class="profile-name" style="display:flex;align-items:center;">'+m.name+' <button style="background:rgba(200,168,75,.15);border:1px solid var(--border);border-radius:6px;color:var(--gold);padding:3px 6px;margin-left:8px;cursor:pointer;font-size:10px;font-family:var(--font);font-weight:700;" onclick="renameMember(\''+m.id+'\')">✏️ Sửa</button></div><div class="profile-since">Thành viên từ '+since+'</div></div></div>'
+    +'<div><div class="profile-name" style="display:flex;align-items:center;">'+m.name+' <button style="background:rgba(200,168,75,.15);border:1px solid var(--border);border-radius:6px;color:var(--gold);padding:3px 6px;margin-left:8px;cursor:pointer;font-size:10px;font-family:var(--font);font-weight:700;" onclick="renameMember(\''+m.id+'\')">✏️ Sửa</button></div><div class="profile-since">Thành viên từ '+since+'</div><div class="member-rank-line">'+eloRankBadgeHtml(rankInfo)+'</div></div></div>'
+    +'<div class="rank-progress-card rank-' + rankInfo.key + '"><div class="rank-progress-top"><div>' + eloRankBadgeHtml(rankInfo) + '</div><div class="rank-progress-elo">' + rankInfo.elo + ' ELO</div></div>'
+    +'<div class="rank-progress-bar"><div class="rank-progress-fill" style="width:' + rankInfo.progress + '%;"></div></div>'
+    +'<div class="rank-progress-note">' + nextText + ' · ' + eloInfo.games + ' giải · ' + eloInfo.wins + ' vô địch · ' + eloInfo.podiums + ' top 3</div></div>'
     +'<div class="profile-stats">'
     +'<div class="pstat"><div class="pstat-val">'+hist.length+'</div><div class="pstat-label">Buổi</div></div>'
     +'<div class="pstat"><div class="pstat-val '+diffCls+'">'+diffTxt+'</div><div class="pstat-label">Tổng</div></div>'
@@ -5814,10 +6530,12 @@ function tourRenderEloRanking(){
   
   // RANK 2 (left)
   if(r2){
+    var r2Rank = getEloRankInfo(r2.elo);
     podHtml += '<div class="elo-podium-spot rank2">';
     podHtml += '<div class="elo-podium-crown">🥈</div>';
     podHtml += '<div class="elo-podium-avatar">'+memberAvatarHtml(findMemberForAvatar(r2.name, r2.memberId))+'</div>';
     podHtml += '<div class="elo-podium-name">'+r2.name+'</div>';
+    podHtml += '<div class="elo-podium-tier">'+eloRankBadgeHtml(r2Rank)+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r2.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">II</div>';
     podHtml += '</div>';
@@ -5827,10 +6545,12 @@ function tourRenderEloRanking(){
   
   // RANK 1 (center)
   if(r1){
+    var r1Rank = getEloRankInfo(r1.elo);
     podHtml += '<div class="elo-podium-spot rank1">';
     podHtml += '<div class="elo-podium-crown">👑</div>';
     podHtml += '<div class="elo-podium-avatar">'+memberAvatarHtml(findMemberForAvatar(r1.name, r1.memberId))+'</div>';
     podHtml += '<div class="elo-podium-name">'+r1.name+'</div>';
+    podHtml += '<div class="elo-podium-tier">'+eloRankBadgeHtml(r1Rank)+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r1.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">I</div>';
     podHtml += '</div>';
@@ -5840,10 +6560,12 @@ function tourRenderEloRanking(){
   
   // RANK 3 (right)
   if(r3){
+    var r3Rank = getEloRankInfo(r3.elo);
     podHtml += '<div class="elo-podium-spot rank3">';
     podHtml += '<div class="elo-podium-crown">🥉</div>';
     podHtml += '<div class="elo-podium-avatar">'+memberAvatarHtml(findMemberForAvatar(r3.name, r3.memberId))+'</div>';
     podHtml += '<div class="elo-podium-name">'+r3.name+'</div>';
+    podHtml += '<div class="elo-podium-tier">'+eloRankBadgeHtml(r3Rank)+'</div>';
     podHtml += '<div class="elo-podium-elo">'+r3.elo+'</div>';
     podHtml += '<div class="elo-podium-bar">III</div>';
     podHtml += '</div>';
@@ -5863,10 +6585,11 @@ function tourRenderEloRanking(){
     var listHtml = '';
     rest.forEach(function(r, idx){
       var rank = idx + 4;
+      var rankInfo = getEloRankInfo(r.elo);
       listHtml += '<div class="elo-row">';
       listHtml += '<div class="elo-row-rank">#'+rank+'</div>';
       listHtml += '<div class="elo-row-avatar">'+memberAvatarHtml(findMemberForAvatar(r.name, r.memberId))+'</div>';
-      listHtml += '<div class="elo-row-name">'+r.name+'</div>';
+      listHtml += '<div class="elo-row-main"><div class="elo-row-name">'+r.name+'</div>'+eloRankBadgeHtml(rankInfo)+'</div>';
       listHtml += '<div class="elo-row-stats">'+r.games+' giải · '+r.wins+' 🏆</div>';
       listHtml += '<div class="elo-row-elo">'+r.elo+'</div>';
       listHtml += '</div>';
@@ -7199,6 +7922,8 @@ function renderBillResult(personMap, dayCount){
 
   document.getElementById('billResultList').innerHTML = h || '<div class="empty">Không có dữ liệu người chơi trong các ngày đã chọn.</div>';
 }
+
+renderHomeWeeklyRanking();
 </script>
 
 </body>
