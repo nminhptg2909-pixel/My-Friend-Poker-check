@@ -2849,8 +2849,8 @@ table.players tr:last-child td{border-bottom:none;}
 <div id="setup-event-fields">
   <div class="form-row" style="margin-bottom:12px;">
     <label style="min-width:80px;color:var(--gold);font-size:11px;">Số người:</label>
-    <input type="number" id="tourMaxPlayers" value="8" min="4" max="10" style="flex:1;">
-    <span style="color:var(--text3);font-size:11px;">(4-10)</span>
+    <input type="number" id="tourMaxPlayers" value="8" min="1" max="10" style="flex:1;">
+    <span style="color:var(--text3);font-size:11px;">(1-10)</span>
   </div>
 </div>
 <div class="form-row" style="margin-bottom:12px;">
@@ -3226,8 +3226,8 @@ table.players tr:last-child td{border-bottom:none;}
         <input type="number" id="tourEditBuyin" style="width:100%;">
       </div>
       <div id="tourEditEventFields">
-        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Số người (4-10)</span>
-        <input type="number" id="tourEditMaxPlayers" min="4" max="10" style="width:100%;">
+        <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Số người (1-10)</span>
+        <input type="number" id="tourEditMaxPlayers" min="1" max="10" style="width:100%;">
       </div>
       <div id="tourEditSessionFields" style="display:none;">
         <span style="font-size:10px;color:var(--text3);display:block;margin-bottom:4px;">Số người mỗi bàn (6-8)</span>
@@ -6668,7 +6668,7 @@ function saveTourEditInfo(){
 
   if(t.mode === 'event'){
     var maxPlayers = parseInt(document.getElementById('tourEditMaxPlayers').value) || 8;
-    if(maxPlayers < 4 || maxPlayers > 10){ alert('EVENT DAY: số người phải từ 4 đến 10'); return; }
+    if(maxPlayers < 1 || maxPlayers > 10){ alert('EVENT DAY: số người phải từ 1 đến 10'); return; }
     if(maxPlayers < t.participants.length){
       alert('⚠️ Đang có ' + t.participants.length + ' người đã đăng ký, không thể giảm xuống dưới số đó.');
       return;
@@ -6810,8 +6810,8 @@ function tourCreateAndOpenReg(){
   
   if(mode === 'event'){
     maxPlayers = parseInt(document.getElementById('tourMaxPlayers').value) || 8;
-    if(maxPlayers < 4 || maxPlayers > 10){
-      alert('EVENT DAY: số người phải từ 4 đến 10');
+    if(maxPlayers < 1 || maxPlayers > 10){
+      alert('EVENT DAY: số người phải từ 1 đến 10');
       return;
     }
     seatsPerTable = maxPlayers; // 1 bàn duy nhất
